@@ -1,0 +1,26 @@
+{
+  "name": "battle_ship",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/negiDharmendra/battle_ship_game.git"
+  },
+  "author": "Dharmendra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/negiDharmendra/battle_ship_game/issues"
+  },
+  "homepage": "https://github.com/negiDharmendra/battle_ship_game#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1"
+  }
+}
