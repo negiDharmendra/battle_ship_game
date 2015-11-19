@@ -17,7 +17,9 @@ describe('ship',function(){
 		chai.assert.equal(ship.name,'battleship');
 		chai.assert.equal(ship.holes,4);
 	});
-
+    it('should placed in valid position');
+    it('should placed horizontal or vertical position');
+    it('cannot change the position of any ship after announcing READY');
 });
 
 describe('player',function(){
@@ -66,6 +68,7 @@ describe('game object',function(){
 	it.skip('game object should have only to keys',function(){
 		chai.assert.equal(Object.keys(sh.game_object),['player1',player2]);
 	});
+    it('starts only when both players says READY');
 });
 
 describe('player1',function(){
@@ -137,5 +140,3 @@ describe('toCheck ship is hitted or not',function(){
 describe('toCheck game over',function(){
 	it.skip('if all ship holes is zero called game over');
 });
-
-
