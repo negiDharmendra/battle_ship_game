@@ -40,20 +40,17 @@ describe('player',function(){
 		chai.expect(ships).to.be.deep.equal(expected);
 	});
 	it.skip('has behaviour of deploying a ship',function(){
-		var deployedShip = player.diployShip('cruiser',['A1','A2','A3']);
+		var deployedShip = player.deployShip('cruiser',['A1','A2','A3']);
 		chai.assert.ok(deployedShip);
 		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3']);
 	});
 	it('deployShip throw an error for invalid ship positon',function(){
-		var deployedShip = player.diployShip.bind(null,'cruiser',['A1','B2','C3']);
-		chai.expect(deployedShip).to.throw(Error,'Can not deploy the ship on this positon');
+		var deployedShip = player.deployShip.bind(null,'cruiser',['A1','B2','C3']);
+		chai.expect(deployedShip).to.throw(Error,/^Can not deploy the ship on this positon$/);
 	});
-	it('at initial position hittedHoles should be zero');
-});
+	it('at initial position hittedHoles should be zero',function(){
 
-describe('game object',function(){
-	it('game object should have only to keys');
-    it('starts only when both players says READY');
+	});
 });
 
 describe('shoot',function(){
@@ -109,8 +106,9 @@ describe('Observer',function(){
 		var isValid = observer.validatePosition('submarine',['A1','B2','C3']);
 		chai.expect(isValid).to.false;
 	});
-	it('sayes position is not valid if player provides number of position less than ship size',function(){
+	it('says position is not valid if player provides number of position less than ship size',function(){
 		var isValid=observer.validatePosition('battleship',['A1','A2','A3']);
 		chai.expect(isValid).to.false;
 	});
+    it('starts only when both players says READY');
 });

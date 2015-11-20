@@ -13,8 +13,10 @@ sh.Ship = function(name,holes){
 };
 
 sh.Ship.prototype = {
-	hittedHoles : function (shipName) {},
-	isSunk : function (shipName) {}
+	hittedHoles :0,
+	isSunk : function() {
+		return this.hittedHoles==this.holes;
+	}
 };
 
 sh.Player = function(player_name){
@@ -26,6 +28,10 @@ sh.Player = function(player_name){
 };
 
 sh.Player.prototype = {
+	deployShip:function(ship,position){
+		if(!sh.observer.validatePosition(ship,position))
+			throw new Error('Can not deploy the ship on this positon');
+	}
 };
 
 sh.isValid = function(pos){
