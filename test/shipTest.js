@@ -69,38 +69,17 @@ describe('distroy',function(){
 		it('should have total number of holes is zero after destroy');
 	});
 });
-<<<<<<< HEAD
-describe('sunk',function(){
-	it.skip('to check ship is sunk or not',function(){
-		chai.assert.ok(sh.isSunk('cruiser'));
-		chai.assert.ok(sh.isSunk('battleship'));
-		chai.assert.ok(sh.isSunk('carrier'));
-		chai.assert.ok(sh.isSunk('submarine'));
-		chai.assert.ok(sh.isSunk('distroyer'));
 
-	});
-=======
-describe('shunk',function(){
-	it('to check ship is shunk or not');
->>>>>>> 78173cd0ae9f4e952384402123a7d15dc820b3ab
+describe('sunk',function(){
+	it('to check ship is sunk or not');
 });
 describe('hitted holes',function(){
 	it('after ship  hitted holes should be increase by one');
 });
 
 describe('fleet',function(){
-<<<<<<< HEAD
-	it('have five ships initially for Player',function(){
-		var narmada=new sh.Player('Narmada');
-		chai.expect(narmada.fleet).to.have.lengthOf(5);
-	});
-
-	it.skip('player should not have repeated ship');
-	it.skip('when player placed all ship they emit ready event for the start game');
-=======
 	it('player should not have repeated ship');
 	it('when player placed all ship they emit ready event for the start game');
->>>>>>> 78173cd0ae9f4e952384402123a7d15dc820b3ab
 });
 
 describe('who play first',function(){
