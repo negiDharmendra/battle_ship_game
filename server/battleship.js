@@ -12,12 +12,17 @@ sh.Ship = function(name,holes){
 	});
 };
 
+sh.Ship.prototype = {
+	hittedHoles : function (shipName) {},
+	isSunk : function (shipName) {}
+};
+
 sh.Player = function(player_name){
 	this.name = player_name;
 	var holes = [4,5,3,2,3];
 	this.fleet =[ 'battleship', 'carrier', 'cruiser', 'distroyer', 'submarine' ].map(function(name,i){
 		return new sh.Ship(name,holes[i]);
-	})
+	});
 };
 
 sh.Player.prototype = {
@@ -32,3 +37,9 @@ sh.Player.prototype = {
 		}
 	}
 };
+
+
+
+
+
+
