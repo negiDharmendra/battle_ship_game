@@ -1,7 +1,7 @@
 "use strict"
 var sh = {};
-exports.sh = sh;
 var ld = require('lodash');
+exports.sh = sh;
 
 sh.Ship = function(name,holes){
 	this.name =  name;
