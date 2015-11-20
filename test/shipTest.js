@@ -94,13 +94,13 @@ describe('distroy',function(){
 		});
 	});
 });
-describe('shunk',function(){
-	it.skip('to check ship is shunk or not',function(){
-		chai.assert.ok(sh.isShunk('cruiser'));
-		chai.assert.ok(sh.isShunk('battleship'));
-		chai.assert.ok(sh.isShunk('carrier'));
-		chai.assert.ok(sh.isShunk('submarine'));
-		chai.assert.ok(sh.isShunk('distroyer'));
+describe('sunk',function(){
+	it.skip('to check ship is sunk or not',function(){
+		chai.assert.ok(sh.isSunk('cruiser'));
+		chai.assert.ok(sh.isSunk('battleship'));
+		chai.assert.ok(sh.isSunk('carrier'));
+		chai.assert.ok(sh.isSunk('submarine'));
+		chai.assert.ok(sh.isSunk('distroyer'));
 
 	});
 });
@@ -116,9 +116,9 @@ describe('hitted holes',function(){
 });
 
 describe('fleet',function(){
-	it('have five ships initialy for Player',function(){
+	it('have five ships initially for Player',function(){
 		var narmada=new sh.Player('Narmada');
-		chai.expect(narmada.fleet).to.have.lengthof(4);
+		chai.expect(narmada.fleet).to.have.lengthOf(5);
 	});
 
 	it.skip('player should not have repeated ship');
