@@ -57,9 +57,10 @@ describe('game object',function(){
     it('starts only when both players says READY');
 });
 
-describe('player1',function(){
-	it.skip('player1 should have only follow properties',function(){
-		chai.assert.equal(Object.keys(sh.game_object.player1),['name','fleet']);
+describe('player',function(){
+	it.skip('player should have only following properties',function(){
+		var nandi=new sh.Player('Nandi');
+		chai.expect(nandi).to.have.all.property('name','fleet');
 	});
 });
 
@@ -91,27 +92,23 @@ describe('shunk',function(){
 });
 describe('hitted holes',function(){
 	it.skip('after ship  hitted holes should be increase by one',function(){
-		var ship = new sh.Ship();
-		chai.assert.equal(ship.hittedHoles('cruiser'),1);
+		var ship =new sh.Ship('battleship',4);
 		chai.assert.equal(ship.hittedHoles('battleship'),1);
-		chai.assert.equal(ship.hittedHoles('submarine'),1);
-		chai.assert.equal(ship.hittedHoles('carrier'),1);
-		chai.assert.equal(ship.hittedHoles('distroyer'),1);
 	});
-	it.skip('at initial position hittedHoles should be zero',function(){
-		var ship = new sh.Ship();
-		chai.assert.equal(ship.hittedHoles('cruiser'),0);
+	it('at initial position hittedHoles should be zero',function(){
+		var ship = new sh.Ship('battleship',4);
 		chai.assert.equal(ship.hittedHoles('battleship'),0);
-		chai.assert.equal(ship.hittedHoles('submarine'),0);
-		chai.assert.equal(ship.hittedHoles('carrier'),0);
-		chai.assert.equal(ship.hittedHoles('distroyer'),0);
 	});
 });
 
 describe('fleet',function(){
-	it.skip('5 ship should have each player');
+	it('have five ships initialy for Player',function(){
+		var narmada=new sh.Player('Narmada');
+		chai.expect(narmada.fleet).to.have.lengthof(4);
+	});
+
 	it.skip('player should not have repeated ship');
-	it.skip('when player puted all ship they emit ready event for the start game');
+	it.skip('when player placed all ship they emit ready event for the start game');
 });
 
 describe('who play first',function(){
