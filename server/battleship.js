@@ -1,7 +1,7 @@
 "use strict"
 var sh = {};
-exports.sh = sh;
 var ld = require('lodash');
+exports.sh = sh;
 
 sh.Ship = function(name,holes){
 	this.name =  name;
@@ -28,7 +28,7 @@ sh.Player.prototype = {
 		if(toCheck){
 			return position.every(function(pos){
 				return (position[0][0]==pos[0]) || (parseInt(pos.slice(1))==+position.slice(1));
-			})
-		}
-	}
+			});
+		};
+	};
 };
