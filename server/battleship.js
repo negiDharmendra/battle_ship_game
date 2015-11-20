@@ -22,8 +22,13 @@ sh.Player = function(player_name){
 
 sh.Player.prototype = {
 	validatePosition : function(shipName,position){
-		return position.every(function(pos){
+		var toCheck = position.every(function(pos){
 			return ld.inRange(parseInt(pos.slice(1)),1,11) && ld.inRange(pos[0].charCodeAt(),65,75);
 		});
+		if(toCheck){
+			return position.every(function(pos){
+				return (position[0][0]==pos[0]) || (parseInt(pos.slice(1))==+position.slice(1));
+			})
+		}
 	}
 };
