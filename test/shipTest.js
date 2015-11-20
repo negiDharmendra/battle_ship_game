@@ -39,26 +39,12 @@ describe('player',function(){
 		var expected = [ 'battleship', 'carrier', 'cruiser', 'distroyer', 'submarine' ];
 		chai.expect(ships).to.be.deep.equal(expected);
 	});
-	it('validatePosition returns true for valid positons of ship',function(){
-		var isValid = player.validatePosition('carrier',['A1','A2','A3','A4','A5']);
-		chai.assert.ok(isValid);
-	});
-	it('validatePosition returns false for invalid positons of ship',function(){
-		var isValid = player.validatePosition('carrier',['A1','A2','A3','A4','Z5']);
-		chai.assert.ok(!isValid);
-		var isValid = player.validatePosition('carrier',['A1','B2','C3','D4','E5']);
-		chai.assert.ok(!isValid);
-	});
-	it('validatePosition returns false if numberOf positons are less than holes of ship',function(){
-		var isValid=player.validatePosition('battleship',['A1','A2','A3']);
-		chai.assert.ok(!isValid);
-	});
-	it('has behaviour of deploying a ship',function(){
+	it.skip('has behaviour of deploying a ship',function(){
 		var deployedShip = player.diployShip('cruiser',['A1','A2','A3']);
 		chai.assert.ok(deployedShip);
 		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3']);
 	});
-	it('deployShip throw an error for invalid ship positon',function(){
+	it.skip('deployShip throw an error for invalid ship positon',function(){
 		var deployedShip = player.diployShip.bind(null,'cruiser',['A1','B2','C3']);
 		chai.expect(deployedShip).to.throw(Error,'Can not deploy the ship on this positon');
 	});
@@ -140,3 +126,24 @@ describe('toCheck ship is hitted or not',function(){
 describe('toCheck game over',function(){
 	it.skip('if all ship holes is zero called game over');
 });
+
+
+describe('Observer',function(){
+	var observer = sh.observer;
+	it('informs player whether the position of ship is valid',function(){
+		var isValid = observer.validatePosition('carrier',['A1','A2','A3','A4','A5']);
+		chai.expect(isValid).to.true;
+	});
+	it('sayes position is not valid if any of the position is not found in the available positions',function(){
+		var isValid = observer.validatePosition('carrier',['A1','A2','A3','A4','Z5']);
+		chai.expect(isValid).to.false;
+	});
+	it('sayes position is not valid if player diploy his ship diagonally',function(){
+		var isValid = observer.validatePosition('submarine',['A1','B2','C3']);
+		chai.expect(isValid).to.false;
+	});
+	it('sayes position is not valid if player provides number of position less than ship size',function(){
+		var isValid=observer.validatePosition('battleship',['A1','A2','A3']);
+		chai.expect(isValid).to.false;
+	});
+})
