@@ -1,28 +1,46 @@
 Implement battle ship for web.
-................................................................
+
+==================================================================================================
 Server will be responsible for serving the required data to the player.
-................................................................
+
+==================================================================================================
 create a game object which have two object namelly player_1 and player_2.
-................................................................
+
+==================================================================================================
+game will have a observer who will watch the every action of players and 
+report the consequence of that action to the players.
+Responsibility of observer will be validating the ship position, decide 
+the playing turn, track the shoot to check whether it's a hit or miss, 
+and to check the status of game.
+
+==================================================================================================
+
+Each ship will have following properties.
+==> name of ship i.e "BATTLESHIP", "CRUISER", "CARRIER", "DESTROYER", "SUBMARINE".
+==> number of holes. "BATTLESHIP has 4", "CRUISER has 3", "CARRIER has 5", "DESTROYER has 2",
+ "SUBMARINE has 3"
+==> number of holes has been hit.
+==> status sunk or alive.
+==================================================================================================
+
+
 each player has following properties
 ==> name - it contains the name of player)
 
 ==> fleet - (fleet is collection of ships that is 5 ship)
 
-		ship will also be an object which has two own properties
-		namelly name and holes. It also has some properties which
-		will be inherited from the Ship constructor function.
+==> deployShip - it will be responsible
 
 ==> usedPositions - it contains the information about all those
 		positions which occupied by all the ship have been deployed till now.
 
 ==>shoot - It is a behaviour. Player should invoke it whenever he
-		wants to shoot his opponent ship. Within the shoot their will be few events
-		as "HIT", "MISSED" and "YOUR TURN" and depending on each of these events
-		server will take some decision how and what data it has to serve to player.
+		wants to shoot his opponent ship. And inside this function observer will be invoked
+		to observe the shoot.
+==> earlierShoot - it will keep tracking all the position shooted earlier, so that
+		player won't shoot those position again and again.
+===================================================================================================
 
-		On the event of "MISSED" a callback function will be invoked which will inform the player itself that the particular position had got hit and can't be hit anymore. 
-
-		On the event of "HIT" a callback function will be invoked which will check which ship of opponent got hit and inform the opponent about it and also inform the player itself that the particular position had got hit and can't be hit anymore.
-
-		and after each of the events "HIT" or "MISSED" an another event "YOUR TURN" will be generated. And on the event of "YOUR TURN" the server will inform the opponent that this your turn and disable the previous player from hiting his opponent untill the opponent playe his turn.
+After every shoot observer will check the status of game by tracking the fleet size of 
+player. If whole fleet of any player have been sank, then it will ionform both the user about the winner
+with reporting the message of game has finished.
