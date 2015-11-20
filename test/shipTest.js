@@ -39,61 +39,37 @@ describe('player',function(){
 		var expected = [ 'battleship', 'carrier', 'cruiser', 'distroyer', 'submarine' ];
 		chai.expect(ships).to.be.deep.equal(expected);
 	});
-	it('validatePosition returns true for valid positons of ship',function(){
-		var isValid = player.validatePosition('carrier',['A1','A2','A3','A4','A5']);
-		chai.assert.ok(isValid);
-	});
-	it('validatePosition returns false for invalid positons of ship',function(){
-		var isValid = player.validatePosition('carrier',['A1','A2','A3','A4','Z5']);
-		chai.assert.ok(!isValid);
-		var isValid = player.validatePosition('carrier',['A1','B2','C3','D4','E5']);
-		chai.assert.ok(!isValid);
-	});
-	it('validatePosition returns false if numberOf positons are less than holes of ship',function(){
-		var isValid=player.validatePosition('battleship',['A1','A2','A3']);
-		chai.assert.ok(!isValid);
-	});
-	it('has behaviour of deploying a ship',function(){
+	it.skip('has behaviour of deploying a ship',function(){
 		var deployedShip = player.diployShip('cruiser',['A1','A2','A3']);
 		chai.assert.ok(deployedShip);
 		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3']);
 	});
-	it.skip('deployShip throw an error for invalid ship positon',function(){
+	it('deployShip throw an error for invalid ship positon',function(){
 		var deployedShip = player.diployShip.bind(null,'cruiser',['A1','B2','C3']);
 		chai.expect(deployedShip).to.throw(Error,'Can not deploy the ship on this positon');
 	});
+	it('at initial position hittedHoles should be zero');
 });
 
 describe('game object',function(){
-	it.skip('game object should have only to keys',function(){
-		chai.assert.equal(Object.keys(sh.game_object),['player1',player2]);
-	});
+	it('game object should have only to keys');
     it('starts only when both players says READY');
 });
 
-describe('player',function(){
-	it.skip('player should have only following properties',function(){
-		var nandi=new sh.Player('Nandi');
-		chai.expect(nandi).to.have.all.property('name','fleet');
-	});
-});
-
 describe('shoot',function(){
-	it.skip('should have events name as HIT MISSED YOUR TURN');
+	it('should have events name as HIT MISSED YOUR TURN');
 });
 
 describe('usedPositions',function(){
-	it.skip('should contains the information about all those positions which occupied by all the ship have been deployed till now');
+	it('should contains the information about all those positions which occupied by all the ship have been deployed till now');
 });
 
 describe('distroy',function(){
 	describe('holes',function(){
-		it.skip('should have total number of holes is zero after destroy',function(){
-			chai.assert.deepEqual(sh.distroy('cruiser'),0);
-		
-		});
+		it('should have total number of holes is zero after destroy');
 	});
 });
+<<<<<<< HEAD
 describe('sunk',function(){
 	it.skip('to check ship is sunk or not',function(){
 		chai.assert.ok(sh.isSunk('cruiser'));
@@ -103,19 +79,17 @@ describe('sunk',function(){
 		chai.assert.ok(sh.isSunk('distroyer'));
 
 	});
+=======
+describe('shunk',function(){
+	it('to check ship is shunk or not');
+>>>>>>> 78173cd0ae9f4e952384402123a7d15dc820b3ab
 });
 describe('hitted holes',function(){
-	it.skip('after ship  hitted holes should be increase by one',function(){
-		var ship =new sh.Ship('battleship',4);
-		chai.assert.equal(ship.hittedHoles('battleship'),1);
-	});
-	it('at initial position hittedHoles should be zero',function(){
-		var ship = new sh.Ship('battleship',4);
-		chai.assert.equal(ship.hittedHoles('battleship'),0);
-	});
+	it('after ship  hitted holes should be increase by one');
 });
 
 describe('fleet',function(){
+<<<<<<< HEAD
 	it('have five ships initially for Player',function(){
 		var narmada=new sh.Player('Narmada');
 		chai.expect(narmada.fleet).to.have.lengthOf(5);
@@ -123,17 +97,41 @@ describe('fleet',function(){
 
 	it.skip('player should not have repeated ship');
 	it.skip('when player placed all ship they emit ready event for the start game');
+=======
+	it('player should not have repeated ship');
+	it('when player placed all ship they emit ready event for the start game');
+>>>>>>> 78173cd0ae9f4e952384402123a7d15dc820b3ab
 });
 
 describe('who play first',function(){
-	it.skip('when ready event emit first 2 time who say ready first they will start');
-	it.skip('when shoot event is emitted hit event should called');
+	it('when ready event emit first 2 time who say ready first they will start');
+	it('when shoot event is emitted hit event should called');
 });
 describe('toCheck ship is hitted or not',function(){
-	it.skip('check hitted co-ordinate and ship co-ordinate');
-	it.skip('if shoot is miss just give a message');
+	it('check hitted co-ordinate and ship co-ordinate');
+	it('if shoot is miss just give a message');
 });
 
 describe('toCheck game over',function(){
-	it.skip('if all ship holes is zero called game over');
+	it('if all ship holes is zero called game over');
+});
+
+describe('Observer',function(){
+	var observer = sh.observer;
+	it('informs player whether the position of ship is valid',function(){
+		var isValid = observer.validatePosition('carrier',['A1','A2','A3','A4','A5']);
+		chai.expect(isValid).to.true;
+	});
+	it('sayes position is not valid if any of the position is not found in the available positions',function(){
+		var isValid = observer.validatePosition('carrier',['A1','A2','A3','A4','Z5']);
+		chai.expect(isValid).to.false;
+	});
+	it('sayes position is not valid if player diploy his ship diagonally',function(){
+		var isValid = observer.validatePosition('submarine',['A1','B2','C3']);
+		chai.expect(isValid).to.false;
+	});
+	it('sayes position is not valid if player provides number of position less than ship size',function(){
+		var isValid=observer.validatePosition('battleship',['A1','A2','A3']);
+		chai.expect(isValid).to.false;
+	});
 });
