@@ -17,9 +17,9 @@ describe('ship',function(){
 		chai.assert.equal(ship.name,'battleship');
 		chai.assert.equal(ship.holes,4);
 	});
-    it('should placed in valid position');
-    it('should placed horizontal or vertical position');
-    it('cannot change the position of any ship after announcing READY');
+	it('at initial position hittedHoles should be zero',function(){
+		chai.expect(ship.hittedHoles).to.equal(0);
+	});
 });
 
 describe('player',function(){
@@ -47,9 +47,6 @@ describe('player',function(){
 	it('deployShip throw an error for invalid ship positon',function(){
 		var deployedShip = player.deployShip.bind(null,'cruiser',['A1','B2','C3']);
 		chai.expect(deployedShip).to.throw(Error,/^Can not deploy the ship on this positon$/);
-	});
-	it('at initial position hittedHoles should be zero',function(){
-
 	});
 });
 

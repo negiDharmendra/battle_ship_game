@@ -29,14 +29,15 @@ sh.Player = function(player_name){
 };
 
 sh.Player.prototype = {
+	usedPositions : [],
 	deployShip:function(ship,position){
-		if(!sh.observer.validatePosition(ship,position))
+		var isPositionUsed = ld.intersection(sh.Player.usedPositions,position).length;
+		if(!sh.observer.validatePosition(ship,position)||isPositionUsed>0)
 			throw new Error('Can not deploy the ship on this positon');
 		else{
 			this.usedPositions=this.usedPositions.concat(position); 
 			return true;
 		}
-
 	}
 };
 
