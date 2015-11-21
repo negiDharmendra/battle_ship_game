@@ -29,10 +29,9 @@ sh.Player = function(player_name){
 };
 
 sh.Player.prototype = {
-	usedPositions : [],
 	deployShip:function(ship,position){
-		var isPositionUsed = ld.intersection(sh.Player.usedPositions,position).length;
-		if(!sh.observer.validatePosition(ship,position)||isPositionUsed>0)
+		var isPositionUsed = ld.intersection(this.usedPositions,position).length;
+		if(!sh.observer.validatePosition(ship,position)||isPositionUsed > 0)
 			throw new Error('Can not deploy the ship on this positon');
 		else{
 			this.usedPositions=this.usedPositions.concat(position); 
@@ -45,7 +44,7 @@ sh.isValid = function(pos){
 	return ld.inRange(parseInt(pos.slice(1)),1,11) && ld.inRange(pos[0].charCodeAt(),65,75);
 };
 sh.notDeployedDiagonally = function(position){
-	return function(pos,index){
+	return function(pos){
 		return (position[0][0]==pos[0]) || (parseInt(pos.slice(1))==+position[0].slice(1));
 	};
 }
