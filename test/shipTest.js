@@ -9,13 +9,16 @@ carrier = 5*/
 describe('ship',function(){
 	var ship = new sh.Ship('battleship',4);
 	it('has only two property namely name and holes',function(){
-		chai.assert.deepEqual(Object.keys(ship),['name','holes']);
+		chai.expect(ship).to.have.all.keys('name','holes');
 	});
 	it('name and holes are not editable',function(){
 		ship.name="cruiser";
 		ship.holes=6;
 		chai.assert.equal(ship.name,'battleship');
 		chai.assert.equal(ship.holes,4);
+	});
+	it('at initial position hittedHoles should be zero',function(){
+
 	});
     it('should placed in valid position');
     it('should placed horizontal or vertical position');
@@ -44,12 +47,15 @@ describe('player',function(){
 		chai.assert.ok(deployedShip);
 		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3']);
 	});
+	it('can deploy another ship after deploying a ship',function(){
+		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
+		chai.assert.ok(deployedCruiser && deployedBattleship);
+		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3','J1','J2','J3','J4']);
+	});
 	it('deployShip throw an error for invalid ship positon',function(){
 		var deployedShip = player.deployShip.bind(null,'cruiser',['A1','B2','C3']);
 		chai.expect(deployedShip).to.throw(Error,/^Can not deploy the ship on this positon$/);
-	});
-	it('at initial position hittedHoles should be zero',function(){
-
 	});
 });
 
