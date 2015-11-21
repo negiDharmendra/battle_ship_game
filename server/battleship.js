@@ -57,9 +57,3 @@ sh.observer =  {
 		return	validPositon && alignment && validSize;
 	}
 };
-
-
-
-
-
-
