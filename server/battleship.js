@@ -25,14 +25,17 @@ sh.Player = function(player_name){
 	this.fleet =[ 'battleship', 'carrier', 'cruiser', 'distroyer', 'submarine' ].map(function(name,i){
 		return new sh.Ship(name,holes[i]);
 	});
+	Object.defineProperty(this,'usedPositions',{value:[],enumerable:false,writable:true});
 };
 
 sh.Player.prototype = {
 	deployShip:function(ship,position){
 		if(!sh.observer.validatePosition(ship,position))
 			throw new Error('Can not deploy the ship on this positon');
-		else
+		else{
+			this.usedPositions=this.usedPositions.concat(position); 
 			return true;
+		}
 	}
 };
 
