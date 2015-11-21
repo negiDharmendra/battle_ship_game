@@ -47,6 +47,7 @@ describe('player',function(){
 		chai.assert.ok(deployedShip);
 	});
 	it('should find usedPositions',function(){
+		var deployedShip = player.deployShip('cruiser',['A1','A2','A3']);
 		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3']);
 	});
 	it('can deploy another ship after deploying a ship',function(){
