@@ -31,6 +31,8 @@ sh.Player.prototype = {
 	deployShip:function(ship,position){
 		if(!sh.observer.validatePosition(ship,position))
 			throw new Error('Can not deploy the ship on this positon');
+		else
+			return true;
 	}
 };
 
@@ -38,7 +40,7 @@ sh.isValid = function(pos){
 	return ld.inRange(parseInt(pos.slice(1)),1,11) && ld.inRange(pos[0].charCodeAt(),65,75);
 };
 sh.notDeployedDiagonally = function(position){
-	return function(pos,index){
+	return function(pos){
 		return (position[0][0]==pos[0]) || (parseInt(pos.slice(1))==+position[0].slice(1));
 	};
 }
