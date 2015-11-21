@@ -18,11 +18,8 @@ describe('ship',function(){
 		chai.assert.equal(ship.holes,4);
 	});
 	it('at initial position hittedHoles should be zero',function(){
-
+		chai.expect(ship.hittedHoles).to.equal(0);
 	});
-    it('should placed in valid position');
-    it('should placed horizontal or vertical position');
-    it('cannot change the position of any ship after announcing READY');
 });
 
 describe('player',function(){
