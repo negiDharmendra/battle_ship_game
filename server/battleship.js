@@ -36,7 +36,6 @@ sh.Player.prototype = {
 			this.usedPositions=this.usedPositions.concat(position); 
 			return true;
 		}
-
 	}
 };
 
@@ -44,7 +43,7 @@ sh.isValid = function(pos){
 	return ld.inRange(parseInt(pos.slice(1)),1,11) && ld.inRange(pos[0].charCodeAt(),65,75);
 };
 sh.notDeployedDiagonally = function(position){
-	return function(pos,index){
+	return function(pos){
 		return (position[0][0]==pos[0]) || (parseInt(pos.slice(1))==+position[0].slice(1));
 	};
 }
