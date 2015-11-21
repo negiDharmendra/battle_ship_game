@@ -18,11 +18,8 @@ describe('ship',function(){
 		chai.assert.equal(ship.holes,4);
 	});
 	it('at initial position hittedHoles should be zero',function(){
-
+		chai.expect(ship.hittedHoles).to.equal(0);
 	});
-    it('should placed in valid position');
-    it('should placed horizontal or vertical position');
-    it('cannot change the position of any ship after announcing READY');
 });
 
 describe('player',function(){
@@ -58,6 +55,8 @@ describe('player',function(){
 	it('deployShip throw an error for invalid ship positon',function(){
 		var deployedShip = player.deployShip.bind(player,'cruiser',['A1','B2','C3']);
 		chai.expect(deployedShip).to.throw(Error,/^Can not deploy the ship on this positon$/);
+		var deployedShip = player.deployShip.bind(player,'cruiser',['A1','A3','A4']);
+		chai.expect(deployedShip).to.throw(Error,/^Can not deploy the ship on this positon$/);
 	});
 	it('can not deploy a ship on used position',function(){
 		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
@@ -65,15 +64,25 @@ describe('player',function(){
 		chai.assert.ok(deployedCruiser);
 		chai.expect(deployedBattleship).to.throw(Error,/^Can not deploy the ship on this positon$/);
 	});
+
+	describe('usedPositions',function(){
+	it('should contains the information about all those positions which occupied by all the ship have been deployed till now',function(){
+		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
+		var deployedSubmarine = player.deployShip('submarine',['C2','D2','E2']);
+		var deployedDestroyer = player.deployShip('distroyer',['G2','G3']);
+		var deployedcarrier = player.deployShip('carrier',['F2','F3','F4','F5','F6']);
+		var usedPositions=['A1','A2','A3','J1','J2','J3','J4','C2','D2','E2','G2','G3','F2','F3','F4','F5','F6'];
+		chai.expect(player.usedPositions).to.be.deep.equal(usedPositions);
+	});
+});
 });
 
 describe('shoot',function(){
 	it('should have events name as HIT MISSED YOUR TURN');
 });
 
-describe('usedPositions',function(){
-	it('should contains the information about all those positions which occupied by all the ship have been deployed till now');
-});
+
 
 describe('distroy',function(){
 	describe('holes',function(){
