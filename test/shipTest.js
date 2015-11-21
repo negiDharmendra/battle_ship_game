@@ -29,7 +29,6 @@ describe('player',function(){
 	var player;
 	beforeEach(function(){
 		player = new sh.Player('arun');	
-
 	});
 	it('has \'name, fleet\' properties.',function(){
 		chai.expect(player).to.have.all.keys('name','fleet');
@@ -57,8 +56,14 @@ describe('player',function(){
 		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3','J1','J2','J3','J4']);
 	});
 	it('deployShip throw an error for invalid ship positon',function(){
-		var deployedShip = player.deployShip.bind(null,'cruiser',['A1','B2','C3']);
+		var deployedShip = player.deployShip.bind(player,'cruiser',['A1','B2','C3']);
 		chai.expect(deployedShip).to.throw(Error,/^Can not deploy the ship on this positon$/);
+	});
+	it('can not deploy a ship on used position',function(){
+		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+		var deployedBattleship = player.deployShip.bind(player,'battleship',['A1','B1','C1','D1']);
+		chai.assert.ok(deployedCruiser);
+		chai.expect(deployedBattleship).to.throw(Error,/^Can not deploy the ship on this positon$/);
 	});
 });
 
