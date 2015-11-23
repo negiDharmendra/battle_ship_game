@@ -1,5 +1,6 @@
 var sh = require('../server/battleship.js').sh;
 var chai = require('chai');
+var should=chai.should();
 
 /* battleship = 4
 cruiser = 3
@@ -31,12 +32,7 @@ describe('player',function(){
 		chai.expect(player).to.have.all.keys('name','fleet');
 	});
 	it('has \'fleet\' of five ship.',function(){
-		chai.expect(player.fleet.length).to.be.equal(5);
-	});
-	it('has \'fleet\' of following ships',function(){
-		var ships = player.fleet.map(function(ship){return ship.name;}).sort();
-		var expected = [ 'battleship', 'carrier', 'cruiser', 'distroyer', 'submarine' ];
-		chai.expect(ships).to.be.deep.equal(expected);
+		chai.expect(player.fleet).to.have.all.keys('battleship','carrier','cruiser','distroyer','submarine');
 	});
 	it('has behaviour of deploying a ship',function(){
 		var deployedShip = player.deployShip('cruiser',['A1','A2','A3']);
@@ -48,30 +44,45 @@ describe('player',function(){
 	});
 	it('can deploy another ship after deploying a ship',function(){
 		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3']);
 		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
-		chai.assert.ok(deployedCruiser && deployedBattleship);
 		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3','J1','J2','J3','J4']);
 	});
-	it('deployShip throw an error for invalid ship positon',function(){
-		var deployedCruiser = function(){ player.deployShip('cruiser',['A1','B2','C3'])};
-		chai.expect(deployedCruiser).to.throw(Error,/^Can not deploy the ship on this positon$/);
-		var deployedCruiser = function(){ player.deployShip('cruiser',['A1','A3','A4'])};
-		chai.expect(deployedCruiser).to.throw(Error,/^Can not deploy the ship on this positon$/);
-		var deployedCruiser = function(){ player.deployShip('cruiser',['A1','A1','A1'])};
-		chai.expect(deployedCruiser).to.throw(Error,/^Can not deploy the ship on this positon$/);
+	describe('deployShip throw an error for invalid ship positons',function(){
+		it('for deploying Diagonally',function(){
+			var deployedCruiser = function(){ player.deployShip('cruiser',['A1','B2','C3'])};
+			chai.expect(deployedCruiser).to.throw(Error,/^Can not Deploy Ship Diagonally$/);
+		});
+		it('for Invalid Postion',function(){
+			var deployedBattleship = function(){ player.deployShip('battleship',['A2','A4','A5','A6'])};
+			chai.expect(deployedBattleship).to.throw(Error,/^Position Not Valid.$/);
+		});
+		it('for all same postion',function(){
+			var deployedCarrier = function(){ player.deployShip('carrier',['C1','C1','C1','C1','C1'])};
+			chai.expect(deployedCarrier).to.throw(Error,/^Position Not Valid.$/);
+		});
+		it('for size of ship',function(){
+			var deployedDistroyer = function(){ player.deployShip('carrier',['A1','A2','A3'])};
+			chai.expect(deployedDistroyer).to.throw(Error,/^Ship size is not Valid$/);
+		})
+		it('can not deploy a ship on used position',function(){
+			var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+			var deployedBattleship = function(){player.deployShip('battleship',['A2','A3','A4','A5'])};
+			chai.assert.ok(deployedCruiser);
+			chai.expect(deployedBattleship).to.throw(Error,/^Position is already used$/);
+		});
+		it('has a property \'onPositions\'',function(){
+			var deployedShip = player.deployShip('battleship',['A1','A2','A3','A4']);
+			player.fleet['battleship'].should.have.property('onPositions');
+		});
 	});
-	it('can not deploy a ship on used position',function(){
-		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
-		var deployedBattleship = function(){player.deployShip('battleship',['A1','B1','C1','D1'])};
-		chai.assert.ok(deployedCruiser);
-		chai.expect(deployedBattleship).to.throw(Error,/^Can not deploy the ship on this positon$/);
-	});
-	it('should contains the information about all those positions which occupied by all the ship have been deployed till now',function(){
+	it('should contains the information about all ship have been deployed till now',function(){	
 		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
 		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
 		var deployedSubmarine = player.deployShip('submarine',['C2','D2','E2']);
 		var usedPositions=['A1','A2','A3','J1','J2','J3','J4','C2','D2','E2'];
 		chai.expect(player.usedPositions).to.be.deep.equal(usedPositions);
+		console.log(player);
 	});
 });
 
@@ -113,28 +124,56 @@ describe('toCheck game over',function(){
 describe('Observer',function(){
 	var observer = sh.observer;
 	it('informs player whether the position of ship is valid',function(){
-		var isValid = observer.validatePosition('carrier',['A1','A2','A3','A4','A5']);
+		var isValid = observer.validatePosition(['A1','A2','A3','A4','A5']);
 		chai.expect(isValid).to.true;
 	});
 	it('says position is not valid if any of the position is not found in the available positions',function(){
-		var isValid = observer.validatePosition('carrier',['A1','A2','A3','A4','Z5']);
+		var isValid = observer.validatePosition(['A1','A2','A3','A4','Z5']);
 		chai.expect(isValid).to.false;
 	});
 	it('says position is not valid if player diploy his ship diagonally',function(){
-		var isValid = observer.validatePosition('submarine',['A1','B2','C3']);
+		var isValid = observer.validateAlignment(['A1','B2','C3']);
 		chai.expect(isValid).to.false;
 	});
 	it('says position is not valid even ship fix in horizontal but number is greater than 10',function(){
-		var isValid = observer.validatePosition('carrier',['A11','A12','A13','A14','A15']);
+		var isValid = observer.validatePosition(['A11','A12','A13','A14','A15']);
 		chai.expect(isValid).to.false;
 	});
 	it('says position is not valid even ship fix in vertical but number is greater than 10',function(){
-		var isValid = observer.validatePosition('carrier',['B11','B12','B13','B14','B15']);
+		var isValid = observer.validatePosition(['B11','B12','B13','B14','B15']);
 		chai.expect(isValid).to.false;
 	});
 	it('says position is not valid if player provides number of position less than ship size',function(){
-		var isValid=observer.validatePosition('battleship',['A1','A2','A3']);
+		var isValid=observer.validateSize(['A1','A2','A3'],'battleship');
 		chai.expect(isValid).to.false;
 	});
     it('starts only when both players says READY');
+    it('checks if player had positioned 5 ships',function () {
+    	var player = new sh.Player('arun');
+		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+		var deployedCarrier = player.deployShip('carrier',['C6','C7','C8','C9','C10']);
+		var deployedSubmarine = player.deployShip('submarine',['H5','I5','J5']);
+		var deployedBattleship = player.deployShip('battleship',['E3','E4','E5','E6']);
+		var deployedDistroyer = player.deployShip('distroyer',['G7','H7']);
+    	player.usedPositions.should.have.length(17);
+    });
+});
+describe('READY event',function(){
+	var player;
+	beforeEach(function(){
+		player = new sh.Player('arun');	
+	});
+	it('can be invoked by player when he had deployed all ships',function(){
+		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
+		var deployedSubmarine = player.deployShip('submarine',['C2','D2','E2']);
+		var deployedDistroyer= player.deployShip('distroyer',['E5','E6']);
+		var deployedCarrier = player.deployShip('carrier',['I1','I2','I3','I4','I5']);
+		chai.expect(function(){player.ready()}).to.not.throw('Announced READY');
+	});
+	it('can not be invoked by player when he had not deployed all ships',function(){
+		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
+		chai.expect(function(){player.ready()}).to.throw(Error,/^Can not announce READY$/);
+	});
 });
