@@ -23,13 +23,17 @@ sh.Ship.prototype = {
 };
 
 sh.Player = function(player_name){
+	var self=this;
 	this.name = player_name;
 	var holes = [4,5,3,2,3];
-	this.fleet =[ 'battleship', 'carrier', 'cruiser', 'distroyer', 'submarine' ].map(function(name,i){
-		return new sh.Ship(name,holes[i]);
+	var ships=['battleship','carrier','cruiser','distroyer','submarine'];
+	this.fleet={};
+	ships.forEach(function(ship,i){
+		self.fleet[ship]= new sh.Ship(ship,holes[i]);
 	});
 	Object.defineProperty(this,'usedPositions',{value:[],enumerable:false,writable:true});
 };
+
 
 sh.Player.prototype = {
 	deployShip:function(ship,position){

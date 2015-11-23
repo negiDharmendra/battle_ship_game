@@ -32,12 +32,7 @@ describe('player',function(){
 		chai.expect(player).to.have.all.keys('name','fleet');
 	});
 	it('has \'fleet\' of five ship.',function(){
-		chai.expect(player.fleet.length).to.be.equal(5);
-	});
-	it('has \'fleet\' of following ships',function(){
-		var ships = player.fleet.map(function(ship){return ship.name;}).sort();
-		var expected = [ 'battleship', 'carrier', 'cruiser', 'distroyer', 'submarine' ];
-		chai.expect(ships).to.be.deep.equal(expected);
+		chai.expect(player.fleet).to.have.all.keys('battleship','carrier','cruiser','distroyer','submarine');
 	});
 	it('has behaviour of deploying a ship',function(){
 		var deployedShip = player.deployShip('cruiser',['A1','A2','A3']);
@@ -77,12 +72,13 @@ describe('player',function(){
 			chai.expect(deployedBattleship).to.throw(Error,/^Position is already used$/);
 		});
 	});
-	it('should contains the information about all ship have been deployed till now',function(){
+	it('should contains the information about all ship have been deployed till now',function(){	
 		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
 		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
 		var deployedSubmarine = player.deployShip('submarine',['C2','D2','E2']);
 		var usedPositions=['A1','A2','A3','J1','J2','J3','J4','C2','D2','E2'];
 		chai.expect(player.usedPositions).to.be.deep.equal(usedPositions);
+		console.log(player);
 	});
 });
 
