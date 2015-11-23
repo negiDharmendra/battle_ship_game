@@ -37,7 +37,6 @@ sh.Player.prototype = {
 			this.usedPositions=this.usedPositions.concat(position); 
 			return true;
 		}
-		
 	}
 };
 
