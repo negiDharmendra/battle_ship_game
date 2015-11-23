@@ -1,5 +1,6 @@
 var sh = require('../server/battleship.js').sh;
 var chai = require('chai');
+var should=chai.should();
 
 /* battleship = 4
 cruiser = 3
@@ -48,8 +49,8 @@ describe('player',function(){
 	});
 	it('can deploy another ship after deploying a ship',function(){
 		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3']);
 		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
-		chai.assert.ok(deployedCruiser && deployedBattleship);
 		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3','J1','J2','J3','J4']);
 	});
 	describe('deployShip throw an error for invalid ship positons',function(){
@@ -147,6 +148,15 @@ describe('Observer',function(){
 		chai.expect(isValid).to.false;
 	});
     it('starts only when both players says READY');
+    it('checks if player had positioned 5 ships',function () {
+    	var player = new sh.Player('arun');
+		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+		var deployedCarrier = player.deployShip('carrier',['C6','C7','C8','C9','C10']);
+		var deployedSubmarine = player.deployShip('submarine',['H5','I5','J5']);
+		var deployedBattleship = player.deployShip('battleship',['E3','E4','E5','E6']);
+		var deployedDistroyer = player.deployShip('distroyer',['G7','H7']);
+    	player.usedPositions.should.have.length(17);
+    });
 });
 describe('READY event',function(){
 	var player;

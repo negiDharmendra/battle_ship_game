@@ -2,9 +2,9 @@
 body{
 	background-color: gray;
 }
-h1{
+#header{
 	font-size: 40px;
-	margin: 1% 0 0 40%;
+	text-align: center;
 }
 h2{
 	font-size: 20px;
@@ -41,6 +41,7 @@ table{
 #game_screen>#target_grid>table td{
 	width: 40px;
 	height: 40px;
+	background-color: steelblue;
 }
 #game_screen table td> button{
 	width: 40px;
@@ -48,7 +49,7 @@ table{
 	background-color: lightgray;
 }
 #game_screen>#target_grid>table td>button:hover{
-	background-color: gray;
+	background-color: green;
 }
 #harbor{
 	width: 25%;

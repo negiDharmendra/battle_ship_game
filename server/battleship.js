@@ -64,7 +64,6 @@ sh.notDeployedDiagonally = function(position){
 	};
 };
 
-
 var is_equal_to_range=function(pos){
 	pos=pos.sort(function(a,b){return a-b;});
 	var range=ld.range(pos[0],ld.last(pos)+1,1);
@@ -83,7 +82,6 @@ sh.is_in_sequence=function(position){
 		return is_equal_to_range(numbers);
 	return false;
 };
-
 
 sh.observer =  {
 	validatePosition : function(position){
