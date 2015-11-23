@@ -47,7 +47,8 @@ sh.Player.prototype = {
 		else if(!sh.observer.validateSize(position,ship))
 			throw new Error('Ship size is not Valid');
 		else{
-			this.usedPositions=this.usedPositions.concat(position); 
+			this.usedPositions=this.usedPositions.concat(position);
+			this.fleet[ship].onPositions=position;
 			return true;
 		}
 	},

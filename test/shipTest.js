@@ -71,6 +71,10 @@ describe('player',function(){
 			chai.assert.ok(deployedCruiser);
 			chai.expect(deployedBattleship).to.throw(Error,/^Position is already used$/);
 		});
+		it('has a property \'onPositions\'',function(){
+			var deployedShip = player.deployShip('battleship',['A1','A2','A3','A4']);
+			player.fleet['battleship'].should.have.property('onPositions');
+		});
 	});
 	it('should contains the information about all ship have been deployed till now',function(){	
 		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
