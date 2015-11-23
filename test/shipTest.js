@@ -48,16 +48,16 @@ describe('player',function(){
 	});
 	it('can deploy another ship after deploying a ship',function(){
 		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3']);
 		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
-		chai.assert.ok(deployedCruiser && deployedBattleship);
 		chai.assert.deepEqual(player.usedPositions,['A1','A2','A3','J1','J2','J3','J4']);
 	});
 	it('deployShip throw an error for invalid ship positon',function(){
 		var deployedCruiser = function(){ player.deployShip('cruiser',['A1','B2','C3'])};
 		chai.expect(deployedCruiser).to.throw(Error,/^Can not deploy the ship on this positon$/);
-		var deployedCruiser = function(){ player.deployShip('cruiser',['A1','A3','A4'])};
+		var deployedCruiser = function(){ player.deployShip('battleship',['A1','A3','A4'])};
 		chai.expect(deployedCruiser).to.throw(Error,/^Can not deploy the ship on this positon$/);
-		var deployedCruiser = function(){ player.deployShip('cruiser',['A1','A1','A1'])};
+		var deployedCruiser = function(){ player.deployShip('carrier',['A1','A1','A1'])};
 		chai.expect(deployedCruiser).to.throw(Error,/^Can not deploy the ship on this positon$/);
 	});
 	it('can not deploy a ship on used position',function(){

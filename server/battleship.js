@@ -30,8 +30,8 @@ sh.Player = function(player_name){
 
 sh.Player.prototype = {
 	deployShip:function(ship,position){
-		var isPositionUsed = ld.intersection(this.usedPositions,position).length;
-		if(!sh.observer.validatePosition(ship,position)||isPositionUsed > 0)
+		var isPositionUsed = ld.intersection(this.usedPositions,position);
+		if(!sh.observer.validatePosition(ship,position) || isPositionUsed.length > 0)
 			throw new Error('Can not deploy the ship on this positon');
 		else{
 			this.usedPositions=this.usedPositions.concat(position); 
@@ -58,3 +58,4 @@ sh.observer =  {
 		return	validPositon && alignment && validSize;
 	}
 };
+
