@@ -78,7 +78,6 @@ describe('player',function(){
 		var deployedSubmarine = player.deployShip('submarine',['C2','D2','E2']);
 		var usedPositions=['A1','A2','A3','J1','J2','J3','J4','C2','D2','E2'];
 		chai.expect(player.usedPositions).to.be.deep.equal(usedPositions);
-		console.log(player);
 	});
 });
 
@@ -143,7 +142,6 @@ describe('Observer',function(){
 		var isValid=observer.validateSize(['A1','A2','A3'],'battleship');
 		chai.expect(isValid).to.false;
 	});
-    it('starts only when both players says READY');
     it('checks if player had positioned 5 ships',function () {
     	var player = new sh.Player('arun');
 		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
@@ -172,4 +170,14 @@ describe('READY event',function(){
 		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
 		chai.expect(function(){player.ready()}).to.throw(Error,/^Can not announce READY$/);
 	});
+});
+describe('Assign Id when player is Created',function(){
+	 it('assign a unique id to every player',function(){
+    	var player1 = new sh.Player('camper');
+		var player2 = new sh.Player('major');
+		player1.playerId=sh.getUniqueId();
+		player2.playerId=sh.getUniqueId();
+		chai.expect(player1.playerId).to.be.equal(1);
+		chai.expect(player2.playerId).to.be.equal(2);
+    });
 });

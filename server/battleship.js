@@ -105,4 +105,16 @@ sh.observer =  {
 	}
 
 };
+sh.getUniqueId=(function(){
+	var id = 1;
+	return function(){return id++;};
+})();
+
+emitter.on('READY',function(player){
+	var playerId=[];
+	playerId.push(player.playerId);
+	if (ld.uniq(playerId).length==2){
+		return ['Start','the','game',playerId[0]].join(' ');
+	};
+});
 
