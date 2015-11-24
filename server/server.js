@@ -1,5 +1,6 @@
 var http=require('http');
 var fs=require('fs');
+var queryString = require('querystring');
 
 var page_not_found=function(req,res){
 	res.end('Page Not Found');
@@ -24,6 +25,8 @@ var handle_get=function(req,res){
  	serveStaticFile(req,res);
 };
 var handle_post=function(req,res){
+	var chunk=''
+	req.on('data',function(data){chunk+=data;chunk = queryString.parse(chunk);console.log('data===>',chunk)})
 	res.end();
 };
 var method_not_allowed=function(req,res){
@@ -31,6 +34,8 @@ var method_not_allowed=function(req,res){
 	res.end('Method Not Allowed');
 };
 var requestHandler = function(req, res){
+	console.log('method==>',req.method,'\nURl==>',req.url);
+	console.log('=====================================================')
 	if(req.method == 'GET')
 		handle_get(req,res);
 	else if(req.method == 'POST')

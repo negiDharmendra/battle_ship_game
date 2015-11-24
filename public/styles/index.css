@@ -5,27 +5,27 @@ body{
 #header{
 	font-size: 40px;
 	text-align: center;
+	height: auto;
 }
 h2{
 	font-size: 20px;
 	text-align: center;
 }
+
 #game_screen{
 	width: 99%;
 	height: 650px;
-	margin:auto;
+	margin:0 0 0 0;
 	border-width:5px;	
 	border-style:dotted solid;
 }
 #ocean_grid {
 	float: left;
-	margin: 14.5% 5% 0 2%;
-	position: relative;
+	margin: 200px 50px 0 30px;
 }
 #target_grid{
 	float: left;
-	margin: 14.5% 5% 0 0;
-	position: relative;
+	margin: 200px 50px 0 0;
 }
 table{
 	border:1;
@@ -57,5 +57,5 @@ table{
 	float: right;
 	font-size: 24px;
 	display: inline-block;
-	background-color: lightgray;
+	background:rgba(100,100,100, 0.5);
 }
