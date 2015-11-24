@@ -28,9 +28,9 @@ function reply_to_deployment(evnt){
 		xmlRqst.onreadystatechange = function(){
 			if(xmlRqst.readyState == 4 && xmlRqst.status ==200){
 				var reply = JSON.parse(xmlRqst.responseText);
-				if(reply.err) alert(reply.err)
+				if(reply == false ) alert('can\'t deploy ship on this position');
 				else {
-					reply.position.forEach(function(ele){
+					position.trim().split(' ').forEach(function(ele){
 						document.querySelector('#ocean_grid>table>tbody>tr>#'+ele).style.background='green';
 					});
 					document.querySelctor('#harbor>#position>#'+evnt.id.split('_')[1]).value = '';

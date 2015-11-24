@@ -1,13 +1,13 @@
 var http=require('http');
 
 var routes = require('./routes.js');
-var queryString = require('querystring');
+
 var eventEmitter = require('events').EventEmitter;
 var emitter = new eventEmitter();
 
 
-var get_handler = routes.get_handler;
-var post_handler = routes.post_handler;
+var get_handlers = routes.get_handlers;
+var post_handlers = routes.post_handlers;
 
 var matchHandlers = function(url){
 	return function(handler){
@@ -30,19 +30,22 @@ var getUrl=function(req){
 var handle_get=function(req,res){
 	req.url=getUrl(req);
 	console.log('Requested Url:----',req.url);
-	var handlers = get_handler.filter(matchHandlers(req.url));
+	var handlers = get_handlers.filter(matchHandlers(req.url));
 	var next = function(){
 		emitter.emit('next',handlers,req,res,next); 
 	};
 	next();
 };
 var handle_post=function(req,res){
-	var chunk=''
-	req.on('data',function(data){chunk+=data;chunk = queryString.parse(chunk);console.log('data+++>',chunk)})
-	res.end();
+	req.url=getUrl(req);
+	console.log('Requested Url:----',req.url);
+	var handlers = post_handlers.filter(matchHandlers(req.url));
+	var next = function(){
+		emitter.emit('next',handlers,req,res,next); 
+	};
+	next();
 };
 var requestHandler = function(req, res){
-	console.log('method==>',req.method,'\nURl==>',req.url);
 	console.log('=====================================================')
 	if(req.method == 'GET')
 		handle_get(req,res);
@@ -52,8 +55,7 @@ var requestHandler = function(req, res){
 		method_not_allowed(req,res);
 };
 var server = http.createServer(requestHandler);
-var port  = +process.argv[2];
-server.listen(port,function(){console.log("listening at port===>"+port)});
+server.listen(3000,function(){console.log("listening at port===>"+3000)});
 
 var ser={};
 exports.ser={getUrl:getUrl};
