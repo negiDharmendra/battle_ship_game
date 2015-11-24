@@ -2,8 +2,20 @@
 function reply_to_shoot(evnt){
 	evnt = evnt || window.event;
 	evnt = evnt.target || evnt.srcElement;
-	if(evnt.nodeName === 'BUTTON')
-		document.querySelector('#targetGrid>tbody>tr>td>#'+evnt.id).remove();
+	if(evnt.nodeName === 'BUTTON'){
+		var xmlRqst = new XMLHttpRequest();
+		xmlRqst.onreadystatechange = function(){
+			if(xmlRqst.readyState == 4 && xmlRqst.status ==200){
+				var reply = JSON.parse(xmlRqst.responseText);
+				reply.status
+				document.querySelector('#targetGrid>tbody>tr>td>#'+evnt.id).remove();
+				var color = (reply.status=='hit')&&'red'||'white';
+				document.querySelector('#targetGrid>tbody>tr>td>#'+evnt.id).style.background= color;
+			};
+		};
+		xmlRqst.open('POST','shoot',true);
+		xmlRqst.send('position='+evnt.id)
+	};
 };
 
 function reply_to_deployment(evnt){
@@ -27,6 +39,6 @@ function reply_to_deployment(evnt){
 			};
 		};
 		xmlRqst.open('POST','deployShip',true);
-		xmlRqst.send('name='+shipName+'&position='+position)
+		xmlRqst.send('name='+shipName+'&positions='+position)
 	};
 };
