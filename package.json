@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive",
+    "min": "mocha -R min --recursive",
+    "watch": "mocha -R min --watch --recursive"
   },
   "repository": {
     "type": "git",
