@@ -5,7 +5,7 @@ var should=chai.should();
 /* battleship = 4
 cruiser = 3
 submarine = 3
-distroyer = 2
+destroyer = 2
 carrier = 5*/
 describe('ship',function(){
 	var ship = new sh.Ship('battleship',4);
@@ -85,40 +85,61 @@ describe('player',function(){
 	});
 });
 
+var deployShip = function(player){
+	var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+	var deployedCarrier = player.deployShip('carrier',['C6','C7','C8','C9','C10']);
+	var deployedSubmarine = player.deployShip('submarine',['H5','I5','J5']);
+	var deployedBattleship = player.deployShip('battleship',['E3','E4','E5','E6']);
+	var deployedDestroyer = player.deployShip('destroyer',['G7','H7']);
+};
 describe('shoot',function(){
-	it('should have events name as HIT MISSED YOUR TURN');
-});
-
-describe('distroy',function(){
-	describe('holes',function(){
-		it('should have total number of holes is zero after destroy');
+	var player,opponentPlayer;
+	var shoot=sh.shoot;
+	beforeEach(function () {
+		player = new sh.Player('Manu');
+		deployShip(player);
+		opponentPlayer = new sh.Player('Shanu');
+		deployShip(opponentPlayer);
+	});
+	it('player can not shoot if it is not his turn',function(){
+		player.playerId = 1;
+		sh.observer.turn = 2;
+		chai.expect(function(){
+			shoot.call(player,opponentPlayer,'A1');
+		}).to.throw(Error,/^Opponent turn$/);
+	});
+	it('player can shoot only if it is his turn',function(){
+		player.playerId = 1;
+		sh.observer.turn = 1;
+		chai.expect(function(){
+			shoot.call(player,opponentPlayer,'A1');
+		}).to.not.throw(Error);
+	});
+	it('player can not shoot on invalid position',function(){
+		player.playerId = 1;
+		opponentPlayer.playerId = 2;
+		sh.observer.turn = 1;
+		chai.expect(function(){
+			shoot.call(player,opponentPlayer,'A12');
+		}).to.throw(Error,/^Invalid position$/);
+	});
+	it('after every shoot hit or miss event will be invoked and turn will be changed',function(){
+		player.playerId = 1;
+		opponentPlayer.playerId = 2;
+		sh.observer.turn = 1;
+		shoot.call(player,opponentPlayer,'A1');
+		chai.expect(sh.observer.turn).to.be.equal(2);
+	});
+	it('hit makes the changes in opponentPlayer usedPositions and fleet',function(){
+		player.playerId = 1;
+		opponentPlayer.playerId = 2;
+		sh.observer.turn = 1;
+		shoot.call(player,opponentPlayer,'A1');
+    	opponentPlayer.usedPositions.should.have.length(16);
+    	chai.expect(opponentPlayer.fleet.cruiser.hittedHoles).to.be.equal(1);
 	});
 });
 
-describe('sunk',function(){
-	it('to check ship is sunk or not');
-});
-describe('hitted holes',function(){
-	it('after ship  hitted holes should be increase by one');
-});
-
-describe('fleet',function(){
-	it('player should not have repeated ship');
-	it('when player placed all ship they emit ready event for the start game');
-});
-
-describe('who play first',function(){
-	it('when ready event emit first 2 time who say ready first they will start');
-	it('when shoot event is emitted hit event should called');
-});
-describe('toCheck ship is hitted or not',function(){
-	it('check hitted co-ordinate and ship co-ordinate');
-	it('if shoot is miss just give a message');
-});
-
-describe('toCheck game over',function(){
-	it('if all ship holes is zero called game over');
-});
 
 describe('Observer',function(){
 	var observer = sh.observer;
@@ -160,6 +181,7 @@ describe('READY event',function(){
 	var player;
 	beforeEach(function(){
 		player = new sh.Player('arun');	
+		player.playerId=1;
 	});
 	it('can be invoked by player when he had deployed all ships',function(){
 		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
@@ -185,3 +207,37 @@ describe('Assign Id when player is Created',function(){
 		chai.expect(player2.playerId).to.be.equal(2);
     });
 });
+
+describe('who play first',function(){
+	var player,opponentPlayer;
+	beforeEach(function () {
+		player = new sh.Player('Manu');
+		deployShip(player);
+		opponentPlayer = new sh.Player('Shanu');
+		deployShip(opponentPlayer);
+	});
+	it('when ready event emit first 2 time who say ready first they will start',function(){
+		player.playerId = 1;
+		opponentPlayer.playerId = 2;
+		player.ready();
+		opponentPlayer.ready();
+		chai.expect(sh.observer.turn).to.be.equal(1);
+	});
+	it('when shoot event is emitted hit event should called');
+});
+
+describe('sunk',function(){
+	it('to check ship is sunk or not');
+});
+describe('hitted holes',function(){
+	it('after ship  hitted holes should be increase by one');
+});
+
+describe('fleet',function(){
+	it('player should not have repeated ship');
+	it('when player placed all ship they emit ready event for the start game');
+});
+describe('toCheck game over',function(){
+	it('if all ship holes is zero called game over');
+});
+
