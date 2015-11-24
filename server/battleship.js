@@ -103,8 +103,8 @@ sh.observer =  {
 		var shipsSize = {battleship:4, carrier:5, cruiser:3, distroyer:2, submarine:3};
 		var validSize =(position.length == shipsSize[shipName]);
 		return validSize;
-	}
-
+	},
+	allplayers:[],
 };
 sh.getUniqueId=(function(){
 	var id = 1;
@@ -112,10 +112,44 @@ sh.getUniqueId=(function(){
 })();
 
 emitter.on('READY',function(player){
-	var playerId=[];
-	playerId.push(player.playerId);
-	if (ld.uniq(playerId).length==2){
-		return ['Start','the','game',playerId[0]].join(' ');
+	var allplayers=sh.observer.allplayers;
+	allplayers.push(player.playerId);
+	if (ld.uniq(allplayers).length==2){
+		sh.observer.turn = allplayers[0];
+		return ['Start','the','game',allplayers[0]].join(' ');
 	};
+});
+
+sh.shoot = function(opponentPlayer,position){
+	if(sh.observer.turn != this.playerId)
+		throw new Error('Opponent turn');
+	if(!sh.observer.validatePosition(position.split(' ')))
+		throw new Error('Invalid position');	
+	var index = opponentPlayer.usedPositions.indexOf(position);
+		if(index!= -1)
+			emitter.emit('HIT',opponentPlayer,position);
+		else
+			emitter.emit('MISS',opponentPlayer);
+};
+
+var destroy = function(opponentPlayer,position){
+	var ships=['battleship','carrier','cruiser','distroyer','submarine'];
+	var index = opponentPlayer.usedPositions.indexOf(position);
+	delete opponentPlayer.usedPositions[index];
+	opponentPlayer.usedPositions = ld.compact(opponentPlayer.usedPositions);
+	for(var ship in opponentPlayer.fleet){
+		if(opponentPlayer.fleet[ship].onPositions.indexOf(position) >= 0)
+			opponentPlayer.fleet[ship].hittedHoles++;
+	};
+};
+
+emitter.on('HIT',function(opponentPlayer,position){
+	console.log('HIT');
+	destroy(opponentPlayer,position);
+	//Further Implementation Check Sunk and if sunk than Check Game Over.
+	sh.observer.turn = opponentPlayer.playerId;
+});
+emitter.on('MISS',function(opponentPlayer){
+	sh.observer.turn = opponentPlayer.playerId;
 });
 
