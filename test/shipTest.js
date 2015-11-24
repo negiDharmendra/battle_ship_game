@@ -221,7 +221,6 @@ describe('who play first',function(){
 		opponentPlayer.playerId = 2;
 		player.ready();
 		opponentPlayer.ready();
-		console.log(sh.observer.turn)
 		chai.expect(sh.observer.turn).to.be.equal(1);
 	});
 	it('when shoot event is emitted hit event should called');

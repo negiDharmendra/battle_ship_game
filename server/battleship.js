@@ -144,7 +144,6 @@ var destroy = function(opponentPlayer,position){
 };
 
 emitter.on('HIT',function(opponentPlayer,position){
-	console.log('HIT');
 	destroy(opponentPlayer,position);
 	//Further Implementation Check Sunk and if sunk than Check Game Over.
 	sh.observer.turn = opponentPlayer.playerId;
