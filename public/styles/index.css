@@ -27,9 +27,6 @@ h2{
 	float: left;
 	margin: 200px 50px 0 0;
 }
-table{
-	border:1;
-}
 #game_screen>#ocean_grid>table td{
 	width: 40px;
 	height: 40px;

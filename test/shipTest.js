@@ -1,6 +1,7 @@
 var sh = require('../server/battleship.js').sh;
 var chai = require('chai');
 var should=chai.should();
+var ld = require('lodash');
 
 /* battleship = 4
 cruiser = 3
@@ -176,6 +177,33 @@ describe('Observer',function(){
 		var deployedDistroyer = player.deployShip('distroyer',['G7','H7']);
     	player.usedPositions.should.have.length(17);
     });
+    describe('sunk',function(){
+  	var player,opponentPlayer;
+		var shoot=sh.shoot;
+		beforeEach(function () {
+			player = new sh.Player('Manu');
+			deployShip(player);
+			opponentPlayer = new sh.Player('Shanu');
+			deployShip(opponentPlayer);
+			player.playerId=1;
+			opponentPlayer.playerId=2;
+			observer.turn=1;
+			shoot.call(player,opponentPlayer,'G7');
+			observer.turn=2;
+			shoot.call(opponentPlayer,player,'A2');
+			observer.turn=1;
+			shoot.call(player,opponentPlayer,'H7');
+			observer.turn=2;
+			shoot.call(opponentPlayer,player,'C1');
+			observer.turn=1;
+			shoot.call(player,opponentPlayer,'C2');
+		});
+		it('checks whether ship is sunk or not',function(){
+    		chai.expect(opponentPlayer.fleet.distroyer.isSunk()).to.be.true;
+    		chai.expect(opponentPlayer.fleet.carrier.isSunk()).to.be.false;
+    	});
+	});
+
 });
 describe('READY event',function(){
 	var player;
@@ -226,18 +254,8 @@ describe('who play first',function(){
 	it('when shoot event is emitted hit event should called');
 });
 
-describe('sunk',function(){
-	it('to check ship is sunk or not');
-});
-describe('hitted holes',function(){
-	it('after ship  hitted holes should be increase by one');
-});
-
 describe('fleet',function(){
 	it('player should not have repeated ship');
 	it('when player placed all ship they emit ready event for the start game');
-});
-describe('toCheck game over',function(){
-	it('if all ship holes is zero called game over');
 });
 

@@ -26,7 +26,7 @@ var handle_get=function(req,res){
 };
 var handle_post=function(req,res){
 	var chunk=''
-	req.on('data',function(data){chunk+=data;chunk = queryString.parse(chunk);console.log('data===>',chunk)})
+	req.on('data',function(data){chunk+=data;chunk = queryString.parse(chunk);console.log('data++++++++++++>',chunk)})
 	res.end();
 };
 var method_not_allowed=function(req,res){

@@ -1,4 +1,3 @@
-
 function reply_to_shoot(evnt){
 	evnt = evnt || window.event;
 	evnt = evnt.target || evnt.srcElement;

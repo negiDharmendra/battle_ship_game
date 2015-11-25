@@ -133,22 +133,28 @@ sh.shoot = function(opponentPlayer,position){
 };
 
 var destroy = function(opponentPlayer,position){
+	var hittedShip;
 	var ships=['battleship','carrier','cruiser','distroyer','submarine'];
 	var index = opponentPlayer.usedPositions.indexOf(position);
 	delete opponentPlayer.usedPositions[index];
 	opponentPlayer.usedPositions = ld.compact(opponentPlayer.usedPositions);
 	for(var ship in opponentPlayer.fleet){
-		if(opponentPlayer.fleet[ship].onPositions.indexOf(position) >= 0)
+		if(opponentPlayer.fleet[ship].onPositions.indexOf(position) >= 0){
 			opponentPlayer.fleet[ship].hittedHoles++;
+			hittedShip=ship;
+		};
 	};
+	return hittedShip;
 };
 
 emitter.on('HIT',function(opponentPlayer,position){
-	destroy(opponentPlayer,position);
-	//Further Implementation Check Sunk and if sunk than Check Game Over.
+	var hittedShip =destroy(opponentPlayer,position);
+	if(opponentPlayer.fleet[hittedShip].isSunk() && (opponentPlayer.usedPositions.length==0)){
+			console.log('Game Over');
+			//process.exit(0);
+	}
 	sh.observer.turn = opponentPlayer.playerId;
 });
 emitter.on('MISS',function(opponentPlayer){
 	sh.observer.turn = opponentPlayer.playerId;
 });
-
