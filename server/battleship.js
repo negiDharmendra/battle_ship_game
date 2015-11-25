@@ -26,7 +26,7 @@ sh.Player = function(player_name){
 	var self=this;
 	this.name = player_name;
 	var holes = [4,5,3,2,3];
-	var ships=['battleship','carrier','cruiser','distroyer','submarine'];
+	var ships=['battleship','carrier','cruiser','destroyer','submarine'];
 	this.fleet={};
 	ships.forEach(function(ship,i){
 		self.fleet[ship]= new sh.Ship(ship,holes[i]);
@@ -100,7 +100,7 @@ sh.observer =  {
 		return alignment;
 	},
 	validateSize:function(position,shipName){
-		var shipsSize = {battleship:4, carrier:5, cruiser:3, distroyer:2, submarine:3};
+		var shipsSize = {battleship:4, carrier:5, cruiser:3, destroyer:2, submarine:3};
 		var validSize =(position.length == shipsSize[shipName]);
 		return validSize;
 	},

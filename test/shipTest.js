@@ -6,7 +6,7 @@ var ld = require('lodash');
 /* battleship = 4
 cruiser = 3
 submarine = 3
-distroyer = 2
+destroyer = 2
 carrier = 5*/
 describe('ship',function(){
 	var ship = new sh.Ship('battleship',4);
@@ -33,7 +33,7 @@ describe('player',function(){
 		chai.expect(player).to.have.all.keys('name','fleet');
 	});
 	it('has \'fleet\' of five ship.',function(){
-		chai.expect(player.fleet).to.have.all.keys('battleship','carrier','cruiser','distroyer','submarine');
+		chai.expect(player.fleet).to.have.all.keys('battleship','carrier','cruiser','destroyer','submarine');
 	});
 	it('has behaviour of deploying a ship',function(){
 		var deployedShip = player.deployShip('cruiser',['A1','A2','A3']);
@@ -63,8 +63,8 @@ describe('player',function(){
 			chai.expect(deployedCarrier).to.throw(Error,/^Position Not Valid.$/);
 		});
 		it('for size of ship',function(){
-			var deployedDistroyer = function(){ player.deployShip('carrier',['A1','A2','A3'])};
-			chai.expect(deployedDistroyer).to.throw(Error,/^Ship size is not Valid$/);
+			var deployedCarrier = function(){ player.deployShip('carrier',['A1','A2','A3'])};
+			chai.expect(deployedCarrier).to.throw(Error,/^Ship size is not Valid$/);
 		})
 		it('can not deploy a ship on used position',function(){
 			var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
@@ -91,7 +91,7 @@ var deployShip = function(player){
 	var deployedCarrier = player.deployShip('carrier',['C6','C7','C8','C9','C10']);
 	var deployedSubmarine = player.deployShip('submarine',['H5','I5','J5']);
 	var deployedBattleship = player.deployShip('battleship',['E3','E4','E5','E6']);
-	var deployedDistroyer = player.deployShip('distroyer',['G7','H7']);
+	var deployedDestroyer = player.deployShip('destroyer',['G7','H7']);
 };
 describe('shoot',function(){
 	var player,opponentPlayer;
@@ -174,7 +174,7 @@ describe('Observer',function(){
 		var deployedCarrier = player.deployShip('carrier',['C6','C7','C8','C9','C10']);
 		var deployedSubmarine = player.deployShip('submarine',['H5','I5','J5']);
 		var deployedBattleship = player.deployShip('battleship',['E3','E4','E5','E6']);
-		var deployedDistroyer = player.deployShip('distroyer',['G7','H7']);
+		var deployedDestroyer = player.deployShip('destroyer',['G7','H7']);
     	player.usedPositions.should.have.length(17);
     });
     describe('sunk',function(){
@@ -215,7 +215,7 @@ describe('READY event',function(){
 		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
 		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
 		var deployedSubmarine = player.deployShip('submarine',['C2','D2','E2']);
-		var deployedDistroyer= player.deployShip('distroyer',['E5','E6']);
+		var deployedDestroyer= player.deployShip('destroyer',['E5','E6']);
 		var deployedCarrier = player.deployShip('carrier',['I1','I2','I3','I4','I5']);
 		chai.expect(function(){player.ready()}).to.not.throw('Announced READY');
 	});

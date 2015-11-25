@@ -10,6 +10,7 @@ var renderGrid = function(oceanGrid,targetGrid){
 		};
 		oceanGridTemplate.push('</tr>');targetGridTemplate.push('</tr>');
 	};
+	console.log(oceanGridTemplate)
 	oceanGrid.innerHTML += '<table id="oceanGrid">'+oceanGridTemplate.join('\n')+'</table>';
 	targetGrid.innerHTML += '<table id="targetGrid">'+targetGridTemplate.join('\n')+'</table>';
 };
