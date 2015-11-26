@@ -248,7 +248,17 @@ describe('who play first',function(){
 });
 
 describe('fleet',function(){
-	it('player should not have repeated ship');
+	var player,opponentPlayer;
+	beforeEach(function () {
+		player = new sh.Player('Manu');
+		deployShip(player);
+		opponentPlayer = new sh.Player('Sanu');
+		deployShip(opponentPlayer);
+	});
+	it('players should not have repeated ship',function () {
+		player.fleet.should.have.keys('battleship','carrier','cruiser','destroyer','submarine');
+		opponentPlayer.fleet.should.have.keys('battleship','carrier','cruiser','destroyer','submarine');
+	});
 	it('when player placed all ship they emit ready event for the start game');
 });
 
