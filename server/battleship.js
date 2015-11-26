@@ -38,13 +38,13 @@ sh.Player = function(player_name){
 sh.Player.prototype = {
 	deployShip:function(ship,position){
 		var isPositionUsed = ld.intersection(this.usedPositions,position).length;
-		if(!sh.observer.validateAlignment(position))
+		if(!sh.game.validateAlignment(position))
 			throw new Error('Can not Deploy Ship Diagonally');
-		else if(!sh.observer.validatePosition(position))
+		else if(!sh.game.validatePosition(position))
 			throw new Error('Position Not Valid.');
 		else if(isPositionUsed>0)
 			throw new Error('Position is already used');
-		else if(!sh.observer.validateSize(position,ship))
+		else if(!sh.game.validateSize(position,ship))
 			throw new Error('Ship size is not Valid');
 		else{
 			this.usedPositions=this.usedPositions.concat(position);
@@ -88,7 +88,7 @@ sh.is_in_sequence=function(position){
 	return false;
 };
 
-sh.observer =  {
+sh.game =  {
 	validatePosition : function(position){
 		var range = position.every(sh.inRange);
 		var duplicate=(position.length==ld.unique(position).length);
@@ -112,18 +112,18 @@ sh.getUniqueId=(function(){
 })();
 
 emitter.on('READY',function(player){
-	var allplayers=sh.observer.allplayers;
+	var allplayers=sh.game.allplayers;
 	allplayers.push(player.playerId);
 	if (ld.uniq(allplayers).length==2){
-		sh.observer.turn = allplayers[0];
+		sh.game.turn = allplayers[0];
 		return ['Start','the','game',allplayers[0]].join(' ');
 	};
 });
 
 sh.shoot = function(opponentPlayer,position){
-	if(sh.observer.turn != this.playerId)
+	if(sh.game.turn != this.playerId)
 		throw new Error('Opponent turn');
-	if(!sh.observer.validatePosition(position.split(' ')))
+	if(!sh.game.validatePosition(position.split(' ')))
 		throw new Error('Invalid position');	
 	var index = opponentPlayer.usedPositions.indexOf(position);
 		if(index!= -1)
@@ -153,8 +153,8 @@ emitter.on('HIT',function(opponentPlayer,position){
 			console.log('Game Over');
 			//process.exit(0);
 	}
-	sh.observer.turn = opponentPlayer.playerId;
+	sh.game.turn = opponentPlayer.playerId;
 });
 emitter.on('MISS',function(opponentPlayer){
-	sh.observer.turn = opponentPlayer.playerId;
+	sh.game.turn = opponentPlayer.playerId;
 });
