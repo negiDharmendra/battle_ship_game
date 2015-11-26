@@ -1,6 +1,7 @@
 var sh = require('../server/battleship.js').sh;
 var chai = require('chai');
 var should=chai.should();
+var ld = require('lodash');
 
 /* battleship = 4
 cruiser = 3
@@ -103,14 +104,14 @@ describe('shoot',function(){
 	});
 	it('player can not shoot if it is not his turn',function(){
 		player.playerId = 1;
-		sh.observer.turn = 2;
+		sh.game.turn = 2;
 		chai.expect(function(){
 			shoot.call(player,opponentPlayer,'A1');
 		}).to.throw(Error,/^Opponent turn$/);
 	});
 	it('player can shoot only if it is his turn',function(){
 		player.playerId = 1;
-		sh.observer.turn = 1;
+		sh.game.turn = 1;
 		chai.expect(function(){
 			shoot.call(player,opponentPlayer,'A1');
 		}).to.not.throw(Error);
@@ -118,7 +119,7 @@ describe('shoot',function(){
 	it('player can not shoot on invalid position',function(){
 		player.playerId = 1;
 		opponentPlayer.playerId = 2;
-		sh.observer.turn = 1;
+		sh.game.turn = 1;
 		chai.expect(function(){
 			shoot.call(player,opponentPlayer,'A12');
 		}).to.throw(Error,/^Invalid position$/);
@@ -126,14 +127,14 @@ describe('shoot',function(){
 	it('after every shoot hit or miss event will be invoked and turn will be changed',function(){
 		player.playerId = 1;
 		opponentPlayer.playerId = 2;
-		sh.observer.turn = 1;
+		sh.game.turn = 1;
 		shoot.call(player,opponentPlayer,'A1');
-		chai.expect(sh.observer.turn).to.be.equal(2);
+		chai.expect(sh.game.turn).to.be.equal(2);
 	});
 	it('hit makes the changes in opponentPlayer usedPositions and fleet',function(){
 		player.playerId = 1;
 		opponentPlayer.playerId = 2;
-		sh.observer.turn = 1;
+		sh.game.turn = 1;
 		shoot.call(player,opponentPlayer,'A1');
     	opponentPlayer.usedPositions.should.have.length(16);
     	chai.expect(opponentPlayer.fleet.cruiser.hittedHoles).to.be.equal(1);
@@ -141,41 +142,61 @@ describe('shoot',function(){
 });
 
 
-describe('Observer',function(){
-	var observer = sh.observer;
+describe('game',function(){
+	var game = sh.game;
 	it('informs player whether the position of ship is valid',function(){
-		var isValid = observer.validatePosition(['A1','A2','A3','A4','A5']);
+		var isValid = game.validatePosition(['A1','A2','A3','A4','A5']);
 		chai.expect(isValid).to.true;
 	});
 	it('says position is not valid if any of the position is not found in the available positions',function(){
-		var isValid = observer.validatePosition(['A1','A2','A3','A4','Z5']);
+		var isValid = game.validatePosition(['A1','A2','A3','A4','Z5']);
 		chai.expect(isValid).to.false;
 	});
 	it('says position is not valid if player diploy his ship diagonally',function(){
-		var isValid = observer.validateAlignment(['A1','B2','C3']);
+		var isValid = game.validateAlignment(['A1','B2','C3']);
 		chai.expect(isValid).to.false;
 	});
 	it('says position is not valid even ship fix in horizontal but number is greater than 10',function(){
-		var isValid = observer.validatePosition(['A11','A12','A13','A14','A15']);
+		var isValid = game.validatePosition(['A11','A12','A13','A14','A15']);
 		chai.expect(isValid).to.false;
 	});
 	it('says position is not valid even ship fix in vertical but number is greater than 10',function(){
-		var isValid = observer.validatePosition(['B11','B12','B13','B14','B15']);
+		var isValid = game.validatePosition(['B11','B12','B13','B14','B15']);
 		chai.expect(isValid).to.false;
 	});
 	it('says position is not valid if player provides number of position less than ship size',function(){
-		var isValid=observer.validateSize(['A1','A2','A3'],'battleship');
+		var isValid=game.validateSize(['A1','A2','A3'],'battleship');
 		chai.expect(isValid).to.false;
 	});
     it('checks if player had positioned 5 ships',function () {
     	var player = new sh.Player('arun');
-		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
-		var deployedCarrier = player.deployShip('carrier',['C6','C7','C8','C9','C10']);
-		var deployedSubmarine = player.deployShip('submarine',['H5','I5','J5']);
-		var deployedBattleship = player.deployShip('battleship',['E3','E4','E5','E6']);
-		var deployedDestroyer = player.deployShip('destroyer',['G7','H7']);
+		deployShip(player);
     	player.usedPositions.should.have.length(17);
     });
+    describe('sunk',function(){
+  	var player,opponentPlayer;
+		var shoot=sh.shoot;
+		beforeEach(function () {
+			player = new sh.Player('Manu');
+			deployShip(player);
+			opponentPlayer = new sh.Player('Shanu');
+			deployShip(opponentPlayer);
+			player.playerId=1;
+			opponentPlayer.playerId=2;
+			player.ready();
+			opponentPlayer.ready();
+			shoot.call(player,opponentPlayer,'G7');
+			shoot.call(opponentPlayer,player,'A2');
+			shoot.call(player,opponentPlayer,'H7');
+			shoot.call(opponentPlayer,player,'C1');
+			shoot.call(player,opponentPlayer,'C2');
+		});
+		it('checks whether ship is sunk or not',function(){
+    		chai.expect(opponentPlayer.fleet.destroyer.isSunk()).to.be.true;
+    		chai.expect(opponentPlayer.fleet.carrier.isSunk()).to.be.false;
+    	});
+	});
+
 });
 describe('READY event',function(){
 	var player;
@@ -221,23 +242,23 @@ describe('who play first',function(){
 		opponentPlayer.playerId = 2;
 		player.ready();
 		opponentPlayer.ready();
-		chai.expect(sh.observer.turn).to.be.equal(1);
+		chai.expect(sh.game.turn).to.be.equal(1);
 	});
 	it('when shoot event is emitted hit event should called');
 });
 
-describe('sunk',function(){
-	it('to check ship is sunk or not');
-});
-describe('hitted holes',function(){
-	it('after ship  hitted holes should be increase by one');
-});
-
 describe('fleet',function(){
-	it('player should not have repeated ship');
+	var player,opponentPlayer;
+	beforeEach(function () {
+		player = new sh.Player('Manu');
+		deployShip(player);
+		opponentPlayer = new sh.Player('Sanu');
+		deployShip(opponentPlayer);
+	});
+	it('players should not have repeated ship',function () {
+		player.fleet.should.have.keys('battleship','carrier','cruiser','destroyer','submarine');
+		opponentPlayer.fleet.should.have.keys('battleship','carrier','cruiser','destroyer','submarine');
+	});
 	it('when player placed all ship they emit ready event for the start game');
-});
-describe('toCheck game over',function(){
-	it('if all ship holes is zero called game over');
 });
 

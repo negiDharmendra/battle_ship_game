@@ -1,64 +1,26 @@
-
-body{
-	background-color: steelblue;
+body {
+	background-image: url("../image/battleship.png");
 }
-#header{
-	font-size: 40px;
+h1{
+	font-size:50px;
 	text-align: center;
-	height: auto;
+	color: goldenrod;
+	position: relative;
+	margin-top: 35px;
 }
-h2{
-	font-size: 20px;
+#input {
 	text-align: center;
+	margin-top: 300px;
 }
-
-#game_screen{
-	width: 99%;
-	height: 650px;
-	margin:0 0 0 0;
-	border-width:5px;	
-	border-style:dotted solid;
+#input>form> button {
+	height:8mm;
+	width:20mm;
+	border-radius: 10mm;
+	font-size:5mm;
+	color: black;
 }
-#ocean_grid {
-	float: left;
-	margin: 200px 50px 0 30px;
-}
-#target_grid{
-	float: left;
-	margin: 200px 50px 0 0;
-}
-table{
-	border:1;
-}
-#game_screen>#ocean_grid>table td{
-	width: 40px;
-	height: 40px;
-	background-color: lightgray;
-	text-align: center;
-	vertical-align: middle;
-	font-size: 10px;
-}
-#game_screen>#target_grid>table td{
-	width: 40px;
-	height: 40px;
-	background-color: steelblue;
-}
-#game_screen table td> button{
-	width: 40px;
-	height: 40px;
-	background-color: lightgray;
-}
-#game_screen>#ocean_grid>table td:hover{
-	background-color: green;
-}
-#game_screen>#target_grid>table td>button:hover{
-	background-color: green;
-}
-#harbor{
-	width: 25%;
-	height: 650px;
-	float: right;
-	font-size: 24px;
-	display: inline-block;
-	background:rgba(100,100,100, 0.5);
+#input>form>input {
+	height:30px;
+	width:200px;
+	font-size:18px
 }

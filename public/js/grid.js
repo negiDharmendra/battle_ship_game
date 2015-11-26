@@ -28,3 +28,4 @@ window.onload = function(){
 	var selectship = document.querySelector("#harbor>#position_of_ship");
 	document.querySelector('#harbor>button').setAttribute('onclick','reply_to_deployment()');
 };
+
