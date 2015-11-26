@@ -1,6 +1,6 @@
 
 body{
-	background-color: gray;
+	background-color: steelblue;
 }
 #header{
 	font-size: 40px;
@@ -47,6 +47,9 @@ table{
 	width: 40px;
 	height: 40px;
 	background-color: lightgray;
+}
+#game_screen>#ocean_grid>table td:hover{
+	background-color: green;
 }
 #game_screen>#target_grid>table td>button:hover{
 	background-color: green;

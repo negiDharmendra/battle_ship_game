@@ -10,13 +10,21 @@ var renderGrid = function(oceanGrid,targetGrid){
 		};
 		oceanGridTemplate.push('</tr>');targetGridTemplate.push('</tr>');
 	};
-	console.log(oceanGridTemplate)
 	oceanGrid.innerHTML += '<table id="oceanGrid">'+oceanGridTemplate.join('\n')+'</table>';
 	targetGrid.innerHTML += '<table id="targetGrid">'+targetGridTemplate.join('\n')+'</table>';
+};
+var providePositions = function(evnt){
+	evnt = evnt || window.event;
+	evnt = evnt.target || evnt.srcElement;
+	if(evnt.nodeName == 'TD')
+		document.querySelector('#harbor>input').value += " "+evnt.id; 
 };
 window.onload = function(){
 	var oceanGrid = document.querySelector('#game_screen> #ocean_grid');
 	var targetGrid = document.querySelector('#game_screen> #target_grid');
 	renderGrid(oceanGrid,targetGrid);
 	targetGrid.querySelector('#targetGrid').setAttribute('onclick','reply_to_shoot()');
+	oceanGrid.querySelector('#oceanGrid').setAttribute('onclick','providePositions()');
+	var selectship = document.querySelector("#harbor>#position_of_ship");
+	document.querySelector('#harbor>button').setAttribute('onclick','reply_to_deployment()');
 };
