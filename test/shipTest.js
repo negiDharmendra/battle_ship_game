@@ -189,17 +189,13 @@ describe('Observer',function(){
 			opponentPlayer.playerId=2;
 			observer.turn=1;
 			shoot.call(player,opponentPlayer,'G7');
-			observer.turn=2;
 			shoot.call(opponentPlayer,player,'A2');
-			observer.turn=1;
 			shoot.call(player,opponentPlayer,'H7');
-			observer.turn=2;
 			shoot.call(opponentPlayer,player,'C1');
-			observer.turn=1;
 			shoot.call(player,opponentPlayer,'C2');
 		});
 		it('checks whether ship is sunk or not',function(){
-    		chai.expect(opponentPlayer.fleet.distroyer.isSunk()).to.be.true;
+    		chai.expect(opponentPlayer.fleet.destroyer.isSunk()).to.be.true;
     		chai.expect(opponentPlayer.fleet.carrier.isSunk()).to.be.false;
     	});
 	});
@@ -255,7 +251,17 @@ describe('who play first',function(){
 });
 
 describe('fleet',function(){
-	it('player should not have repeated ship');
+	var player,opponentPlayer;
+	beforeEach(function () {
+		player = new sh.Player('Manu');
+		deployShip(player);
+		opponentPlayer = new sh.Player('Sanu');
+		deployShip(opponentPlayer);
+	});
+	it('players should not have repeated ship',function () {
+		player.fleet.should.have.keys('battleship','carrier','cruiser','destroyer','submarine');
+		opponentPlayer.fleet.should.have.keys('battleship','carrier','cruiser','destroyer','submarine');
+	});
 	it('when player placed all ship they emit ready event for the start game');
 });
 
