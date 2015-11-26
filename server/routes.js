@@ -26,8 +26,15 @@ var serve_ship_deployment_info = function(req,res,next){
 		data = queryString.parse(data);
 	});
 	req.on('end',function(){
-		if(players[data.number].deployShip(data.name,data.positions.trim().split(' '))==true)
-			res.end('true');
+		var status='';
+		console.log('data=====',data);
+		try{
+		status=players[data.number].deployShip(data.name,data.positions.trim().split(' '));
+		}catch(e){
+			status=e.message;
+		}
+		console.log('status=====',status);
+		res.end(JSON.stringify(status));
 	});
 };
 
@@ -40,11 +47,11 @@ var addPlayer = function(req,res){
 		data = queryString.parse(data);
 		var uniqueID=game.getUniqueId();
 		players[uniqueID]= new game.Player(data.name);
-		players.playerId=uniqueID;
+		players[uniqueID].playerId=uniqueID;
 		res.writeHead(301,{
 			'Location':'html/battleship.html',
 			'Content-Type':'text/html',
-			'Set-Cookie':players.number});
+			'Set-Cookie':uniqueID});
 		console.log(players);
 	res.end();
 	});
@@ -56,7 +63,7 @@ var method_not_allowed=function(req,res){
 };
 exports.post_handlers = [
 	{path : '^public/html/index.html$', handler:addPlayer},
-	{path : '^public/deployShip$',		handler : serve_ship_deployment_info},
+	{path : '^public/html/deployShip$',	handler : serve_ship_deployment_info},
 	{path : '^public/shoot$',			handler : 'validateShoot'}
 ];
 exports.get_handlers = [

@@ -27,22 +27,20 @@ function reply_to_deployment(evnt){
 		var xmlRqst = new XMLHttpRequest();
 		xmlRqst.onreadystatechange = function(){
 			if(xmlRqst.readyState == 4 && xmlRqst.status ==200){
-				console.log(xmlRqst)
 				var reply = JSON.parse(xmlRqst.responseText);
-				if(reply == false ) alert('can\'t deploy ship on this position');
-				else {
+				if(reply == true) {
 					position.trim().split(' ').forEach(function(ele){
 						document.querySelector('#ocean_grid>table>tbody>tr>#'+ele).style.background='green';
 					});
 					document.querySelector('#harbor>input').value = '';
 					document.querySelector('#harbor>#position_of_ship>[value]').remove();
-					if(document.querySelector('#harbor>#position_of_ship').length == 0){
+					if(document.querySelector('#harbor>#position_of_ship').length == 0)
 						document.querySelector('#harbor').innerHTML='<h1>Deployed all ships</h1>';
-					}
-				};
+				}
+				else alert(reply);
 			};
 		};
 		xmlRqst.open('POST','deployShip',true);
-		xmlRqst.send('name='+shipName+'&positions='+position'&=number='+document.cookie);
+		xmlRqst.send('name='+shipName+'&positions='+position+'&number='+document.cookie);
 	};
 };
