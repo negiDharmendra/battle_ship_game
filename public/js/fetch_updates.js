@@ -39,6 +39,6 @@ function reply_to_deployment(evnt){
 			};
 		};
 		xmlRqst.open('POST','deployShip',true);
-		xmlRqst.send('name='+shipName+'&positions='+position)
+		xmlRqst.send('name='+shipName+'&positions='+position'&=number='+document.cookie);
 	};
 };

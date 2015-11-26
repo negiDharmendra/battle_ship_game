@@ -45,8 +45,12 @@ var handle_post=function(req,res){
 	};
 	next();
 };
+var method_not_allowed=function(req,res){
+	res.writeHead(405,{'Content-Type':'text/html'});
+	res.end('Method Not Allowed');
+};
 var requestHandler = function(req, res){
-	console.log('=====================================================')
+	console.log('=====================',req.url,'==============',req.method,'==================')
 	if(req.method == 'GET')
 		handle_get(req,res);
 	else if(req.method == 'POST')
@@ -56,6 +60,8 @@ var requestHandler = function(req, res){
 };
 var server = http.createServer(requestHandler);
 server.listen(3000,function(){console.log("listening at port===>"+3000)});
-
+server.on('error',function(e){
+	console.log('Can not Start the Server due to:--',e.message);
+});
 var ser={};
 exports.ser={getUrl:getUrl};
