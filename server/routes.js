@@ -1,7 +1,9 @@
 var fs=require('fs');
 var queryString = require('querystring');
+
 var game = require('./battleship.js').sh;
 var players={};
+
 var page_not_found=function(req,res){
 	res.writeHead(404,{'Content-Type':'text/html'});
 	res.end('Page Not Found');
@@ -26,9 +28,8 @@ var serve_ship_deployment_info = function(req,res,next){
 	req.on('end',function(){
 		if(players[data.number].deployShip(data.name,data.positions.trim().split(' '))==true)
 			res.end('true');
-		else res.end('false');
 	});
-}
+};
 
 var addPlayer = function(req,res){
 	var data='';
@@ -54,10 +55,9 @@ var method_not_allowed=function(req,res){
 	res.end('Method Not Allowed');
 };
 exports.post_handlers = [
-	{path : '^public/html/index.html$',handler:addPlayer},
-	{path : '^public/deployShip$',handler : serve_ship_deployment_info},
-	{path : '^public/shoot$',handler : 'validateShoot'},
-	{path : '',handler : method_not_allowed}
+	{path : '^public/html/index.html$', handler:addPlayer},
+	{path : '^public/deployShip$',		handler : serve_ship_deployment_info},
+	{path : '^public/shoot$',			handler : 'validateShoot'}
 ];
 exports.get_handlers = [
 	{path : '',handler:serveStaticFile},

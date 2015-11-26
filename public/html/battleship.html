@@ -1,9 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Battle SHip</title>
+	<link rel="stylesheet" href="../styles/reset.css">
+	<link rel="stylesheet" href="../styles/battleship.css">
+	<script type="text/javascript" src="../js/lodash.min.js"></script>
+	<script type="text/javascript" src="../js/grid.js"></script>
+	<script type="text/javascript" src="../js/fetch_updates.js"></script>
+
 </head>
 <body>
-MAIN PAGE
+<div id="header">
+	BATTLE SHIP
+</div>
+<div id="game_screen">
+	<div id="ocean_grid"><h2>Ocean Grid</h2></div>
+	<div id="target_grid"> <h2>Target Grid</h2></div>
+	<div id="harbor">
+			Select Ship:</br>
+			<select id="position_of_ship" value="Select">
+			  <option value="battleship">Battleship</option>
+			  <option  value="cruiser">Cruiser</option>
+			  <option  value="carrier">Carrier</option>
+			  <option value="destroyer">Destroyer</option>
+			  <option value="submarine">Submarine</option>
+			</select>
+			<input type="text">
+			<button id="deploy_battleship">Deploy</button>
+	</div>
+</div>
 </body>
 </html>
