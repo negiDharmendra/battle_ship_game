@@ -1,4 +1,40 @@
+body {
+	background-image: url("../image/battleship.png");
+}
+h1{
+	font-size:50px;
+	text-align: center;
+	color: goldenrod;
+	position: relative;
+	margin-top: 35px;
+}
+#input {
+	text-align: center;
+	margin-top: 300px;
+}
+#input>form> button {
+	height:8mm;
+	width:20mm;
+	border-radius: 10mm;
+	font-size:5mm;
+	color: black;
+}
+#input>form>input {
+	height:30px;
+	width:200px;
+	font-size:18px
+}
 
+
+
+
+
+
+
+
+
+
+/*
 body{
 	background-color: gray;
 }
@@ -56,3 +92,4 @@ h2{
 	display: inline-block;
 	background:rgba(100,100,100, 0.5);
 }
+*/
