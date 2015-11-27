@@ -16,8 +16,10 @@ var renderGrid = function(oceanGrid,targetGrid){
 var providePositions = function(evnt){
 	evnt = evnt || window.event;
 	evnt = evnt.target || evnt.srcElement;
-	if(evnt.nodeName == 'TD')
-		document.querySelector('#harbor>input').value += " "+evnt.id; 
+	if(evnt.nodeName == 'TD'){
+		document.querySelector('#harbor>input').value += " "+evnt.id;
+		document.querySelector('#harbor>button').setAttribute('onclick','reply_to_deployment()')
+	}
 };
 window.onload = function(){
 	var oceanGrid = document.querySelector('#game_screen> #ocean_grid');
@@ -26,6 +28,5 @@ window.onload = function(){
 	targetGrid.querySelector('#targetGrid').setAttribute('onclick','reply_to_shoot()');
 	oceanGrid.querySelector('#oceanGrid').setAttribute('onclick','providePositions()');
 	var selectship = document.querySelector("#harbor>#position_of_ship");
-	document.querySelector('#harbor>button').setAttribute('onclick','reply_to_deployment()');
 };
 

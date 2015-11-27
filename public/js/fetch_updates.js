@@ -1,3 +1,13 @@
+function sayReady(){
+	var xmlRqst = new XMLHttpRequest();
+	xmlRqst.onreadystatechange = function(){
+		if(xmlRqst.readyState == 2 ){
+		};
+	};
+	document.querySelector('#game_screen>#info_board').innerHTML= "Please Wait";
+	xmlRqst.open('POST','sayReady',true);
+	xmlRqst.send('playerId='+document.cookie);
+};
 
 function reply_to_shoot(evnt){
 	evnt = evnt || window.event;
@@ -14,7 +24,7 @@ function reply_to_shoot(evnt){
 			};
 		};
 		xmlRqst.open('POST','shoot',true);
-		xmlRqst.send('position='+evnt.id);
+		xmlRqst.send('position='+evnt.id+'&playerId='+document.cookie);
 	};
 };
 
@@ -35,12 +45,12 @@ function reply_to_deployment(evnt){
 					document.querySelector('#harbor>input').value = '';
 					document.querySelector('#harbor>#position_of_ship>[value]').remove();
 					if(document.querySelector('#harbor>#position_of_ship').length == 0)
-						document.querySelector('#harbor').innerHTML='<h1>Deployed all ships</h1>';
+						document.querySelector('#harbor').innerHTML='<h1>Deployed all ships</h1></br><button id="ready" onclick = "sayReady()">Ready</button>';
 				}
 				else alert(reply);
 			};
 		};
 		xmlRqst.open('POST','deployShip',true);
-		xmlRqst.send('name='+shipName+'&positions='+position+'&number='+document.cookie);
+		xmlRqst.send('name='+shipName+'&positions='+position+'&playerId='+document.cookie);
 	};
 };

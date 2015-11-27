@@ -39,15 +39,11 @@ var handle_get=function(req,res){
 var handle_post=function(req,res){
 	console.log('Requested Url:----',req.url);
 	req.url=getUrl(req);
-	if(req.url=='public/shoot') res.end('I knew that you will try to crash the server')
-	else{
-		var handlers = post_handlers.filter(matchHandlers(req.url));
-		var next = function(){
-			emitter.emit('next',handlers,req,res,next); 
-		};
-		next();
-		
+	var handlers = post_handlers.filter(matchHandlers(req.url));
+	var next = function(){
+		emitter.emit('next',handlers,req,res,next); 
 	};
+	next();
 };
 var method_not_allowed=function(req,res){
 	res.writeHead(405,{'Content-Type':'text/html'});

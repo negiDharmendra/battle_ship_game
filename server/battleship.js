@@ -116,7 +116,6 @@ emitter.on('READY',function(player){
 	allplayers.push(player.playerId);
 	if (ld.uniq(allplayers).length==2){
 		sh.game.turn = allplayers[0];
-		return ['Start','the','game',allplayers[0]].join(' ');
 	};
 });
 
@@ -150,8 +149,6 @@ var destroy = function(opponentPlayer,position){
 emitter.on('HIT',function(opponentPlayer,position){
 	var hittedShip =destroy(opponentPlayer,position);
 	if(opponentPlayer.fleet[hittedShip].isSunk() && (opponentPlayer.usedPositions.length==0)){
-			console.log('Game Over');
-			//process.exit(0);
 	}
 	sh.game.turn = opponentPlayer.playerId;
 });

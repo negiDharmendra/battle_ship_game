@@ -4,6 +4,7 @@ body{
 }
 #header{
 	font-size: 40px;
+	font-weight: bold;
 	text-align: center;
 	height: auto;
 }
@@ -19,17 +20,56 @@ h2{
 	border-width:5px;	
 	border-style:dotted solid;
 }
+#info_board{
+	width: 100%;
+	height: 150px;
+	background:rgba(192,192,192, .1);
+	border-radius: 8px;
+	text-align: center;
+	font-size: 24px;
+	font-weight: bold;
+	color: white;
+}
+#harbor{
+	width: 25%;
+	height: 500px;
+	float: right;
+	font-size: 24px;
+	font-weight: bold;
+	display: inline-block;
+	background:rgba(192,192,192, .1);
+	border-radius: 8px;
+}
+h1{
+	margin: 10px 0 0 20px;
+}
+#harbor>select{
+	margin: 10px 0 0 20px;
+}
+#harbor>input{
+	margin: 10px 0 0 20px;
+}
+#harbor>#ready{
+	margin: 10px 0 0 20px;
+}
+#harbor>button:hover{
+	color: red;
+}
+#harbor>#deady{
+	padding:30px;
+}
 #ocean_grid {
 	float: left;
-	margin: 200px 50px 0 30px;
+	margin: 50px 50px 0 30px;
 }
 #target_grid{
 	float: left;
-	margin: 200px 50px 0 0;
+	margin: 50px 50px 0 0;
 }
 table{
 	border:1;
 }
+
 #game_screen>#ocean_grid>table td{
 	width: 40px;
 	height: 40px;
@@ -48,14 +88,10 @@ table{
 	height: 40px;
 	background-color: lightgray;
 }
+#game_screen>#ocean_grid>table td:hover{
+	background-color: green;
+}
 #game_screen>#target_grid>table td>button:hover{
 	background-color: green;
 }
-#harbor{
-	width: 25%;
-	height: 650px;
-	float: right;
-	font-size: 24px;
-	display: inline-block;
-	background:rgba(100,100,100, 0.5);
-}
+
