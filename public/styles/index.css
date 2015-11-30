@@ -1,10 +1,10 @@
 body {
-	background-image: url("../image/battleship.png");
+	/*background-image: url("../image/battleship.png");*/
 }
 h1{
 	font-size:50px;
 	text-align: center;
-	color: goldenrod;
+	color: black;
 	position: relative;
 	margin-top: 35px;
 }
@@ -12,12 +12,12 @@ h1{
 	width: 400px;
 	height: 200px;
 	text-align: center;
-	margin: 200px 0 0 500px;
+	margin: 15% 0 0 35%;
 	background:rgba(192,192,192, .6);
 	border-radius: 30px;
 }
 #input>form{
-	padding: 70px 0 0 0;
+	padding: 20% 0 0 0;
 }
 #input>form> button {
 	height:8mm;

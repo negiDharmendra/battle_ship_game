@@ -66,7 +66,7 @@ function reply_to_deployment(evnt){
 function displayDeployedShip(reply,position){
 	if(reply == true) {
 		position.trim().split(' ').forEach(function(ele){
-			document.querySelector('#ocean_grid>table>tbody>tr>#'+ele).style.background='green';
+			document.querySelector('#ocean_grid>table>tbody>tr>#'+ele).style.background='lightgreen';
 		});
 		document.querySelector('#harbor>input').value = '';
 		document.querySelector('#harbor>#position_of_ship>[value]').remove();
