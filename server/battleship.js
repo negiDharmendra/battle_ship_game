@@ -125,10 +125,14 @@ sh.shoot = function(opponentPlayer,position){
 	if(!sh.game.validatePosition(position.split(' ')))
 		throw new Error('Invalid position');	
 	var index = opponentPlayer.usedPositions.indexOf(position);
-		if(index!= -1)
+		if(index!= -1){
 			emitter.emit('HIT',opponentPlayer,position);
-		else
+			return 'hit';
+		}
+		else{
 			emitter.emit('MISS',opponentPlayer);
+			return 'miss';
+		}
 };
 
 var destroy = function(opponentPlayer,position){

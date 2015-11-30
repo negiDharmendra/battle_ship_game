@@ -76,22 +76,26 @@ table{
 	background-color: lightgray;
 	text-align: center;
 	vertical-align: middle;
-	font-size: 10px;
+	font-size: 12px;
+	font-family: sans-serif;
 }
 #game_screen>#target_grid>table td{
 	width: 40px;
 	height: 40px;
-	background-color: steelblue;
+	background-color: lightgray;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 10px;
 }
-#game_screen table td> button{
+/*#game_screen table td> button{
 	width: 40px;
 	height: 40px;
 	background-color: lightgray;
-}
+}*/
 #game_screen>#ocean_grid>table td:hover{
 	background-color: green;
 }
-#game_screen>#target_grid>table td>button:hover{
+#game_screen>#target_grid>table td:hover{
 	background-color: green;
 }
 

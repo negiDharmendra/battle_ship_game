@@ -2,7 +2,7 @@ var fs = require('fs');
 var ld = require('lodash');
 var queryString = require('querystring');
 
-var game = require('./battleship.js').sh;
+var battleship = require('./battleship.js').sh;
 var players = {};
 
 var page_not_found = function(req,res){
@@ -22,19 +22,20 @@ var serveStaticFile = function(req,res,next){
 var serve_ship_deployment_info = function(req,res,next){
 	console.log('My Url:----',req.url);
 	var data = '';
+	console.log('req.header.cookie--->',req.headers.cookie)
 	req.on('data',function(chunk){
 		data +=  chunk;
 		data = queryString.parse(data);
 	});
 	req.on('end',function(){
 		var status = '';
+		var player = get_player(data.playerId);
 		console.log('data=====',data);
 		try{
-		status = players[data.playerId].deployShip(data.name,data.positions.trim().split(' '));
+		status = player.deployShip(data.name,data.positions.trim().split(' '));
 		}catch(e){
 			status = e.message;
 		}
-		console.log('used position for'+ players[data.playerId].name+'=====',players[data.playerId].usedPositions);
 		res.end(JSON.stringify(status));
 	});
 };
@@ -46,15 +47,15 @@ var addPlayer = function(req,res){
 	});
 	req.on('end',function(){
 		data = queryString.parse(data);
-		var uniqueID = game.getUniqueId();
-		players[uniqueID] =  new game.Player(data.name);
-		players[uniqueID].playerId = uniqueID;
+		var uniqueID = battleship.getUniqueId();
+		players[data.name+'_'+uniqueID] =  new battleship.Player(data.name);
+		players[data.name+'_'+uniqueID].playerId = data.name+'_'+uniqueID;
 		res.writeHead(301,{
 			'Location':'html/battleship.html',
 			'Content-Type':'text/html',
-			'Set-Cookie':uniqueID});
-		console.log(players);
+			'Set-Cookie':data.name+'_'+uniqueID});
 	res.end();
+	console.log(players);
 	});
 };
 
@@ -65,23 +66,27 @@ var i_am_ready = function(req,res){
 		data = queryString.parse(data);
 	});
 	req.on('end',function(){
-		players[data.playerId].ready();
-		console.log('game.game.allplayers---',game.game.allplayers,"\n 'It\'s your turn "+game.game.turn)
-		if(game.game.allplayers.length == 1)
+		var player = get_player(data.playerId);
+		player.ready();
+		if(battleship.game.allplayers.length == 1)
 			res.end('Please wait for your opponent to be ready');
 		else
-			res.end('It\'s your turn '+players[game.game.turn].name);
+			res.end('It\'s'+get_player(battleship.game.turn).name+'your turn');
 	})
-
 };
 
-var get_opponentPlayer_id = function(player_id){
+var get_opponentPlayer = function(player_id){
 	var ids = Object.keys(players);
 	delete ids[ids.indexOf(player_id)];
-	ids = ld.compact(ids);
-	ids = ids.shift();
-	return ids;
-}
+	var id = ld.compact(ids);
+	id = id.shift();
+	return players[id];
+};
+
+
+var get_player=function(id){
+	return players[id];
+};
 var validateShoot = function(req,res){
 	var data = '';
 	req.on('data',function(chunk){
@@ -89,17 +94,34 @@ var validateShoot = function(req,res){
 	});
 	req.on('end',function(){
 		data = queryString.parse(data);
-		var id = get_opponentPlayer_id(data.playerId);
-		console.log("I'm inside shoot function",players[data.playerId].name,players[id].name,"\n i'm finished")
-		var status = game.shoot.call(players[data.playerId],players[id],data.position);
-		console.log(players[id].name,'=================',players[id].fleet.cruiser.hittedHoles);
-	})
-
-}
-var method_not_allowed = function(req,res){
-	res.writeHead(405,{'Content-Type':'text/html'});
-	res.end('Method Not Allowed');
+		var status = {};
+		try{
+			var opponentPlayer = get_opponentPlayer(data.playerId);
+			var player = get_player(data.playerId);
+			status.reply = battleship.shoot.call(player,opponentPlayer,data.position);
+		}catch(e){
+			status.error = e.message;
+		};
+		res.end(JSON.stringify(status));
+	});
 };
+var deliver_latest_updates = function(req,res){
+	try{
+		var updates = {position:[]};
+		var player = get_player(req.headers.cookie);
+		for(var ship in player.fleet)
+			updates.position=updates.position.concat(player.fleet[ship].onPositions);
+		updates.position = ld.compact(updates.position);
+	 	updates.gotHit = ld.difference(updates.position,player.usedPositions);
+	 	res.end(JSON.stringify(updates.gotHit));
+	}catch(e){
+		console.log(e.message);
+	}
+	finally{
+		res.end();
+	};
+};
+
 exports.post_handlers = [
 	{path : '^public/html/sayReady$',   handler:i_am_ready},
 	{path : '^public/html/index.html$', handler:addPlayer},
@@ -107,6 +129,7 @@ exports.post_handlers = [
 	{path : '^public/html/shoot$',		handler : validateShoot}
 ];
 exports.get_handlers = [
+	{path : '^public/html/get_updates$', handler: deliver_latest_updates},
 	{path : '',handler:serveStaticFile},
 	{path : '',handler:page_not_found}
 ];
