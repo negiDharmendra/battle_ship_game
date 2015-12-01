@@ -5,7 +5,7 @@ function get_updates(){
 		var gotHit=updates.gotHit;
 		var usedPosition=updates.position;
 		for (var i = 0; i < usedPosition.length; i++)
-			$('#oceanGrid>tbody>tr>td#'+usedPosition[i]).css('background','green');
+			$('#oceanGrid>tbody>tr>td#'+usedPosition[i]).css('background','lightgreen');
 		for (var i = 0; i < gotHit.length; i++)
 			$('#oceanGrid>tbody>tr>td#'+gotHit[i]).css('background','red');
 	};
