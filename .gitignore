@@ -1,6 +1,3 @@
 .DS_Store
 data/
 node_modules/
-js/lodash.min.js
-js/jquery-2.1.4.min.js
-js/handlebars-v4.0.5.js

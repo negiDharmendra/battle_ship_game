@@ -244,7 +244,6 @@ describe('who play first',function(){
 		opponentPlayer.ready();
 		chai.expect(sh.game.turn).to.be.equal(1);
 	});
-	it('when shoot event is emitted hit event should called');
 });
 
 describe('fleet',function(){
@@ -259,6 +258,5 @@ describe('fleet',function(){
 		player.fleet.should.have.keys('battleship','carrier','cruiser','destroyer','submarine');
 		opponentPlayer.fleet.should.have.keys('battleship','carrier','cruiser','destroyer','submarine');
 	});
-	it('when player placed all ship they emit ready event for the start game');
 });
 

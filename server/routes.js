@@ -67,11 +67,16 @@ var i_am_ready = function(req,res){
 	});
 	req.on('end',function(){
 		var player = get_player(data.playerId);
+		try{
 		player.ready();
 		if(battleship.game.allplayers.length == 1)
 			res.end('Please wait for your opponent to be ready');
 		else
 			res.end('It\'s'+get_player(battleship.game.turn).name+'your turn');
+		}
+		catch(e){
+			console.log(e.message);
+		}
 	})
 };
 
@@ -99,6 +104,9 @@ var validateShoot = function(req,res){
 			var opponentPlayer = get_opponentPlayer(data.playerId);
 			var player = get_player(data.playerId);
 			status.reply = battleship.shoot.call(player,opponentPlayer,data.position);
+			if(opponentPlayer.sunkShips.length==5){
+				status.end=player.name+'You won the Game';
+			}
 		}catch(e){
 			status.error = e.message;
 		};
@@ -113,7 +121,7 @@ var deliver_latest_updates = function(req,res){
 			updates.position=updates.position.concat(player.fleet[ship].onPositions);
 		updates.position = ld.compact(updates.position);
 	 	updates.gotHit = ld.difference(updates.position,player.usedPositions);
-	 	res.end(JSON.stringify(updates.gotHit));
+	 	res.end(JSON.stringify(updates));
 	}catch(e){
 		console.log(e.message);
 	}
@@ -123,8 +131,8 @@ var deliver_latest_updates = function(req,res){
 };
 
 exports.post_handlers = [
-	{path : '^public/html/sayReady$',   handler:i_am_ready},
-	{path : '^public/html/index.html$', handler:addPlayer},
+	{path : '^public/html/sayReady$',   handler : i_am_ready},
+	{path : '^public/html/index.html$', handler : addPlayer},
 	{path : '^public/html/deployShip$',	handler : serve_ship_deployment_info},
 	{path : '^public/html/shoot$',		handler : validateShoot}
 ];

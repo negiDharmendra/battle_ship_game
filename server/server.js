@@ -28,7 +28,7 @@ var getUrl=function(req){
 	return 'public'+req.url;	
 };
 var handle_get=function(req,res){
-	console.log('Requested Url:----',req.url);
+	if(req.url != '/html/get_updates')console.log('Requested Url:----',req.url);
 	req.url=getUrl(req);
 	var handlers = get_handlers.filter(matchHandlers(req.url));
 	var next = function(){
@@ -54,7 +54,7 @@ var method_not_allowed=function(req,res){
 	res.end('Method Not Allowed');
 };
 var requestHandler = function(req, res){
-	console.log('=====================',req.url,'==============',req.method,'==================')
+	if(req.url != '/html/get_updates')console.log("=================================");	
 	if(req.method == 'GET')
 		handle_get(req,res);
 	else if(req.method == 'POST')

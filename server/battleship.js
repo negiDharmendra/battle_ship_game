@@ -32,6 +32,7 @@ sh.Player = function(player_name){
 		self.fleet[ship]= new sh.Ship(ship,holes[i]);
 	});
 	Object.defineProperty(this,'usedPositions',{value:[],enumerable:false,writable:true});
+	Object.defineProperty(this,'sunkShips',{value:[],enumerable:false,writable:true});
 };
 
 
@@ -152,8 +153,8 @@ var destroy = function(opponentPlayer,position){
 
 emitter.on('HIT',function(opponentPlayer,position){
 	var hittedShip =destroy(opponentPlayer,position);
-	if(opponentPlayer.fleet[hittedShip].isSunk() && (opponentPlayer.usedPositions.length==0)){
-	}
+	if(opponentPlayer.fleet[hittedShip].isSunk())
+		opponentPlayer.sunkShips.push(hittedShip);
 	sh.game.turn = opponentPlayer.playerId;
 });
 emitter.on('MISS',function(opponentPlayer){
