@@ -27,6 +27,7 @@ var getUrl=function(req){
 		req.url= '/html/index.html';
 	return 'public'+req.url;	
 };
+
 var handle_get=function(req,res){
 	if(req.url != '/html/get_updates')console.log('Requested Url:----',req.url);
 	req.url=getUrl(req);
@@ -68,5 +69,3 @@ server.on('error',function(e){
 	console.log('Can not Start the Server due to:--',e.message);
 });
  
-var ser={};
-exports.ser={getUrl:getUrl};

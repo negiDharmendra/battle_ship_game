@@ -9,8 +9,18 @@ var page_not_found = function(req,res){
 	res.writeHead(404,{'Content-Type':'text/html'});
 	res.end('Page Not Found');
 };
+
+var redirectToHome=function(req,res){
+	if(!req.headers.cookie){
+		res.writeHead(301,{'Location': '/'});
+		res.end();
+	}
+};
+
 var serveStaticFile = function(req,res,next){
 	console.log('My Url:----',req.url);
+	if(req.url.match('^public/html/battleship.html$'))
+		redirectToHome(req,res);
 	fs.readFile(req.url,function(err,data){
 		if(data)
 			res.end(data);
@@ -116,6 +126,8 @@ var validateShoot = function(req,res){
 var deliver_latest_updates = function(req,res){
 	try{
 		var updates = {position:[]};
+		if(!req.headers.cookie)
+			res.end(JSON.stringify('Id Required'));
 		var player = get_player(req.headers.cookie);
 		for(var ship in player.fleet)
 			updates.position=updates.position.concat(player.fleet[ship].onPositions);

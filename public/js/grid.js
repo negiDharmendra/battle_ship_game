@@ -10,8 +10,8 @@ var renderGrid = function(){
 		};
 		oceanGridTemplate.push('</tr>');targetGridTemplate.push('</tr>');
 	};
-	$('#game_screen> #ocean_grid').html('<h2>OCEAN GRID</h2><table id="oceanGrid">'+oceanGridTemplate.join('\n')+'</table>');
-	$('#game_screen> #target_grid').html('<h2>TARGET GRID</h2><table id="targetGrid">'+targetGridTemplate.join('\n')+'</table>');
+	$('.game_screen> #ocean_grid').html('<h2>OCEAN GRID</h2><table id="oceanGrid" class = "grid">'+oceanGridTemplate.join('\n')+'</table>');
+	$('.game_screen> #target_grid').html('<h2>TARGET GRID</h2><table id="targetGrid" class = "grid">'+targetGridTemplate.join('\n')+'</table>');
 };
 var providePositions = function(e){
 	if(e.target.nodeName == 'TD'){
@@ -19,9 +19,12 @@ var providePositions = function(e){
 	};
 };
 
-$( window ).load(function() {
+$( window ).load(function(){
 	renderGrid();
     $('#oceanGrid').click(providePositions);
-	$('#game_screen> #target_grid>#targetGrid').click(reply_to_shoot);
-	$('#harbor>button').click(reply_to_deployment);
+	$('.game_screen>#target_grid>#targetGrid').click(reply_to_shoot);
+	$('#harbor>button').click(function(evnt){
+		if($('#harbor>input').val().trim()!='')reply_to_deployment(evnt);
+		else $('#message').html('<p style="color:red;">Please provide position</p>');
+	});
 });

@@ -4,7 +4,6 @@ function get_updates(){
 		var updates=JSON.parse(data);
 		var gotHit=updates.gotHit;
 		var usedPosition=updates.position;
-		console.log(gotHit);
 		for (var i = 0; i < usedPosition.length; i++)
 			$('#oceanGrid>tbody>tr>td#'+usedPosition[i]).css('background','green');
 		for (var i = 0; i < gotHit.length; i++)
@@ -18,7 +17,7 @@ if(document.cookie)
 function sayReady(){
 	document.querySelector('#harbor>button#ready').remove();
 	alert("Please Wait");
-	$.post('sayReady','playerId='+getId(),function(data){
+	$.post('sayReady','playerId='+getCookie(),function(data){
 		$('#message').html('<p style=color:red;>'+JSON.parse(data)+'</p>');
 	});
 };
@@ -38,7 +37,7 @@ function displayDeployedShip(reply,position){
 };
 
 
-function getId(){
+function getCookie(){
 	return document.cookie;
 };
 
@@ -47,7 +46,7 @@ function reply_to_deployment(evnt){
 	var position = $('#harbor>input').val();
 	var shipName = $("#harbor>#position_of_ship>[value]").val();
 	if(evnt.nodeName === 'BUTTON'){
-	$.post('deployShip','name='+shipName+'&positions='+position+'&playerId='+getId(),function(data){
+	$.post('deployShip','name='+shipName+'&positions='+position+'&playerId='+getCookie(),function(data){
 		var reply = JSON.parse(data);
 		displayDeployedShip(reply,position);
 	});
@@ -57,7 +56,7 @@ function reply_to_deployment(evnt){
 function reply_to_shoot(evnt){
 	evnt = evnt.target;
 	if(evnt.nodeName === 'TD'){
-		$.post("shoot",{position:evnt.id,playerId:getId()},function(data){
+		$.post("shoot",{position:evnt.id,playerId:getCookie()},function(data){
 		var status = JSON.parse(data);
 		if(status.reply){
 			var color = (status.reply=='hit')&&'red'||'white';
@@ -72,7 +71,7 @@ function reply_to_shoot(evnt){
 	};
 };
 
-setInterval(clear_Message,2000);
+setInterval(clear_Message,4000);
 function clear_Message(){
 	$('#message').html('');
 }
