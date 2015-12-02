@@ -78,3 +78,9 @@ table{
 .grid td:hover{
 	background-color: lightgreen;
 }
+.message{
+	font-family: sans-serif;
+	font-weight: 100;
+	font-size: 28px;
+	color:green;
+}

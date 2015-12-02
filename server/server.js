@@ -50,10 +50,7 @@ var method_not_allowed=function(req,res){
 	res.writeHead(405,{'Content-Type':'text/html'});
 	res.end('Method Not Allowed');
 };
-var method_not_allowed=function(req,res){
-	res.writeHead(405,{'Content-Type':'text/html'});
-	res.end('Method Not Allowed');
-};
+
 var requestHandler = function(req, res){
 	if(req.url != '/html/get_updates')console.log("=================================");	
 	if(req.method == 'GET')

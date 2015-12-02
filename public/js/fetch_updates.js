@@ -4,21 +4,26 @@ function get_updates(){
 		var updates=JSON.parse(data);
 		var gotHit=updates.gotHit;
 		var usedPosition=updates.position;
+		var turn=updates.turn;
+		var gameEnd=updates.gameEnd;
 		for (var i = 0; i < usedPosition.length; i++)
 			$('#oceanGrid>tbody>tr>td#'+usedPosition[i]).css('background','lightgreen');
 		for (var i = 0; i < gotHit.length; i++)
 			$('#oceanGrid>tbody>tr>td#'+gotHit[i]).css('background','red');
+		if(turn!='')
+			display_Message('It\'s '+turn+' turn');
+		else if(turn=='')
+			display_Message('Your opponent player haven\'t started yet.');
+		if(gameEnd)
+			display_Message('You lost!!!!!');
 	};
 };
-
-if(document.cookie)
-	setInterval(get_updates, 1000);
 
 function sayReady(){
 	document.querySelector('#harbor>button#ready').remove();
 	alert("Please Wait");
 	$.post('sayReady','playerId='+getCookie(),function(data){
-		$('#message').html('<p style=color:red;>'+JSON.parse(data)+'</p>');
+		display_Message(JSON.parse(data));
 	});
 };
 
@@ -33,7 +38,7 @@ function displayDeployedShip(reply,position){
 			$('#harbor').html('<h1>Deployed all ships</h1></br>'+'<button id="ready" onclick = "sayReady()">Ready</button>');
 	}
 	else 
-		$('#message').html('<p style=color:red;>'+reply+'</p>');
+		display_Message(reply);
 };
 
 
@@ -63,15 +68,22 @@ function reply_to_shoot(evnt){
 			$('#targetGrid>tbody>tr>td#'+evnt.id).css('background',color);
 		}
 		else if(status.error)
-			$('#message').html('<p style=color:red;>'+status.error+'</p>');
-			if(status.end){
-				$('#message').html('<p style=color:red;>'+status.end+'</p>');
-			};
+				display_Message(status.error);
+		if(status.end)
+			display_Message(status.end),end_Game(true);
 		});
 	};
 };
 
-setInterval(clear_Message,4000);
-function clear_Message(){
-	$('#message').html('');
+if(document.cookie && !end_Game())
+	setInterval(get_updates,1000);
+
+function display_Message(message){
+	$('.message').html('<p>'+message+'</p>');
+}
+function end_Game(status){
+	var s=status;
+	return function(){
+		return s;
+	}();
 }

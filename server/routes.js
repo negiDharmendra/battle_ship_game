@@ -115,7 +115,7 @@ var validateShoot = function(req,res){
 			var player = get_player(data.playerId);
 			status.reply = battleship.shoot.call(player,opponentPlayer,data.position);
 			if(opponentPlayer.sunkShips.length==5){
-				status.end=player.name+'You won the Game';
+				status.end='You won the Game '+player.name;
 			}
 		}catch(e){
 			status.error = e.message;
@@ -124,22 +124,39 @@ var validateShoot = function(req,res){
 	});
 };
 var deliver_latest_updates = function(req,res){
-	try{
-		var updates = {position:[]};
-		if(!req.headers.cookie)
-			res.end(JSON.stringify('Id Required'));
-		var player = get_player(req.headers.cookie);
-		for(var ship in player.fleet)
-			updates.position=updates.position.concat(player.fleet[ship].onPositions);
-		updates.position = ld.compact(updates.position);
-	 	updates.gotHit = ld.difference(updates.position,player.usedPositions);
-	 	res.end(JSON.stringify(updates));
-	}catch(e){
-		console.log(e.message);
-	}
-	finally{
+	if(!req.headers.cookie){
 		res.end();
+	}
+	else{
+		try{
+			var updates = {position:[],gotHit:[],turn:''};
+			var player = get_player(req.headers.cookie);
+			if(player && player.readyState){
+				for(var ship in player.fleet)
+					updates.position=updates.position.concat(player.fleet[ship].onPositions);
+				updates.position = ld.compact(updates.position);
+			 	updates.gotHit = ld.difference(updates.position,player.usedPositions);
+			 	updates.turn = selectPlayer(req.headers.cookie,battleship.game.turn).name;
+			 	updates.gameEnd=checkGameStatus(player);
+			}
+		 	res.end(JSON.stringify(updates));
+		}catch(e){
+			console.log(e.message);
+		}
+		finally{
+			res.end();
+		};
 	};
+};
+
+function checkGameStatus(player){
+	return (player.sunkShips.length == 5);
+};
+function selectPlayer(cookie,id){
+	if(!id) return {name:''};
+	if(players[cookie].playerId==id)
+		return get_player(cookie);
+	return get_opponentPlayer(cookie);
 };
 
 exports.post_handlers = [
