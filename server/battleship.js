@@ -33,6 +33,7 @@ sh.Player = function(player_name){
 	});
 	Object.defineProperty(this,'usedPositions',{value:[],enumerable:false,writable:true});
 	Object.defineProperty(this,'sunkShips',{value:[],enumerable:false,writable:true});
+	Object.defineProperty(this,'readyState',{value:false,enumerable:false,writable:true});
 };
 
 
@@ -113,6 +114,7 @@ sh.getUniqueId=(function(){
 })();
 
 emitter.on('READY',function(player){
+	player.readyState=true;
 	var allplayers=sh.game.allplayers;
 	allplayers.push(player.playerId);
 	if (ld.uniq(allplayers).length==2){

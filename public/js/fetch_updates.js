@@ -4,10 +4,18 @@ function get_updates(){
 		var updates=JSON.parse(data);
 		var gotHit=updates.gotHit;
 		var usedPosition=updates.position;
+		var turn=updates.turn;
+		var gameEnd=updates.gameEnd;
 		for (var i = 0; i < usedPosition.length; i++)
 			$('#oceanGrid>tbody>tr>td#'+usedPosition[i]).css('background','lightgreen');
 		for (var i = 0; i < gotHit.length; i++)
 			$('#oceanGrid>tbody>tr>td#'+gotHit[i]).css('background','red');
+		if(turn!='')
+			display_Message('It\'s '+turn+' turn');
+		else if(turn=='')
+			display_Message('Your opponent player haven\'t started yet.');
+		if(gameEnd)
+			display_Message('You lost!!!!!');
 	};
 };
 
@@ -25,18 +33,18 @@ function get_ship_info(){
 			var holes = +data[shipName].split(' ')[0];
 			var hitHoles = +data[shipName].split(' ')[1];
 			if(holes==hitHoles)
-				$('#message').html('<p style=color:red;>'+shipName+' is destroyed</p>');
+				display_Message('Your '+shipName+' has been destroyed.');
 			shipStatus.push('<tr><td>'+shipName+'</td>'+'<td>'+hitHoles+'</td></tr>');
 		};
 		$('#ship_info').html('<table border=1>'+shipStatus.join('\n')+'</table>');
 	});
 };
 
+
 function sayReady(){
-	document.querySelector('#harbor>button#ready').remove();
-	alert("Please Wait");
+	$('#harbor').html("Deployed all ships");
 	$.post('sayReady','playerId='+getCookie(),function(data){
-		$('#message').html('<p style=color:red;>'+JSON.parse(data)+'</p>');
+		display_Message(JSON.parse(data));
 	});
 };
 	setInterval(get_ship_info,1000);
@@ -53,7 +61,7 @@ function displayDeployedShip(reply,position){
 			$('#harbor').html('<h1>Deployed all ships</h1></br>'+'<button id="ready" onclick = "sayReady()">Ready</button>');
 	}
 	else 
-		$('#message').html('<p style=color:red;>'+reply+'</p>');
+		display_Message(reply);
 };
 
 
@@ -83,16 +91,23 @@ function reply_to_shoot(evnt){
 			$('#targetGrid>tbody>tr>td#'+evnt.id).css('background',color);
 		}
 		else if(status.error)
-			$('#message').html('<p style=color:red;>'+status.error+'</p>');
-			if(status.end){
-				$('#message').html('<p style=color:red;>'+status.end+'</p>');
-			};
+				display_Message(status.error);
+		if(status.end)
+			display_Message(status.end),end_Game(true);
 		});
 	};
 };
 
-setInterval(clear_Message,4000);
-function clear_Message(){
-	$('#message').html('');
-}
 
+if(document.cookie && !end_Game())
+	setInterval(get_updates,1000);
+
+function display_Message(message){
+	$('.message').html('<p>'+message+'</p>');
+}
+function end_Game(status){
+	var s=status;
+	return function(){
+		return s;
+	}();
+}
