@@ -15,10 +15,9 @@ if(document.cookie)
 	setInterval(get_updates, 1000);
 
 function sayReady(){
-	document.querySelector('#harbor>button#ready').remove();
-	alert("Please Wait");
+	$('#harbor').html("Deployed all ships");
 	$.post('sayReady','playerId='+getCookie(),function(data){
-		$('#message').html('<p style=color:red;>'+JSON.parse(data)+'</p>');
+		$('#message').html('<p style=color:red;>Please Wait</p>');
 	});
 };
 

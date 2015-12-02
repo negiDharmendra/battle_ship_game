@@ -64,8 +64,8 @@ var addPlayer = function(req,res){
 			'Location':'html/battleship.html',
 			'Content-Type':'text/html',
 			'Set-Cookie':data.name+'_'+uniqueID});
-	res.end();
-	console.log(players);
+		res.end();
+		console.log(players);	
 	});
 };
 
@@ -116,7 +116,7 @@ var validateShoot = function(req,res){
 			status.reply = battleship.shoot.call(player,opponentPlayer,data.position);
 			if(opponentPlayer.sunkShips.length==5){
 				status.end=player.name+'You won the Game';
-			}
+			};
 		}catch(e){
 			status.error = e.message;
 		};
