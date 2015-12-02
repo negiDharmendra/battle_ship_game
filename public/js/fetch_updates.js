@@ -14,6 +14,24 @@ function get_updates(){
 if(document.cookie)
 	setInterval(get_updates, 1000);
 
+function get_ship_info(){
+	$.post('shipInfo','playerId='+getCookie(),function(data,status){
+		data = JSON.parse(data);
+		var ships = Object.keys(data);
+		var shipStatus = [];
+		shipStatus.push('<tr><th>Ship_name</th><th>Hit_holes</th></tr>');
+		for (var i = 0; i < 5; i++) {
+			var shipName = ships[i];
+			var holes = +data[shipName].split(' ')[0];
+			var hitHoles = +data[shipName].split(' ')[1];
+			if(holes==hitHoles)
+				$('#message').html('<p style=color:red;>'+shipName+' is destroyed</p>');
+			shipStatus.push('<tr><td>'+shipName+'</td>'+'<td>'+hitHoles+'</td></tr>');
+		};
+		$('#ship_info').html('<table border=1>'+shipStatus.join('\n')+'</table>');
+	});
+};
+
 function sayReady(){
 	document.querySelector('#harbor>button#ready').remove();
 	alert("Please Wait");
@@ -21,6 +39,8 @@ function sayReady(){
 		$('#message').html('<p style=color:red;>'+JSON.parse(data)+'</p>');
 	});
 };
+	setInterval(get_ship_info,1000);
+
 
 function displayDeployedShip(reply,position){
 	if(reply == true) {
@@ -75,3 +95,4 @@ setInterval(clear_Message,4000);
 function clear_Message(){
 	$('#message').html('');
 }
+
