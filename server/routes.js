@@ -64,8 +64,8 @@ var addPlayer = function(req,res){
 			'Location':'html/battleship.html',
 			'Content-Type':'text/html',
 			'Set-Cookie':data.name+'_'+uniqueID});
-	res.end();
-	console.log(players);
+		res.end();
+		console.log(players);	
 	});
 };
 

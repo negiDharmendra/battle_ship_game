@@ -20,8 +20,7 @@ function get_updates(){
 };
 
 function sayReady(){
-	document.querySelector('#harbor>button#ready').remove();
-	alert("Please Wait");
+	$('#harbor').html("Deployed all ships");
 	$.post('sayReady','playerId='+getCookie(),function(data){
 		display_Message(JSON.parse(data));
 	});
