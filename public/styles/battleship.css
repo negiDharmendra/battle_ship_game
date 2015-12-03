@@ -86,3 +86,6 @@ table{
 	font-size: 28px;
 	color:green;
 }
+#ship_info{
+	text-transform: uppercase;
+}

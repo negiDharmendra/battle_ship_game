@@ -56,16 +56,26 @@ var addPlayer = function(req,res){
 		data += chunk;
 	});
 	req.on('end',function(){
-		data = queryString.parse(data);
-		var uniqueID = battleship.getUniqueId();
-		players[data.name+'_'+uniqueID] =  new battleship.Player(data.name);
-		players[data.name+'_'+uniqueID].playerId = data.name+'_'+uniqueID;
-		res.writeHead(301,{
-			'Location':'html/deploy.html',
-			'Content-Type':'text/html',
-			'Set-Cookie':data.name+'_'+uniqueID});
+	try{
+		if(Object.keys(players).length >= 2){
+			res.write('Wait')
+		}else{
+			data = queryString.parse(data);
+			var uniqueID = battleship.getUniqueId();
+			players[data.name+'_'+uniqueID] =  new battleship.Player(data.name);
+			players[data.name+'_'+uniqueID].playerId = data.name+'_'+uniqueID;
+			res.writeHead(301,{
+				'Location':'html/deploy.html',
+				'Content-Type':'text/html',
+				'Set-Cookie':data.name+'_'+uniqueID});
+			console.log(players);	
+		}
+	}catch(err){
+		console.log(err.message);	
+	}
+	finally{
 		res.end();
-		console.log(players);	
+	}
 	});
 };
 
