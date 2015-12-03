@@ -15,13 +15,10 @@ function get_updates(){
 		else if(turn=='')
 			display_Message('Your opponent player haven\'t started yet.');
 		if(gameEnd){
-			$('.message').html('<p>You lost!!!!</p>');
+			$('.message').html('<p>You lost!!!!</p>'),displayGameOver();
 		}
 	};
 };
-
-if(document.cookie)
-	setInterval(get_updates, 1000);
 
 function get_ship_info(){
 	$.post('shipInfo','playerId='+getCookie(),function(data,status){
@@ -41,45 +38,6 @@ function get_ship_info(){
 	});
 };
 
-
-function sayReady(){
-	$('#harbor').html("Deployed all ships");
-	$.post('sayReady','playerId='+getCookie(),function(data){
-		display_Message(JSON.parse(data));
-	});
-};
-
-function displayDeployedShip(reply,position){
-	if(reply == true) {
-		position.trim().split(' ').forEach(function(ele){
-			$('#ocean_grid>table>tbody>tr>#'+ele).css('background','lightgreen');
-		});
-		$('#harbor>input').val('');
-		document.querySelector('#harbor>#position_of_ship>[value]').remove();
-		if($('#harbor>#position_of_ship>option').length == 0)
-			$('#harbor').html('<h1>Deployed all ships</h1></br>'+'<button id="ready" onclick = "sayReady()">Ready</button>');
-	}
-	else 
-		display_Message(reply);
-};
-
-
-function getCookie(){
-	return document.cookie;
-};
-
-function reply_to_deployment(evnt){
-	evnt = evnt.target;
-	var position = $('#harbor>input').val();
-	var shipName = $("#harbor>#position_of_ship>[value]").val();
-	if(evnt.nodeName === 'BUTTON'){
-	$.post('deployShip','name='+shipName+'&positions='+position+'&playerId='+getCookie(),function(data){
-		var reply = JSON.parse(data);
-		displayDeployedShip(reply,position);
-	});
-	};
-};
-
 function reply_to_shoot(evnt){
 	evnt = evnt.target;
 	if(evnt.nodeName === 'TD'){
@@ -91,25 +49,30 @@ function reply_to_shoot(evnt){
 			}
 			else if(status.error)
 				display_Message(status.error);
-			if(status.end){
-				$('.message').html('<p>'+status.end+'</p>');
-			}
+		if(status.end)
+			display_Message(status.end),displayGameOver();
 		});
 	};
 };
 
+
 function displayGameOver(chunk){
-	clearInterval(x);
-	clearInterval(y)
-}
-if(document.cookie){
-	var x = setInterval(get_updates,1000);	
-	var y = setInterval(get_ship_info,1000);
-}
+	clearInterval(position_updates);
+	clearInterval(ship_updates)
+};
 
 function display_Message(message){
 	$('.message').html('<p>'+message+'</p>');
-}
+};
+function getCookie(){
+	return document.cookie;
+};
+
 function display_sunk_info(message){
 	$('.info').html('<p>'+message+'</p>');
 }
+
+if(document.cookie){
+	var position_updates = setInterval(get_updates,1000);	
+	var ship_updates = setInterval(get_ship_info,1000);
+};

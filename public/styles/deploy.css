@@ -1,0 +1,61 @@
+h1{
+	font-family: sans-serif;
+	text-align: center;
+	font-size: 50px;
+}
+
+table td{
+	width: 45px;
+	height: 45px;
+	background-color: lightgray;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 18px;
+	color: black;
+	font-family: sans-serif;
+}
+
+th{
+	font-family: sans-serif;
+	text-align: center;
+	vertical-align: middle;
+}
+.harbor{
+    width: 20%;
+	float: left;
+	margin: 4% 0 0 10%;
+	font-size: 24px;
+}
+
+.hover{
+	background-color: lightgreen;
+}
+.ocean_grid{
+	margin: 3% 0 0 15%;
+	float: left;
+}
+.harbor>select{
+	margin: 10px 0 0 0;
+	font-size: 20px;
+}
+.harbor>input{
+	margin: 10px 0 0 0px;
+	font-size: 18px;
+}
+.harbor>button{
+	margin: 10px 0 0 0px;
+	font-size: 20px;
+	border-radius: 10px;
+}
+.harbor>button:hover{
+	color: blue;
+}
+
+.information{
+	height: 40px;
+	font-family: sans-serif;
+	font-weight: 100;
+	font-size: 28px;
+	color:green;
+	text-align: center;
+}

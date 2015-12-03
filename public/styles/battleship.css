@@ -41,9 +41,10 @@ h2{
 #harbor,#ship_info{
 	height: 200px;
 	font-size: 24px;
-	font-family: monospace;
+	font-family: sans-serif;
+	font-weight: 100;
 	display: inline-block;
-	margin: 1.8% 0 0 5%;
+	margin: 12;
 }
 #harbor>select{
 	margin: 10px 0 0 0;
