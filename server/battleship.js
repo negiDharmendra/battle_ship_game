@@ -26,6 +26,7 @@ sh.Player = function(player_name){
 	var self=this;
 	this.name = player_name;
 	var holes = [4,5,3,2,3];
+	this.isAlive = true;
 	var ships=['battleship','carrier','cruiser','destroyer','submarine'];
 	this.fleet={};
 	ships.forEach(function(ship,i){
@@ -34,6 +35,8 @@ sh.Player = function(player_name){
 	Object.defineProperty(this,'usedPositions',{value:[],enumerable:false,writable:true});
 	Object.defineProperty(this,'sunkShips',{value:[],enumerable:false,writable:true});
 	Object.defineProperty(this,'readyState',{value:false,enumerable:false,writable:true});
+	Object.defineProperty(this,'isAlive',{enumerable:false,writable:true});
+
 };
 
 
@@ -155,8 +158,11 @@ var destroy = function(opponentPlayer,position){
 
 emitter.on('HIT',function(opponentPlayer,position){
 	var hittedShip =destroy(opponentPlayer,position);
-	if(opponentPlayer.fleet[hittedShip].isSunk())
+	if(opponentPlayer.fleet[hittedShip].isSunk()){
 		opponentPlayer.sunkShips.push(hittedShip);
+		if(opponentPlayer.sunkShips.length==5)
+			opponentPlayer.isAlive = false;
+	}
 	sh.game.turn = opponentPlayer.playerId;
 });
 emitter.on('MISS',function(opponentPlayer){

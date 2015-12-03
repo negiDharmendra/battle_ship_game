@@ -13,7 +13,7 @@ h1{
 	height: 200px;
 	text-align: center;
 	margin: 15% 0 0 35%;
-	background:rgba(192,192,192, .6);
+	background:rgba(192,192,192, .38);
 	border-radius: 30px;
 }
 #input>form{
@@ -25,7 +25,7 @@ h1{
 	border-radius: 10mm;
 	font-size:5mm;
 	color: black;
-	background-color: steelblue;
+	background-color: silver;
 }
 #input>form>input {
 	height:30px;
