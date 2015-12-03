@@ -19,8 +19,22 @@ function get_updates(){
 	};
 };
 
-function getCookie(){
-	return document.cookie;
+function get_ship_info(){
+	$.post('shipInfo','playerId='+getCookie(),function(data,status){
+		data = JSON.parse(data);
+		var ships = Object.keys(data);
+		var shipStatus = [];
+		shipStatus.push('<tr><th>Ship_name</th><th>Hit_holes</th></tr>');
+		for (var i = 0; i < 5; i++) {
+			var shipName = ships[i];
+			var holes = +data[shipName].split(' ')[0];
+			var hitHoles = +data[shipName].split(' ')[1];
+			if(holes==hitHoles)
+				display_Message('Your '+shipName+' has been destroyed.');
+			shipStatus.push('<tr><td>'+shipName+'</td>'+'<td>'+hitHoles+'</td></tr>');
+		};
+		$('#ship_info').html('<table border=1>'+shipStatus.join('\n')+'</table>');
+	});
 };
 
 
@@ -41,9 +55,13 @@ function reply_to_shoot(evnt){
 	};
 };
 
-if(document.cookie)
-	setInterval(get_updates,1000);
-
 function display_Message(message){
 	$('.message').html('<p>'+message+'</p>');
+};
+function getCookie(){
+	return document.cookie;
+};
+if(document.cookie){
+	setInterval(get_updates,1000);
+	setInterval(get_ship_info,1000);
 }

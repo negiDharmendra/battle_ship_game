@@ -151,6 +151,28 @@ var deliver_latest_updates = function(req,res){
 	};
 };
 
+var serveShipInfo = function(req,res){
+	var data ='';
+	req.on('data',function(chunk){
+		data+=chunk;
+		data = queryString.parse(data);
+	});
+	req.on('end',function(){
+		try{
+			var player = get_player(data.playerId);
+			var fleetStatus={};
+			for(var ship in player.fleet)
+				fleetStatus[ship]=player.fleet[ship].holes +' '+player.fleet[ship].hittedHoles;
+			res.end(JSON.stringify(fleetStatus));
+		}
+		catch(e){
+			console.log(e.message);
+		}
+		finally{
+			res.end();
+		}
+	});
+}
 function checkGameStatus(player){
 	return (player.sunkShips.length == 5);
 };
@@ -165,7 +187,8 @@ exports.post_handlers = [
 	{path : '^public/html/deploy.html$',handler : i_am_ready},
 	{path : '^public/html/index.html$', handler : addPlayer},
 	{path : '^public/html/deployShip$',	handler : serve_ship_deployment_info},
-	{path : '^public/html/shoot$',		handler : validateShoot}
+	{path : '^public/html/shoot$',		handler : validateShoot},
+	{path : '^public/html/shipInfo$',handler:serveShipInfo}
 ];
 exports.get_handlers = [
 	{path : '^public/html/get_updates$', handler: deliver_latest_updates},
