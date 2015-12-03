@@ -19,43 +19,10 @@ function get_updates(){
 	};
 };
 
-function sayReady(){
-	$('#harbor').html("Deployed all ships");
-	$.post('sayReady','playerId='+getCookie(),function(data){
-		display_Message(JSON.parse(data));
-	});
-};
-
-function displayDeployedShip(reply,position){
-	if(reply == true) {
-		position.trim().split(' ').forEach(function(ele){
-			$('#ocean_grid>table>tbody>tr>#'+ele).css('background','lightgreen');
-		});
-		$('#harbor>input').val('');
-		document.querySelector('#harbor>#position_of_ship>[value]').remove();
-		if($('#harbor>#position_of_ship>option').length == 0)
-			$('#harbor').html('<h1>Deployed all ships</h1></br>'+'<button id="ready" onclick = "sayReady()">Ready</button>');
-	}
-	else 
-		display_Message(reply);
-};
-
-
 function getCookie(){
 	return document.cookie;
 };
 
-function reply_to_deployment(evnt){
-	evnt = evnt.target;
-	var position = $('#harbor>input').val();
-	var shipName = $("#harbor>#position_of_ship>[value]").val();
-	if(evnt.nodeName === 'BUTTON'){
-	$.post('deployShip','name='+shipName+'&positions='+position+'&playerId='+getCookie(),function(data){
-		var reply = JSON.parse(data);
-		displayDeployedShip(reply,position);
-	});
-	};
-};
 
 function reply_to_shoot(evnt){
 	evnt = evnt.target;
@@ -69,20 +36,14 @@ function reply_to_shoot(evnt){
 		else if(status.error)
 				display_Message(status.error);
 		if(status.end)
-			display_Message(status.end),end_Game(true);
+			display_Message(status.end);
 		});
 	};
 };
 
-if(document.cookie && !end_Game())
+if(document.cookie)
 	setInterval(get_updates,1000);
 
 function display_Message(message){
 	$('.message').html('<p>'+message+'</p>');
-}
-function end_Game(status){
-	var s=status;
-	return function(){
-		return s;
-	}();
 }

@@ -61,7 +61,7 @@ var addPlayer = function(req,res){
 		players[data.name+'_'+uniqueID] =  new battleship.Player(data.name);
 		players[data.name+'_'+uniqueID].playerId = data.name+'_'+uniqueID;
 		res.writeHead(301,{
-			'Location':'html/battleship.html',
+			'Location':'html/deploy.html',
 			'Content-Type':'text/html',
 			'Set-Cookie':data.name+'_'+uniqueID});
 		res.end();
@@ -76,16 +76,18 @@ var i_am_ready = function(req,res){
 		data = queryString.parse(data);
 	});
 	req.on('end',function(){
-		var player = get_player(data.playerId);
+		var player = get_player(req.headers.cookie);
 		try{
 		player.ready();
-		if(battleship.game.allplayers.length == 1)
-			res.end('Please wait for your opponent to be ready');
-		else
-			res.end('It\'s'+get_player(battleship.game.turn).name+'your turn');
+		res.writeHead(301,{
+			'Location':'battleship.html',
+			'Content-Type':'text/html'});
 		}
 		catch(e){
 			console.log(e.message);
+		}
+		finally{
+			res.end();
 		}
 	})
 };
@@ -160,7 +162,7 @@ function selectPlayer(cookie,id){
 };
 
 exports.post_handlers = [
-	{path : '^public/html/sayReady$',   handler : i_am_ready},
+	{path : '^public/html/deploy.html$',handler : i_am_ready},
 	{path : '^public/html/index.html$', handler : addPlayer},
 	{path : '^public/html/deployShip$',	handler : serve_ship_deployment_info},
 	{path : '^public/html/shoot$',		handler : validateShoot}
