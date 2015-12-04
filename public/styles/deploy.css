@@ -7,7 +7,7 @@ h1{
 table td{
 	width: 45px;
 	height: 45px;
-	background-color: lightgray;
+	background-color: #E9E9E9;
 	text-align: center;
 	vertical-align: middle;
 	font-size: 18px;
@@ -18,7 +18,9 @@ table td{
 th{
 	font-family: sans-serif;
 	text-align: center;
+	font-size: 10px;
 	vertical-align: middle;
+	color: lightgrey;
 }
 .harbor{
     width: 20%;
@@ -31,7 +33,7 @@ th{
 	background-color: lightgreen;
 }
 .ocean_grid{
-	margin: 3% 0 0 15%;
+	margin: 3% 0 0 24%;
 	float: left;
 }
 .harbor>select{

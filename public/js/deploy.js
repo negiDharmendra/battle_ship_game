@@ -61,7 +61,7 @@ function reply_to_deployment(evnt){
 };
 
 function getCookie(){
-	return document.cookie;
+	return $.cookie('name');
 };
 
 function displayDeployedShip(reply,position){
@@ -70,7 +70,7 @@ function displayDeployedShip(reply,position){
 			$('.ocean_grid>table>tbody>tr>#'+ele).css('background','lightgreen');
 		});
 		$('.harbor>input').val('');
-		document.querySelector('.harbor>#position_of_ship>[value]').remove();
+		$('.harbor>#position_of_ship>option:selected').remove();
 		if($('.harbor>#position_of_ship>option').length == 0)
 			$('.harbor').html('<h1>Deployed all ships</h1></br>'+
 				'<form method="POST"><button id="ready" type="submit">Ready</button></form>');

@@ -1,12 +1,22 @@
 function renderGrid(){
 	var oceanGridTemplate = [];
 	var targetGridTemplate = [];
-	for (var i = 1; i <= 10; i++) {
+	for (var i = 1; i <= 11; i++) {
 		oceanGridTemplate.push('<tr>');targetGridTemplate.push('<tr>');
-		var character = String.fromCharCode(64+i);
-		for (var j = 1; j <= 10; j++) {
-			oceanGridTemplate.push('<td id='+character+j+' class = "grid">'+character+j+'</td>');
-			targetGridTemplate.push('<td id='+character+j+' class = "grid">'+character+j+'</td>');
+		var character = String.fromCharCode(64+i-1);
+		for (var j = 1; j <= 11; j++) {
+			if(i==1){
+				oceanGridTemplate.push('<td class = "th">'+(j&&(i==1&''||j-1)||'')+'</td>');
+				targetGridTemplate.push('<td class = "th">'+(j&&(i==1&''||j-1)||'')+'</td>');
+			}
+			else if(i!=1&&j==1){
+				oceanGridTemplate.push('<td class = "th">'+(j==1&''||character)+'</td>');
+				targetGridTemplate.push('<td class = "th">'+(j==1&''||character)+'</td>');
+			}
+			else{
+				oceanGridTemplate.push('<td id='+character+(j-1)+' class = "grid" title='+character+(j-1)+'></td>');
+				targetGridTemplate.push('<td id='+character+(j-1)+' class = "grid" title="'+character+(j-1)+'" onclick="reply_to_shoot(event)"></td>');
+			}
 		};
 		oceanGridTemplate.push('</tr>');targetGridTemplate.push('</tr>');
 	};
@@ -16,5 +26,5 @@ function renderGrid(){
 
 $( window ).load(function(){
 	renderGrid();
-	$('.game_screen>#target_grid>#targetGrid').click(reply_to_shoot);
+	// $('#targetGrid>tbody>tr>.grid').click(reply_to_shoot);
 });

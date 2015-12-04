@@ -5,13 +5,26 @@ var queryString = require('querystring');
 var battleship = require('./battleship.js').sh;
 var players = {};
 
+
+function getCookie(req,cname) {
+    var name = cname + "=";
+    var ca = req.headers.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+    }
+    return "";
+}
+
+
 var page_not_found = function(req,res){
 	res.writeHead(404,{'Content-Type':'text/html'});
 	res.end('Page Not Found');
 };
 
 var redirectToHome=function(req,res){
-	if(!req.headers.cookie){
+	if(!getCookie(req,'name')){
 		res.writeHead(301,{'Location': '/'});
 		res.end();
 	}
@@ -32,7 +45,7 @@ var serveStaticFile = function(req,res,next){
 var serve_ship_deployment_info = function(req,res,next){
 	console.log('My Url:----',req.url);
 	var data = '';
-	console.log('req.header.cookie--->',req.headers.cookie)
+	console.log('req.header.cookie--->',getCookie(req,'name'))
 	req.on('data',function(chunk){
 		data +=  chunk;
 		data = queryString.parse(data);
@@ -67,7 +80,7 @@ var addPlayer = function(req,res){
 			res.writeHead(301,{
 				'Location':'html/deploy.html',
 				'Content-Type':'text/html',
-				'Set-Cookie':data.name+'_'+uniqueID});
+				'Set-Cookie':'name='+data.name+'_'+uniqueID});
 			console.log(players);	
 		}
 	}catch(err){
@@ -80,13 +93,14 @@ var addPlayer = function(req,res){
 };
 
 var i_am_ready = function(req,res){
+console.log("I'm cokkie---------------",getCookie(req,'name'))
 	var data = '';
 	req.on('data',function(chunk){
 		data += chunk;
 		data = queryString.parse(data);
 	});
 	req.on('end',function(){
-		var player = get_player(req.headers.cookie);
+		var player = get_player(getCookie(req,'name'));
 		try{
 		player.ready();
 		res.writeHead(301,{
@@ -136,19 +150,19 @@ var validateShoot = function(req,res){
 	});
 };
 var deliver_latest_updates = function(req,res){
-	if(!req.headers.cookie){
+	if(!getCookie(req,'name')){
 		res.end();
 	}
 	else{
 		try{
 			var updates = {position:[],gotHit:[],turn:''};
-			var player = get_player(req.headers.cookie);
+			var player = get_player(getCookie(req,'name'));
 			if(player && player.readyState){
 				for(var ship in player.fleet)
 					updates.position=updates.position.concat(player.fleet[ship].onPositions);
 				updates.position = ld.compact(updates.position);
 			 	updates.gotHit = ld.difference(updates.position,player.usedPositions);
-			 	updates.turn = selectPlayer(req.headers.cookie,battleship.game.turn).name;
+			 	updates.turn = selectPlayer(getCookie(req,'name'),battleship.game.turn).name;
 			 	updates.gameEnd=!player.isAlive;
 			}
 		 	res.end(JSON.stringify(updates));

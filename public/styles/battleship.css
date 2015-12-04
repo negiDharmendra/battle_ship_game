@@ -1,16 +1,7 @@
 #container{
 	background-color: white;
 	width: auto;
-	height: 580px;
-}
-#gameOver{
-    position:relative;
-    top:50%;
-    margin-left:580px;
-    font-size: 60px;
-}
-#redirection>a{
-	text-align:right;
+	height: 300px;
 }
 #header{
 	font-size: 40px;
@@ -21,70 +12,40 @@
 }
 h2{
 	font-size: 24px;
+	margin: 0px 0px 15px 0px;
 	text-align: center;
 	font-family: monospace;
-}
-.game_screen{
-	width: 100%;
-	height: 300px;
-	border-width:5px;
 }
 #info_board{
 	width: 100%;
 	height: 100px;
-	text-align: center;
-	font-size: 24px;
-	font-weight: bold;
-	color: white;
 	margin-top:20px; 
 }
-#harbor,#ship_info{
-	height: 200px;
-	font-size: 24px;
-	font-family: sans-serif;
-	font-weight: 100;
-	display: inline-block;
-	margin: 12;
-}
-#harbor>select{
-	margin: 10px 0 0 0;
-	font-size: 20px;
-}
-#harbor>input{
-	margin: 10px 0 0 0px;
-	font-size: 18px;
-}
-#harbor>button{
-	margin: 10px 0 0 0px;
-	font-size: 20px;
-	border-radius: 10px;
-}
-#harbor>button:hover{
-	color: blue;
-}
-.game_screen #ocean_grid {
+.game_screen #ocean_grid , .game_screen #target_grid {
 	float: left;
 	margin: 2% 0 0 7%;
 }
-.game_screen #target_grid{
-	float: left;
-	margin: 2% 0 0 7%;
-}
-
-table{
+#oceanGrid, #targetGrid{
+	width: 495px;
+	height: 495px;
 	border:1;
 }
 .grid{
-	width: 45px;
-	height: 45px;
-	background-color: lightgray;
+	width: 10%;
+	height: 10%;
+	background-color: #E9E9E9;
+	
+	border-color: white;
+}
+.th{
 	text-align: center;
 	vertical-align: middle;
-	font-size: 18px;
-	color: black;
+	font-size: 10px;
+	color: lightgrey;
 	font-family: sans-serif;
-}		
-#targetGrid td:hover{
+
+}
+td.grid:hover{
 	background-color: gray;
 }
 .hover{
@@ -94,8 +55,31 @@ table{
 	font-family: sans-serif;
 	font-weight: 100;
 	font-size: 28px;
+	text-align: center;
 	color:green;
 }
-#ship_info{
+.ship_info th{
+	font-size: 24px;
+}
+.ship_info td {
+	width: 130px;
+	height: 45px;
+	vertical-align: middle;
+	font-size: 18px;
+	color: black;
+	font-family: sans-serif;
+	border-color: white;
+}
+.ship_info{
+	width: 300px;
+	height: 460px;
+	float: left;
+	margin: 3.8% 0 0 5%;
 	text-transform: uppercase;
+}
+.hit{
+	background: #EE9090;
+}
+.miss{
+	background: #9090EE;
 }
