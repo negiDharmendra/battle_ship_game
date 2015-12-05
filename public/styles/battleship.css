@@ -1,7 +1,7 @@
 #container{
 	background-color: white;
 	width: auto;
-	height: 300px;
+	height: 320px;
 }
 #header{
 	font-size: 40px;
@@ -31,10 +31,9 @@ h2{
 	border:1;
 }
 .grid{
-	width: 10%;
-	height: 10%;
+	width: 45px;
+	height: 45px;
 	background-color: #E9E9E9;
-	
 	border-color: white;
 }
 .th{
@@ -46,7 +45,7 @@ h2{
 
 }
 td.grid:hover{
-	background-color: gray;
+	background-color: #c9d4da;
 }
 .hover{
 	background-color: lightgreen;

@@ -20,8 +20,8 @@ function renderGrid(){
 		};
 		oceanGridTemplate.push('</tr>');targetGridTemplate.push('</tr>');
 	};
-	$('.game_screen> #ocean_grid').html('<h2>OCEAN GRID</h2><table id="oceanGrid" >'+oceanGridTemplate.join('\n')+'</table>');
-	$('.game_screen> #target_grid').html('<h2>TARGET GRID</h2><table id="targetGrid">'+targetGridTemplate.join('\n')+'</table>');
+	$('.game_screen> #ocean_grid').html('<h2>OCEAN </h2><table id="oceanGrid" >'+oceanGridTemplate.join('\n')+'</table>');
+	$('.game_screen> #target_grid').html('<h2>TARGET </h2><table id="targetGrid">'+targetGridTemplate.join('\n')+'</table>');
 };
 
 $( window ).load(function(){
