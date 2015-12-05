@@ -29,6 +29,7 @@ function displayPosition(e){
 		positions.forEach(function(id){
 			$('.ocean_grid td#'+id).addClass('hover');});
 	};
+	return positions;
 };
 
 function hidePosition(e){
@@ -44,15 +45,21 @@ function getPositions(startingPosition){
 	var handlerFunction = {'vertical':vertical,'horizontal':horizontal};
 	var shipName = $(".harbor>#position_of_ship>[value]").val();
 	var formation = $('select#formation').val();
+	// $(document).keydown(function(){
+	// 	console.log('dfbvsoducsd vlsd')
+	// 	formation  = 'horizontal';
+	// var positions = handlerFunction['horizontal'](startingPosition,shipSize[shipName]);
+	// 	return positions;
+	// })
 	var positions = handlerFunction[formation](startingPosition,shipSize[shipName]);
 	return positions;
 };
 
 function reply_to_deployment(evnt){
 	evnt = evnt.target;
-	var position = $('.harbor>input').val();
+	var position = getPositions(evnt.id).join(' ');
 	var shipName = $(".harbor>#position_of_ship>[value]").val();
-	if(evnt.nodeName === 'BUTTON'){
+	if(evnt.nodeName === 'TD'){
 	$.post('deployShip','name='+shipName+'&positions='+position+'&playerId='+getCookie(),function(data){
 		var reply = JSON.parse(data);
 		displayDeployedShip(reply,position);
@@ -71,9 +78,9 @@ function displayDeployedShip(reply,position){
 		});
 		$('.harbor>input').val('');
 		$('.harbor>#position_of_ship>option:selected').remove();
-		if($('.harbor>#position_of_ship>option').length == 0)
-			$('.harbor').html('<h1>Deployed all ships</h1></br>'+
-				'<form method="POST"><button id="ready" type="submit">Ready</button></form>');
+		if($('.harbor>#position_of_ship>option').length == 0){
+			$('.harbor').html('<h1>Deployed all ships</h1></br>'+'<form method="POST"><button id="ready" type="submit">Ready</button></form>');
+		}
 	}
 	else 
 		display_Message(reply);
@@ -88,10 +95,7 @@ $( window ).load(function(){
 	$('.ocean_grid').click(providePositions);
     $('.ocean_grid td').mouseover(displayPosition);
     $('.ocean_grid td').mouseleave(hidePosition);
-    $('.harbor button').click(function(evnt){
-		if($('.harbor input').val().trim()!='')
-			reply_to_deployment(evnt);
-		else 
-			display_Message('Please provide position');
+    $('.ocean_grid td').click(function(evnt){
+		reply_to_deployment(evnt);
 	});
 });

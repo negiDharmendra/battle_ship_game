@@ -192,7 +192,7 @@ var serveShipInfo = function(req,res){
 function getCookie(req,cookie_n) {
     var name = cookie_n + "=";
     var cookies = req.headers.cookie.split(';');
-    for(var index=0; index<cookindexes.length; index++) {
+    for(var index=0; index<cookies.length; index++) {
         var cookie = cookies[index];
         while (cookie.charAt(0)==' ') cookie = cookie.substring(1);
         if (cookie.indexOf(name) == 0) return cookie.substring(name.length, cookie.length);
@@ -208,7 +208,7 @@ function selectPlayer(cookie,id){
 };
 
 exports.post_handlers = [
-	{path : '^public/html/deploy.html$',handler : i_am_ready},
+	{path:'^public/html/deploy.html',handler:i_am_ready},
 	{path : '^public/html/index.html$', handler : addPlayer},
 	{path : '^public/html/deployShip$',	handler : serve_ship_deployment_info},
 	{path : '^public/html/shoot$',		handler : validateShoot},

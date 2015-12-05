@@ -15,7 +15,7 @@ function get_updates(){
 		else if(turn=='')
 			display_Message('Your opponent player haven\'t started yet.');
 		if(!gameEnd.player || !gameEnd.opponentPlayer){
-			displayGameOver();
+			gameOver();
 			if(!gameEnd.player)
 				display_Message('You lost!!!!');
 			if(!gameEnd.opponentPlayer)
