@@ -14,8 +14,12 @@ function get_updates(){
 			display_Message('It\'s '+turn+' turn');
 		else if(turn=='')
 			display_Message('Your opponent player haven\'t started yet.');
-		if(gameEnd){
-			display_Message('You lost!!!!'),gameOver();
+		if(!gameEnd.player || !gameEnd.opponentPlayer){
+			displayGameOver();
+			if(!gameEnd.player)
+				display_Message('You lost!!!!');
+			if(!gameEnd.opponentPlayer)
+				display_Message('You won!!!!');	
 		}
 	};
 };
