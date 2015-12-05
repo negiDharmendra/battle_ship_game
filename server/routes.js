@@ -52,27 +52,50 @@ var addPlayer = function(req,res){
 		data += chunk;
 	});
 	req.on('end',function(){
-	try{
-		if(Object.keys(players).length >= 2){
-			res.write('Wait')
-		}else{
+		try{
 			data = queryString.parse(data);
 			var uniqueID = battleship.getUniqueId();
 			players[data.name+'_'+uniqueID] =  new battleship.Player(data.name);
 			players[data.name+'_'+uniqueID].playerId = data.name+'_'+uniqueID;
 			res.writeHead(301,{
-				'Location':'html/deploy.html',
+				'Location':'deploy.html',
 				'Content-Type':'text/html',
 				'Set-Cookie':'name='+data.name+'_'+uniqueID});
 			console.log(players);	
+		}catch(err){
+			console.log(err.message);
 		}
-	}catch(err){
-		console.log(err.message);	
-	}
-	finally{
-		res.end();
-	}
+		finally{
+			res.end();
+		}
 	});
+};
+
+var holdPlayer = function(req,res){
+	var data = '';
+	req.on('data',function(chunk){
+		data += chunk;
+	});
+	req.on('end',function(){
+		data = queryString.parse(data);
+		res.writeHead(301,{
+				'Location':'players_queue.html',
+				'Content-Type':'text/html',
+				'Set-Cookie':'name='+data.name});
+		res.end();
+	});
+};
+var respondToPlayerInQueue = function(req,res){
+	var noOfPlayers = Object.keys(players).length;
+	if(noOfPlayers < 2)
+		res.end('true');
+	else
+		res.end('false');
+};
+var inform_players = function(req,res){
+	if(Object.keys(players).length >= 2)
+		holdPlayer(req,res);
+	else addPlayer(req,res);
 };
 
 var i_am_ready = function(req,res){
@@ -158,6 +181,28 @@ var deliver_latest_updates = function(req,res){
 	};
 };
 
+var respondToRestartGame = function(req,res){
+	var cookie = getCookie(req,'name');
+	var playerName = players[cookie].name;
+	players[cookie] =  new battleship.Player(playerName);
+	players[cookie].playerId = cookie;
+	console.log('respondToRestartGame ----------',players[cookie].usedPositions);
+	res.writeHead(301,{
+		'Location':'deploy.html',
+		'Content-Type':'text/html'});
+	res.end();
+};
+var respondToQuitGame = function(req,res){
+	var cookie = getCookie(req,'name');
+	delete players[cookie];
+	delete battleship.game.allplayers.indexOf(cookie);
+	battleship.game.allplayers = ld.compact(battleship.game.allplayers);
+	console.log('respondToQuitGame ----------',players);
+	res.writeHead(301,{
+		'Location':'/',
+		'Content-Type':'text/html'});
+	res.end();
+};
 var serveShipInfo = function(req,res){
 	var data ='';
 	req.on('data',function(chunk){
@@ -192,7 +237,7 @@ var serveShipInfo = function(req,res){
 function getCookie(req,cookie_n) {
     var name = cookie_n + "=";
     var cookies = req.headers.cookie.split(';');
-    for(var index=0; index<cookindexes.length; index++) {
+    for(var index=0; index<cookies.length; index++) {
         var cookie = cookies[index];
         while (cookie.charAt(0)==' ') cookie = cookie.substring(1);
         if (cookie.indexOf(name) == 0) return cookie.substring(name.length, cookie.length);
@@ -206,16 +251,25 @@ function selectPlayer(cookie,id){
 		return get_player(cookie);
 	return get_opponentPlayer(cookie);
 };
+function serveIndexFile(req,res,next){
+	res.writeHead(301,{Location:'html/index.html','Content-Type':'text/html'});
+	res.end();
+};
 
 exports.post_handlers = [
 	{path : '^public/html/deploy.html$',handler : i_am_ready},
-	{path : '^public/html/index.html$', handler : addPlayer},
+	{path : '^public/html/index.html$', handler : inform_players},
+	{path : '^public/html/players_queue.html$', handler : inform_players},
 	{path : '^public/html/deployShip$',	handler : serve_ship_deployment_info},
+	{path : '^public/html/restartGame$',handler: respondToRestartGame},
+	{path : '^public/html/quitGame$',handler: respondToQuitGame},
 	{path : '^public/html/shoot$',		handler : validateShoot},
 	{path : '^public/html/shipInfo$',	handler : serveShipInfo}
 ];
 exports.get_handlers = [
+	{path : '^public/$', handler: serveIndexFile},
 	{path : '^public/html/get_updates$', handler: deliver_latest_updates},
+	{path : '^public/html/queryGameOver$',handler: respondToPlayerInQueue},
 	{path : '',handler:serveStaticFile},
 	{path : '',handler:page_not_found}
 ];
