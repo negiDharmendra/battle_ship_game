@@ -23,7 +23,7 @@ h2{
 }
 .game_screen #ocean_grid , .game_screen #target_grid {
 	float: left;
-	margin: 2% 0 0 7%;
+	margin: 2% 0 0 5%;
 }
 #oceanGrid, #targetGrid{
 	width: 495px;
@@ -45,7 +45,7 @@ h2{
 	font-family: sans-serif;
 
 }
-td.grid:hover{
+#targetGrid td:hover{
 	background-color: gray;
 }
 .hover{
@@ -57,12 +57,14 @@ td.grid:hover{
 	font-size: 28px;
 	text-align: center;
 	color:green;
+	text-transform: uppercase;
 }
 .ship_info th{
-	font-size: 24px;
+	font-size: 20px;
+	font-weight: bolder;
 }
 .ship_info td {
-	width: 130px;
+	width: 150px;
 	height: 45px;
 	vertical-align: middle;
 	font-size: 18px;

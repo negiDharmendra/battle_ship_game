@@ -15,25 +15,19 @@ function get_updates(){
 		else if(turn=='')
 			display_Message('Your opponent player haven\'t started yet.');
 		if(gameEnd){
-			display_Message('You lost!!!!'),displayGameOver();
+			display_Message('You lost!!!!'),gameOver();
 		}
 	};
 };
 function get_ship_info(){
 	$.post('shipInfo','playerId='+getCookie(),function(data,status){
-		data = JSON.parse(data);
-		var ships = Object.keys(data);
+		var ships = JSON.parse(data);
 		var shipStatus = [];
-		var sunk =[];
-		shipStatus.push('<tr><th>Ship name</th><th>Hits</th></tr>');
-		for (var i = 0; i < 5; i++) {
-			var shipName = ships[i];
-			var holes = +data[shipName].split(' ')[0];
-			var hitHoles = +data[shipName].split(' ')[1];
-			if(holes==hitHoles)
-			shipStatus.push('<tr><td >'+shipName+'</td>'+'<td  align=center>'+hitHoles+'</td></tr>');	
-				else
-			shipStatus.push('<tr><td>'+shipName+'</td>'+'<td align=center>'+hitHoles+'</td></tr>');
+		shipStatus.push('<tr><th>Ship name</th><th>Hits</th><th>Status</th></tr>');
+		for (var ship in ships) {
+			var ship_info = ships[ship];
+			var status = ship_info.status&&'Sunk'||'';
+			shipStatus.push('<tr><td>'+ship+'</td>'+'<td align=center>'+ship_info.hits+'</td><td align=center>'+status+'</td></tr>');
 		};
 		$('.ship_info').html('<table class="fleet">'+shipStatus.join('\n')+'</table>');
 	});
@@ -52,12 +46,12 @@ function reply_to_shoot(evnt){
 		else if(status.error)
 			display_Message(status.error);
 	if(status.end)
-		display_Message(status.end),displayGameOver();
+		display_Message(status.end),gameOver();
 	});
 };
 
 
-function displayGameOver(chunk){
+function gameOver(chunk){
 	$('#targetGrid>tbody>tr>.grid').removeAttr('onclick');
 	clearInterval(position_updates);
 	clearInterval(ship_updates)
@@ -70,10 +64,6 @@ function getCookie(){
 	return $.cookie('name');
 };
 
-function display_sunk_info(message){
-	$('.info').html('<p>'+message+'</p>');
-	setTimeout(function(){$('.info').html('')},7000);
-}
 if(getCookie()){
 	var position_updates = setInterval(get_updates,1000);	
 	var ship_updates = setInterval(get_ship_info,1000);
