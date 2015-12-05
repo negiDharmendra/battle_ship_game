@@ -1,6 +1,6 @@
 function get_updates(){
-	$.get('get_updates',sucess);
-	function sucess(data){
+	$.get('get_updates',success);
+	function success(data){
 		var updates=JSON.parse(data);
 		var gotHit=updates.gotHit;
 		var usedPosition=updates.position;
@@ -15,7 +15,7 @@ function get_updates(){
 		else if(turn=='')
 			display_Message('Your opponent player haven\'t started yet.');
 		if(!gameEnd.player || !gameEnd.opponentPlayer){
-			gameOver();
+			gameOver(),restartOrQuit();
 			if(!gameEnd.player)
 				display_Message('You lost!!!!');
 			if(!gameEnd.opponentPlayer)
@@ -49,18 +49,21 @@ function reply_to_shoot(evnt){
 		}
 		else if(status.error)
 			display_Message(status.error);
-	if(status.end)
-		display_Message(status.end),gameOver();
+		if(status.end)
+			display_Message(status.end),gameOver(),restartOrQuit();
 	});
 };
 
-
-function gameOver(chunk){
-	$('#targetGrid>tbody>tr>.grid').removeAttr('onclick');
+function gameOver(){
 	clearInterval(position_updates);
 	clearInterval(ship_updates)
+	$('#targetGrid>tbody>tr>.grid').removeAttr('onclick');
 };
 
+function restartOrQuit(){
+	var restartHtml = '<form method="POST" action="restartGame"><button>Restart</button></form><br><form method="POST" action="quitGame"><button>Quit</button></form>';
+	$('div.info').html(restartHtml);
+}
 function display_Message(message){
 	$('.message').html('<p>'+message+'</p>');
 };

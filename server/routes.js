@@ -24,27 +24,22 @@ var bad_request=function(req,res,next){
 	res.end('Bad Request');
 };
 
-var addPlayer=function(req,res,next){
-try{
-	if(Object.keys(players).length >= 2){
-		res.write('Wait');
-	}else{
+var addPlayer=function(req,res){
+	try{
 		var uniqueID = battleship.getUniqueId();
 		players[req.data.name+'_'+uniqueID] =  new battleship.Player(req.data.name);
 		players[req.data.name+'_'+uniqueID].playerId = req.data.name+'_'+uniqueID;
 		res.writeHead(301,{
-			'Location':'html/deploy.html',
+			'Location':'deploy.html',
 			'Content-Type':'text/html',
 			'Set-Cookie':'name='+req.data.name+'_'+uniqueID});
+	}catch(err){
+		console.log(err.message);	
 	}
-}catch(err){
-	console.log(err.message);	
-}
-finally{
-	res.end();
-}
+	finally{
+		res.end();
+	}
 };
-
 
 var readyAnnounement = function(req,res){
 	try{
@@ -62,41 +57,61 @@ var readyAnnounement = function(req,res){
 	}
 };
 
+var holdPlayer = function(req,res){
+	res.writeHead(301,{
+			'Location':'players_queue.html',
+			'Content-Type':'text/html',
+			'Set-Cookie':'name='+req.data.name});
+	res.end();
+};
+var respondToPlayerInQueue = function(req,res){
+	var noOfPlayers = Object.keys(players).length;
+	if(noOfPlayers < 2)
+		res.end('true');
+	else
+		res.end('false');
+};
+var inform_players = function(req,res){
+	if(Object.keys(players).length >= 2)
+		holdPlayer(req,res);
+	else addPlayer(req,res);
+};
+
 var deployShips = function(req,res,next){
 	var status = '';
 	try{
-	var player = get_player(req.playerId);
-	status = player.deployShip(req.data.name,req.data.positions.trim().split(' '));
+		var player = get_player(req.playerId);
+		status = player.deployShip(req.data.name,req.data.positions.trim().split(' '));
 	}catch(e){
 		status = e.message;
 	}
 	finally{
-	res.end(JSON.stringify(status));
+		res.end(JSON.stringify(status));
 	}
 };
 
 
 var deliver_latest_updates = function(req,res){
-try{
-	var updates = {position:[],gotHit:[],turn:''};
-	var player = get_player(req.playerId);
-	var opponentPlayer=get_opponentPlayer(req.playerId) || {isAlive:true};
-	var turn = get_player(battleship.game.turn);
-	if(player && player.readyState){
-		for(var ship in player.fleet)
-			updates.position=updates.position.concat(player.fleet[ship].onPositions);
-		updates.position = ld.compact(updates.position);
-	 	updates.gotHit = ld.difference(updates.position,player.usedPositions);
-	 	updates.turn = turn?turn.name :'';
-	 	updates.gameEnd={player:player.isAlive,opponentPlayer:opponentPlayer.isAlive};
+	try{
+		var updates = {position:[],gotHit:[],turn:''};
+		var player = get_player(req.playerId);
+		var opponentPlayer=get_opponentPlayer(req.playerId) || {isAlive:true};
+		var turn = get_player(battleship.game.turn);
+		if(player && player.readyState){
+			for(var ship in player.fleet)
+				updates.position=updates.position.concat(player.fleet[ship].onPositions);
+			updates.position = ld.compact(updates.position);
+		 	updates.gotHit = ld.difference(updates.position,player.usedPositions);
+		 	updates.turn = turn?turn.name :'';
+		 	updates.gameEnd={player:player.isAlive,opponentPlayer:opponentPlayer.isAlive};
+		}
+	 	res.end(JSON.stringify(updates));
+	}catch(e){
+		console.log(e.message);
 	}
- 	res.end(JSON.stringify(updates));
-}catch(e){
-	console.log(e.message);
-}
-finally{
-	res.end();
-};
+	finally{
+		res.end();
+	};
 };
 
 var serveShipInfo = function(req,res){
@@ -124,9 +139,8 @@ var validateShoot = function(req,res){
 		var opponentPlayer = get_opponentPlayer(req.playerId);
 		var player = get_player(req.playerId);
 		status.reply = battleship.shoot.call(player,opponentPlayer,req.data.position);
-		if(!opponentPlayer.isAlive){
+		if(!opponentPlayer.isAlive)
 			status.end='You won the Game '+player.name;
-		}
 	}catch(e){
 		status.error = e.message;
 	};
@@ -148,11 +162,40 @@ var get_player=function(id){
 var autheniction=function(req,res,next){
 	cookiehandler.validateUser(req,res,next,players);	
 }
+var respondToRestartGame = function(req,res){
+	var playerId = req.playerId;
+	var playerName = players[playerId].name;
+	players[playerId] =  new battleship.Player(playerName);
+	players[playerId].playerId = playerId;
+	res.writeHead(301,{
+		'Location':'deploy.html',
+		'Content-Type':'text/html'});
+	res.end();
+};
+var respondToQuitGame = function(req,res){
+	var playerId = req.playerId;
+	delete players[playerId];
+	delete battleship.game.allplayers.indexOf(playerId);
+	battleship.game.allplayers = ld.compact(battleship.game.allplayers);
+	res.writeHead(301,{
+		'Location':'/',
+		'Content-Type':'text/html'});
+	res.end();
+};
+
+
+function serveIndexFile(req,res){
+	res.writeHead(301,{Location:'html/index.html','Content-Type':'text/html'});
+	res.end();
+};
 
 exports.post_handlers = [
 	{path : ''						   ,handler : dataParser.requestDataParser},
-	{path : '^public/html/index.html$' ,handler : addPlayer},
+	{path : '^public/html/index.html$' ,handler : inform_players},
+	{path : '^public/html/players_queue.html$',  handler : inform_players},
 	{path : ''						   ,handler : autheniction},
+	{path : '^public/html/restartGame$',handler : respondToRestartGame},
+	{path : '^public/html/quitGame$'   ,handler : respondToQuitGame},
 	{path : '^public/html/deployShip$' ,handler : deployShips},
 	{path : '^public/html/deploy.html$',handler : readyAnnounement},
 	{path : '^public/html/shoot$'	   ,handler : validateShoot},
@@ -160,9 +203,11 @@ exports.post_handlers = [
 	{path : ''						   ,handler : bad_request}
 ];
 exports.get_handlers = [
+	{path : '^public/$', handler: serveIndexFile},
+	{path : '^public/html/queryGameOver$',handler : respondToPlayerInQueue},
 	{path : ''						   ,handler : dataParser.requestDataParser},
 	{path : ''						   ,handler : serveStaticFile},
 	{path : ''						   ,handler : autheniction},
-	{path : '^public/html/get_updates$',handler: deliver_latest_updates},
-	{path : ''						   ,handler:page_not_found}
+	{path : '^public/html/get_updates$',handler : deliver_latest_updates},
+	{path : ''						   ,handler : page_not_found}
 ];

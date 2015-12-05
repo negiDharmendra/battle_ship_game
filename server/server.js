@@ -23,8 +23,6 @@ emitter.on('next', function(handlers, req, res, next){
 });
 
 var getUrl=function(req){
-	if(req.url=='/')
-		req.url= '/html/index.html';
 	return 'public'+req.url;	
 };
 
