@@ -34,7 +34,7 @@ var addPlayer=function(req,res){
 			'Content-Type':'text/html',
 			'Set-Cookie':'name='+req.data.name+'_'+uniqueID});
 	}catch(err){
-		console.log(err.message);	
+		console.log(err.message);
 	}
 	finally{
 		res.end();
@@ -139,12 +139,18 @@ var validateShoot = function(req,res){
 		var opponentPlayer = get_opponentPlayer(req.playerId);
 		var player = get_player(req.playerId);
 		status.reply = battleship.shoot.call(player,opponentPlayer,req.data.position);
+		saveFiredPositions(player,req.data.position,status.reply);
 		if(!opponentPlayer.isAlive)
 			status.end='You won the Game '+player.name;
 	}catch(e){
 		status.error = e.message;
 	};
 	res.end(JSON.stringify(status));
+};
+
+var saveFiredPositions=function(player,position,status){
+		player[status]=player[status] || [];
+		player[status].push(position);
 };
 
 var get_opponentPlayer = function(player_id){
@@ -160,7 +166,7 @@ var get_player=function(id){
 };
 
 var autheniction=function(req,res,next){
-	cookiehandler.validateUser(req,res,next,players);	
+	cookiehandler.validateUser(req,res,next,players);
 }
 var respondToRestartGame = function(req,res){
 	var playerId = req.playerId;
@@ -183,7 +189,19 @@ var respondToQuitGame = function(req,res){
 	res.end();
 };
 
-
+function getMyshootPositions(req,res){
+		var status={hit:[],miss:[]};
+	try{
+		var player=get_player(req.playerId);
+		status.hit=player['hit'] || [];
+		status.miss=player['miss'] || [];
+	}catch(e){
+		console.log(e.message);
+	}
+	finally{
+	res.end(JSON.stringify(status));
+	}
+};
 function serveIndexFile(req,res){
 	res.writeHead(301,{Location:'html/index.html','Content-Type':'text/html'});
 	res.end();
@@ -193,7 +211,7 @@ exports.post_handlers = [
 	{path : ''						   ,handler : dataParser.requestDataParser},
 	{path : '^public/html/index.html$' ,handler : inform_players},
 	{path : '^public/html/players_queue.html$',  handler : inform_players},
-	{path : ''						   ,handler : autheniction},
+	{path : ''						  									 ,handler : autheniction},
 	{path : '^public/html/restartGame$',handler : respondToRestartGame},
 	{path : '^public/html/quitGame$'   ,handler : respondToQuitGame},
 	{path : '^public/html/deployShip$' ,handler : deployShips},
@@ -209,5 +227,6 @@ exports.get_handlers = [
 	{path : ''						   ,handler : serveStaticFile},
 	{path : ''						   ,handler : autheniction},
 	{path : '^public/html/get_updates$',handler : deliver_latest_updates},
+	{path : '^public/html/myShootPositions$',handler : getMyshootPositions},
 	{path : ''						   ,handler : page_not_found}
 ];

@@ -19,7 +19,7 @@ h2{
 #info_board{
 	width: 100%;
 	height: 100px;
-	margin-top:20px; 
+	margin-top:20px;
 }
 .game_screen #ocean_grid , .game_screen #target_grid {
 	float: left;
@@ -46,7 +46,7 @@ h2{
 }
 
 td.grid:hover{
-	background-color: #c9d4da;
+	opacity: .4;
 }
 .hover{
 	background-color: lightgreen;
