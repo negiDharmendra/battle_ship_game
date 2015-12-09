@@ -1,5 +1,4 @@
-
-"use strict"
+"use strict";
 var sh = {};
 var ld = require('lodash');
 var Events=require("events").EventEmitter;
@@ -119,30 +118,36 @@ sh.getUniqueId=(function(){
 
 emitter.on('READY',function(player){
 	player.readyState=true;
-	var allplayers=sh.game.allplayers;
-	allplayers.push(player.playerId);
-	if (ld.uniq(allplayers).length==2){
-		sh.game.turn = allplayers[0];
+	sh.game.allplayers.push(player.playerId);
+	if (ld.uniq(sh.game.allplayers).length==2){
+		sh.game.turn = sh.game.allplayers[0];
+		sh.game.allplayers=[];
 	};
 });
 
 sh.shoot = function(opponentPlayer,position){
+	if(!this.readyState)
+		throw new Error('Not announced ready');
 	if(sh.game.turn != this.playerId)
 		throw new Error('Opponent turn');
 	if(!sh.game.validatePosition(position.split(' ')))
-		throw new Error('Invalid position');	
+		throw new Error('Invalid position');
 	var index = opponentPlayer.usedPositions.indexOf(position);
 		if(index!= -1){
 			emitter.emit('HIT',opponentPlayer,position);
+			this.hit=this.hit || [];
+			this.hit.push(position);
 			return 'hit';
 		}
 		else{
 			emitter.emit('MISS',opponentPlayer);
+			this.miss=this.miss || [];
+			this.miss.push(position);
 			return 'miss';
 		}
 };
 
-var destroy = function(opponentPlayer,position){
+sh.destroy = function(opponentPlayer,position){
 	var hittedShip;
 	var ships=['battleship','carrier','cruiser','distroyer','submarine'];
 	var index = opponentPlayer.usedPositions.indexOf(position);
@@ -158,10 +163,10 @@ var destroy = function(opponentPlayer,position){
 };
 
 emitter.on('HIT',function(opponentPlayer,position){
-	var hittedShip =destroy(opponentPlayer,position);
+	var hittedShip =sh.destroy(opponentPlayer,position);
 	if(opponentPlayer.fleet[hittedShip].isSunk()){
 		opponentPlayer.sunkShips.push(hittedShip);
-		if(opponentPlayer.sunkShips.length==5)
+	if(opponentPlayer.sunkShips.length==5)
 			opponentPlayer.isAlive = false;
 	}
 	sh.game.turn = opponentPlayer.playerId;
