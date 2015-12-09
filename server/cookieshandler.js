@@ -1,17 +1,12 @@
 var lib={};
 module.exports=lib;
-lib.getCookie =function(req,cookie_n) {
-    var name = cookie_n + "=";
+lib.getCookie =function(req,cookieName) {
     var cookies = req.headers.cookie || '';
-    var cookies = cookies.split(';');
-    for(var index=0; index<cookies.length; index++) {
-        var cookie = cookies[index];
-        while (cookie.charAt(0)==' ') 
-        	cookie = cookie.substring(1);
-        if (cookie.indexOf(name) == 0) 
-        	return cookie.substring(name.length, cookie.length);
-    }
-    return "";
+    var cookieRegEx = new RegExp(cookieName+'=\\w+','g'); 
+    var cookie = cookies.match(cookieRegEx);
+    cookie = cookie && cookie.pop() || '';
+    var cookieValue = cookie.substr(cookie.indexOf('=')+1);
+    return cookieValue;
 };
 
 lib.authenticateUser=function(cookie,players){

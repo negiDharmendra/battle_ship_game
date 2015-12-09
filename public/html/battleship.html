@@ -5,6 +5,7 @@
 	<link rel="stylesheet" href="../styles/battleship.css">
 	<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 	<script type="text/javascript" src="../js/grid.js"></script>
 	<script type="text/javascript" src="../js/fetch_updates.js"></script>
 
@@ -16,12 +17,40 @@
 	</div>
 	<div id="info_board">
 		<div class="message"></div><br>
-		<div class="info"></div>
 	</div>
 	<div class="game_screen">
 		<div id="ocean_grid"></div>
 		<div id="target_grid"></div>
-		<div class="ship_info"></div>
+		<div class="ship_info">
+			<table>
+				<tr><th>Ship Name</th><th>Hit</th><th>Status</th></tr>
+				<tr class="battleship alive">
+					<td>Battleship</td>
+					<td></td>
+					<td>Alive</td>
+				</tr>
+				<tr class="cruiser alive">
+					<td>Cruiser</td>
+					<td></td>
+					<td>Alive</td>
+				</tr>
+				<tr class="carrier alive">
+					<td>Carrier</td>
+					<td></td>
+					<td>Alive</td>
+				</tr>
+				<tr class="destroyer alive">
+					<td>dDestroyer</td>
+					<td></td>
+					<td>Alive</td>
+				</tr>
+				<tr class="submarine alive">
+					<td>Submarine</td>
+					<td></td>
+					<td>Alive</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 </div>
 </body>

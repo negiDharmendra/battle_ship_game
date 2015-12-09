@@ -1,12 +1,13 @@
 body {
 	/*background-image: url("../image/battleship.png");*/
 }
-h1{
+.header{
 	font-size:50px;
 	text-align: center;
 	color: black;
 	position: relative;
-	margin-top: 35px;
+	background: #939393;
+	/*margin-top: 35px;*/
 }
 #input {
 	width: 400px;
