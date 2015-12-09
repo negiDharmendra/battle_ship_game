@@ -7,7 +7,6 @@
 	font-size: 40px;
 	font-weight: bold;
 	text-align: center;
-	height: auto;
 	margin: 2% 0 0 0;
 }
 h2{
@@ -45,12 +44,8 @@ h2{
 
 }
 
-
-td.grid:hover{
+.hover:hover{
 	opacity: .4;
-}
-.hover{
-	background-color: lightgreen;
 }
 .message,.info{
 	font-family: sans-serif;

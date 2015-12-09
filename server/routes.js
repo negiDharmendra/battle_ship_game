@@ -33,7 +33,6 @@ var addPlayer=function(req,res){
 			'Location':'deploy.html',
 			'Content-Type':'text/html',
 			'Set-Cookie':'name='+req.data.name+'_'+uniqueID});
-			console.log('players',players);
 	}catch(err){
 		console.log(err.message);
 	}
@@ -49,7 +48,6 @@ var readyAnnounement = function(req,res){
 	res.writeHead(301,{
 		'Location':'battleship.html',
 		'Content-Type':'text/html'});
-	console.log(battleship.game.allplayers);
 	}
 	catch(e){
 		console.log(e.message);
@@ -98,13 +96,13 @@ var deliver_latest_updates = function(req,res){
 		var updates = {position:[],gotHit:[],turn:''};
 		var player = get_player(req.playerId);
 		var opponentPlayer=get_opponentPlayer(req.playerId) || {isAlive:true};
-		var turn = get_player(battleship.game.turn);
+		var activePlayer = get_player(battleship.game.turn);
 		if(player && player.readyState){
 			for(var ship in player.fleet)
 				updates.position=updates.position.concat(player.fleet[ship].onPositions);
 			updates.position = ld.compact(updates.position);
 		 	updates.gotHit = ld.difference(updates.position,player.usedPositions);
-		 	updates.turn = turn?turn.name :'';
+		 	updates.turn = activePlayer?activePlayer.playerId :null;
 		 	updates.gameEnd={player:player.isAlive,opponentPlayer:opponentPlayer.isAlive};
 		}
 	 	res.end(JSON.stringify(updates));
@@ -169,6 +167,7 @@ var respondToRestartGame = function(req,res){
 	var playerName = players[playerId].name;
 	players[playerId] =  new battleship.Player(playerName);
 	players[playerId].playerId = playerId;
+	battleship.game.turn=null;
 	res.writeHead(301,{
 		'Location':'deploy.html',
 		'Content-Type':'text/html'});
@@ -184,7 +183,7 @@ var respondToQuitGame = function(req,res){
 };
 
 function getMyshootPositions(req,res){
-		var status={hit:[],miss:[]};
+	var status={hit:[],miss:[]};
 	try{
 		var player=get_player(req.playerId);
 		status.hit=player.hit || [];

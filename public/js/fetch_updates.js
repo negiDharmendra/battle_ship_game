@@ -2,13 +2,9 @@ function get_updates(){
 	$.get('get_updates',success);
 	function success(data){
 		var updates=JSON.parse(data);
-		var turn=updates.turn;
 		var gameEnd=updates.gameEnd;
 		displayShips('#oceanGrid',updates.gotHit,updates.position,'lightgreen');
-		if(turn!='')
-			display_Message('It\'s '+turn+' turn');
-		else if(turn=='')
-			display_Message('Your opponent player haven\'t started yet.');
+		displayTurnMessage(updates.turn);
 		if(!gameEnd.player || !gameEnd.opponentPlayer){
 			gameOver(),restartOrQuit();
 			if(!gameEnd.player)
@@ -18,6 +14,21 @@ function get_updates(){
 		}
 	};
 };
+function displayTurnMessage(turn){
+	if(!turn)
+		display_Message('Your opponent player haven\'t started yet.');
+	else if(turn==getCookie()){
+		display_Message('Your Turn');
+		$('#targetGrid>tbody>tr>td.grid').css({"cursor":"default"});
+		$('#targetGrid>tbody>tr>td.grid').addClass('hover');
+	}
+	else{
+		display_Message('Opponent Turn');
+		$('#targetGrid>tbody>tr>td.grid').css({"cursor":"not-allowed"});
+		$('#targetGrid>tbody>tr>td.grid').removeClass('hover');
+
+	}
+}
 
 function displayShips(gridId,gotHit,usedPosition,color) {
 	for (var i = 0; i < usedPosition.length; i++)
@@ -56,7 +67,6 @@ function reply_to_shoot(evnt){
 		if(status.reply){
 			$('#targetGrid>tbody>tr>td#'+evnt.id).removeAttr('onclick');
 			$('#targetGrid>tbody>tr>td#'+evnt.id).addClass(status.reply);
-			$('#targetGrid>tbody>tr>td.grid').css({"cursor":"not-allowed"});
 		}
 		else if(status.error)
 			display_Message(status.error);
