@@ -6,11 +6,11 @@ function get_updates(){
 		displayShips('#oceanGrid',updates.gotHit,updates.position,'lightgreen');
 		displayTurnMessage(updates.turn);
 		if(!gameEnd.player || !gameEnd.opponentPlayer){
-			gameOver(),restartOrQuit();
+			gameOver();
 			if(!gameEnd.player)
-				display_Message('You lost!!!!');
+				display_gameover('You lost the game');
 			if(!gameEnd.opponentPlayer)
-				display_Message('You won!!!!');
+				display_gameover('You won the game');
 		}
 	};
 };
@@ -30,6 +30,14 @@ function displayTurnMessage(turn){
 	}
 }
 
+function display_gameover(message){
+	var sampleHtml = '<div class="game_screen"><div class="gameStatus">{{gameStatus}}</br></br> If you wants to play again click on restart otherwise click on quit"</div>'+
+	'<div class="restartOrQuit"><form method="POST" action="restartGame"><button>Restart</button>'+
+	'</form><form method="POST" action="quitGame"><button>Quit</button></form></div></div>';
+	var template = Handlebars.compile(sampleHtml);
+	var htmlStructure = template({gameStatus:message});
+ 	$('.game_screen').html(htmlStructure);
+}
 function displayShips(gridId,gotHit,usedPosition,color) {
 	for (var i = 0; i < usedPosition.length; i++)
 		$(gridId+'>tbody>tr>td#'+usedPosition[i]).css('background',color);
@@ -38,16 +46,17 @@ function displayShips(gridId,gotHit,usedPosition,color) {
 };
 
 function get_ship_info(){
-	$.post('shipInfo','playerId='+getCookie(),function(data,status){
+	$.get('shipInfo',function(data,status){
 		var ships = JSON.parse(data);
-		var shipStatus = [];
-		shipStatus.push('<tr><th>Ship name</th><th>Hits</th><th>Status</th></tr>');
 		for (var ship in ships) {
 			var ship_info = ships[ship];
-			var status = ship_info.status&&'Sunk'||'';
-			shipStatus.push('<tr><td>'+ship+'</td>'+'<td align=center>'+ship_info.hits+'</td><td align=center style="color:red">'+status+'</td></tr>');
+			$('.ship_info .'+ship+' td:nth-child(2)').html(ship_info.hits)
+			if(ship_info.status){
+				$('.ship_info .'+ship).removeClass('alive');
+				$('.ship_info .'+ship).addClass('sunk');
+				$('.ship_info .'+ship+' td:nth-child(3)').html('sunk');
+			}
 		};
-		$('.ship_info').html('<table class="fleet">'+shipStatus.join('\n')+'</table>');
 	});
 };
 
@@ -62,16 +71,17 @@ $( window ).load(function(){
 
 function reply_to_shoot(evnt){
 	evnt = evnt.target;
-	$.post("shoot",{position:evnt.id,playerId:getCookie()},function(data){
+	$.post("shoot",{position:evnt.id},function(data){
 		var status = JSON.parse(data);
 		if(status.reply){
 			$('#targetGrid>tbody>tr>td#'+evnt.id).removeAttr('onclick');
 			$('#targetGrid>tbody>tr>td#'+evnt.id).addClass(status.reply);
 		}
-		else if(status.error)
-			display_Message(status.error);
 		if(status.end)
-			display_Message(status.end),gameOver(),restartOrQuit();
+			if(!gameEnd.player)
+				display_gameover('You lost the game');
+			else if(!gameEnd.opponentPlayer)
+				display_gameover('You won the game');
 	});
 };
 
@@ -80,11 +90,6 @@ function gameOver(){
 	clearInterval(ship_updates)
 	$('#targetGrid>tbody>tr>.grid').removeAttr('onclick');
 };
-
-function restartOrQuit(){
-	var restartHtml = '<form method="POST" action="restartGame"><button>Restart</button></form><br><form method="POST" action="quitGame"><button>Quit</button></form>';
-	$('div.info').html(restartHtml);
-}
 function display_Message(message){
 	$('.message').html('<p>'+message+'</p>');
 };
@@ -92,7 +97,7 @@ function getCookie(){
 	return $.cookie('name');
 };
 
-if(getCookie()){
-	var position_updates = setInterval(get_updates,1000);
+if(getCookie()||$(window).unload()){
+	var position_updates = setInterval(get_updates,1);	
 	var ship_updates = setInterval(get_ship_info,1000);
 };

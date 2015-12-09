@@ -1,6 +1,7 @@
 var http=require('http');
 
 var routes = require('./routes.js');
+var log = require('./log.js');
 
 var eventEmitter = require('events').EventEmitter;
 var emitter = new eventEmitter();
@@ -56,7 +57,10 @@ var requestHandler = function(req, res){
 		method_not_allowed(req,res);
 };
 var server = http.createServer(requestHandler);
-server.listen(3000,function(){console.log("listening at port===>"+3000)});
+server.listen(3000,function(){console.log("listening at port===>"+3000);
+   log.log_message('writeFile','players.log','server started at '+new Date().toLocaleTimeString());
+   log.log_message('writeFile','errors.log','server started at '+new Date().toLocaleTimeString());
+});
 server.on('error',function(e){
 	console.log('Can not Start the Server due to:--',e.message);
 });

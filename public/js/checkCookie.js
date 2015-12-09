@@ -8,5 +8,6 @@ function checkCookie(){
 };
 
 $(window).load(function(){
+	$.removeCookie('name',null, { path: '/' });
 	checkCookie();
 });

@@ -1,6 +1,7 @@
-h1{
+.header{
 	font-family: sans-serif;
 	text-align: center;
+	background: #939393;
 	font-size: 50px;
 }
 
@@ -18,14 +19,14 @@ table td{
 th{
 	font-family: sans-serif;
 	text-align: center;
-	font-size: 10px;
+	font-size: 12px;
 	vertical-align: middle;
-	color: lightgrey;
+	color: #939393;
 }
 .harbor{
     width: 20%;
 	float: left;
-	margin: 4% 0 0 10%;
+	margin: 4% 0 0 5%;
 	font-size: 24px;
 }
 
@@ -33,7 +34,7 @@ th{
 	background-color: lightgreen;
 }
 .ocean_grid{
-	margin: 3% 0 0 24%;
+	margin: 3% 0 0 33%;
 	float: left;
 }
 .harbor>select{
@@ -44,12 +45,12 @@ th{
 	margin: 10px 0 0 0px;
 	font-size: 18px;
 }
-.harbor>button{
+.harbor button{
 	margin: 10px 0 0 0px;
 	font-size: 20px;
 	border-radius: 10px;
 }
-.harbor>button:hover{
+.harbor button:hover{
 	color: blue;
 }
 
