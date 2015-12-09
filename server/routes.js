@@ -204,20 +204,33 @@ var respondToQuitGame = function(req,res){
 		log.log_message('appendFile','errors.log','line-154 '+req.playerId+'➽'+err.message);
 	}finally{
 		res.end();
-	}
+	};
 };
 
-
+function getMyshootPositions(req,res){
+		var status={hit:[],miss:[]};
+	try{
+		var player=get_player(req.playerId);
+		status.hit=player.hit || [];
+		status.miss=player.miss || [];
+	}catch(e){
+		console.log(e.message);
+	}
+	finally{
+	res.end(JSON.stringify(status));
+	}
+};
 function serveIndexFile(req,res){
 	res.writeHead(301,{Location:'html/index.html','Content-Type':'text/html'});
 	res.end();
 };
 
+
 exports.post_handlers = [
 	{path : ''						   ,handler : dataParser.requestDataParser},
 	{path : '^public/html/index.html$' ,handler : inform_players},
 	{path : '^public/html/players_queue.html$',  handler : inform_players},
-	{path : ''						   ,handler : autheniction},
+	{path : ''						  									 ,handler : autheniction},
 	{path : '^public/html/restartGame$',handler : respondToRestartGame},
 	{path : '^public/html/quitGame$'   ,handler : respondToQuitGame},
 	{path : '^public/html/deployShip$' ,handler : deployShips},
@@ -233,5 +246,6 @@ exports.get_handlers = [
 	{path : ''						   ,handler : autheniction},
 	{path : '^public/html/get_updates$',handler : deliver_latest_updates},
 	{path : '^public/html/shipInfo$'   ,handler : serveShipInfo},
+	{path : '^public/html/myShootPositions$',handler : getMyshootPositions},
 	{path : ''						   ,handler : page_not_found}
 ];

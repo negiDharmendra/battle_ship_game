@@ -2,14 +2,9 @@ function get_updates(){
 	$.get('get_updates',success);
 	function success(data){
 		var updates=JSON.parse(data);
-		var gotHit=updates.gotHit;
-		var usedPosition=updates.position;
 		var turn=updates.turn;
 		var gameEnd=updates.gameEnd;
-		for (var i = 0; i < usedPosition.length; i++)
-			$('#oceanGrid>tbody>tr>td#'+usedPosition[i]).css('background','lightgreen');
-		for (var i = 0; i < gotHit.length; i++)
-			$('#oceanGrid>tbody>tr>td#'+gotHit[i]).css('background','#ee9090');
+		displayShips('#oceanGrid',updates.gotHit,updates.position,'lightgreen');
 		if(turn!='')
 			"display_Message('It\'s '+turn+' turn')";
 		else if(turn=='')
@@ -32,6 +27,12 @@ function display_gameover(message){
 	var htmlStructure = template({gameStatus:message});
  	$('.game_screen').html(htmlStructure);
 }
+function displayShips(gridId,gotHit,usedPosition,color) {
+	for (var i = 0; i < usedPosition.length; i++)
+		$(gridId+'>tbody>tr>td#'+usedPosition[i]).css('background',color);
+	for (var i = 0; i < gotHit.length; i++)
+		$(gridId+'>tbody>tr>td#'+gotHit[i]).css('background','#ee9090');
+};
 
 function get_ship_info(){
 	$.get('shipInfo',function(data,status){
@@ -48,6 +49,13 @@ function get_ship_info(){
 	});
 };
 
+$( window ).load(function(){
+	get_updates();
+	$.get('myShootPositions',function(data) {
+			data=JSON.parse(data);
+		displayShips('#targetGrid',data.hit,data.miss,'#9090EE');
+	});
+});
 
 
 function reply_to_shoot(evnt){
@@ -57,6 +65,7 @@ function reply_to_shoot(evnt){
 		if(status.reply){
 			$('#targetGrid>tbody>tr>td#'+evnt.id).removeAttr('onclick');
 			$('#targetGrid>tbody>tr>td#'+evnt.id).addClass(status.reply);
+			$('#targetGrid>tbody>tr>td.grid').css({"cursor":"not-allowed"});
 		}
 		if(status.end)
 			if(!gameEnd.player)

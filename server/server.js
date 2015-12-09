@@ -24,14 +24,14 @@ emitter.on('next', function(handlers, req, res, next){
 });
 
 var getUrl=function(req){
-	return 'public'+req.url;	
+	return 'public'+req.url;
 };
 
 var handle_get=function(req,res){
 	req.url=getUrl(req);
 	var handlers = get_handlers.filter(matchHandlers(req.url));
 	var next = function(){
-		emitter.emit('next',handlers,req,res,next); 
+		emitter.emit('next',handlers,req,res,next);
 	};
 	next();
 };
@@ -39,7 +39,7 @@ var handle_post=function(req,res){
 	req.url=getUrl(req);
 	var handlers = post_handlers.filter(matchHandlers(req.url));
 	var next = function(){
-		emitter.emit('next',handlers,req,res,next); 
+		emitter.emit('next',handlers,req,res,next);
 	};
 	next();
 };
@@ -64,4 +64,3 @@ server.listen(3000,function(){console.log("listening at port===>"+3000);
 server.on('error',function(e){
 	console.log('Can not Start the Server due to:--',e.message);
 });
- 

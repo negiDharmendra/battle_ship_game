@@ -37,11 +37,11 @@ function getPositions(startingPosition){
 	if($('.harbor>#position_of_ship>option').length>0){
 		var shipSize = {battleship:4,cruiser:3,carrier:5,destroyer:2,submarine:3};
 		var handlerFunction = {'vertical':vertical,'horizontal':horizontal};
-		var shipName = $(".harbor>#position_of_ship>[value]").val();
+		var shipName = $('.harbor>#position_of_ship option:selected').val();
 		var formation = $('select#formation').val();
 		var positions = handlerFunction[formation](startingPosition,shipSize[shipName]);
 		return positions;
-	}
+	};
 };
 
 function reply_to_deployment(evnt){
