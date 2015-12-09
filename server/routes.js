@@ -33,6 +33,7 @@ var addPlayer=function(req,res){
 			'Location':'deploy.html',
 			'Content-Type':'text/html',
 			'Set-Cookie':'name='+req.data.name+'_'+uniqueID});
+			console.log('players',players);
 	}catch(err){
 		console.log(err.message);
 	}
@@ -48,6 +49,7 @@ var readyAnnounement = function(req,res){
 	res.writeHead(301,{
 		'Location':'battleship.html',
 		'Content-Type':'text/html'});
+	console.log(battleship.game.allplayers);
 	}
 	catch(e){
 		console.log(e.message);
@@ -139,18 +141,12 @@ var validateShoot = function(req,res){
 		var opponentPlayer = get_opponentPlayer(req.playerId);
 		var player = get_player(req.playerId);
 		status.reply = battleship.shoot.call(player,opponentPlayer,req.data.position);
-		saveFiredPositions(player,req.data.position,status.reply);
 		if(!opponentPlayer.isAlive)
 			status.end='You won the Game '+player.name;
 	}catch(e){
 		status.error = e.message;
 	};
 	res.end(JSON.stringify(status));
-};
-
-var saveFiredPositions=function(player,position,status){
-		player[status]=player[status] || [];
-		player[status].push(position);
 };
 
 var get_opponentPlayer = function(player_id){
@@ -181,8 +177,6 @@ var respondToRestartGame = function(req,res){
 var respondToQuitGame = function(req,res){
 	var playerId = req.playerId;
 	delete players[playerId];
-	delete battleship.game.allplayers.indexOf(playerId);
-	battleship.game.allplayers = ld.compact(battleship.game.allplayers);
 	res.writeHead(301,{
 		'Location':'/',
 		'Content-Type':'text/html'});
@@ -193,8 +187,8 @@ function getMyshootPositions(req,res){
 		var status={hit:[],miss:[]};
 	try{
 		var player=get_player(req.playerId);
-		status.hit=player['hit'] || [];
-		status.miss=player['miss'] || [];
+		status.hit=player.hit || [];
+		status.miss=player.miss || [];
 	}catch(e){
 		console.log(e.message);
 	}
