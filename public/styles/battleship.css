@@ -45,6 +45,7 @@ h2{
 
 }
 
+
 td.grid:hover{
 	background-color: #c9d4da;
 }
@@ -84,4 +85,10 @@ td.grid:hover{
 }
 .miss{
 	background: #9090EE;
+}
+a{
+	float: right;
+    margin-right: 50px;
+    font-size: 30px;
+    color: black;
 }

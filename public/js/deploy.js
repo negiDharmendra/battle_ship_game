@@ -43,14 +43,8 @@ function hidePosition(e){
 function getPositions(startingPosition){
 	var shipSize = {battleship:4,cruiser:3,carrier:5,destroyer:2,submarine:3};
 	var handlerFunction = {'vertical':vertical,'horizontal':horizontal};
-	var shipName = $(".harbor>#position_of_ship>[value]").val();
+	var shipName = $('.harbor>#position_of_ship option:selected').val();
 	var formation = $('select#formation').val();
-	// $(document).keydown(function(){
-	// 	console.log('dfbvsoducsd vlsd')
-	// 	formation  = 'horizontal';
-	// var positions = handlerFunction['horizontal'](startingPosition,shipSize[shipName]);
-	// 	return positions;
-	// })
 	var positions = handlerFunction[formation](startingPosition,shipSize[shipName]);
 	return positions;
 };
@@ -58,7 +52,7 @@ function getPositions(startingPosition){
 function reply_to_deployment(evnt){
 	evnt = evnt.target;
 	var position = getPositions(evnt.id).join(' ');
-	var shipName = $(".harbor>#position_of_ship>[value]").val();
+	var shipName = $('.harbor>#position_of_ship option:selected').val();
 	if(evnt.nodeName === 'TD'){
 	$.post('deployShip','name='+shipName+'&positions='+position+'&playerId='+getCookie(),function(data){
 		var reply = JSON.parse(data);

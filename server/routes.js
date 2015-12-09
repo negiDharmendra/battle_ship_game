@@ -256,6 +256,7 @@ function serveIndexFile(req,res,next){
 	res.end();
 };
 
+
 exports.post_handlers = [
 	{path : '^public/html/deploy.html$',handler : i_am_ready},
 	{path : '^public/html/index.html$', handler : inform_players},

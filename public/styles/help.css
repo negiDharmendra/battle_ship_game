@@ -1,0 +1,32 @@
+.container{
+	width: 60%;
+	margin: auto;
+	font-family: serif;
+	font-size: 18px;
+}
+h1{
+}
+h2{
+	font-size:18px;
+	color: black;
+}
+.header{
+	font-size:30px;
+	text-align: center;
+	text-transform: uppercase;
+	color: black;
+	font-family: monospace;
+	display: inline-block;
+}
+img{
+	float: left;
+};
+ol>li{
+	font-size: 24px;
+}
+p{
+	text-indent: 40px;
+}
+p>table tr:nth-child(1){
+	font-weight: bolder;
+}

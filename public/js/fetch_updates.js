@@ -2,14 +2,9 @@ function get_updates(){
 	$.get('get_updates',success);
 	function success(data){
 		var updates=JSON.parse(data);
-		var gotHit=updates.gotHit;
-		var usedPosition=updates.position;
 		var turn=updates.turn;
 		var gameEnd=updates.gameEnd;
-		for (var i = 0; i < usedPosition.length; i++)
-			$('#oceanGrid>tbody>tr>td#'+usedPosition[i]).css('background','lightgreen');
-		for (var i = 0; i < gotHit.length; i++)
-			$('#oceanGrid>tbody>tr>td#'+gotHit[i]).css('background','#ee9090');
+		displayShips('#oceanGrid',updates.gotHit,updates.position,'lightgreen');
 		if(turn!='')
 			display_Message('It\'s '+turn+' turn');
 		else if(turn=='')
@@ -19,10 +14,18 @@ function get_updates(){
 			if(!gameEnd.player)
 				display_Message('You lost!!!!');
 			if(!gameEnd.opponentPlayer)
-				display_Message('You won!!!!');	
+				display_Message('You won!!!!');
 		}
 	};
 };
+
+function displayShips(gridId,gotHit,usedPosition,color) {
+	for (var i = 0; i < usedPosition.length; i++)
+		$(gridId+'>tbody>tr>td#'+usedPosition[i]).css('background',color);
+	for (var i = 0; i < gotHit.length; i++)
+		$(gridId+'>tbody>tr>td#'+gotHit[i]).css('background','#ee9090');
+};
+
 function get_ship_info(){
 	$.post('shipInfo','playerId='+getCookie(),function(data,status){
 		var ships = JSON.parse(data);
@@ -31,12 +34,19 @@ function get_ship_info(){
 		for (var ship in ships) {
 			var ship_info = ships[ship];
 			var status = ship_info.status&&'Sunk'||'';
-			shipStatus.push('<tr><td>'+ship+'</td>'+'<td align=center>'+ship_info.hits+'</td><td align=center>'+status+'</td></tr>');
+			shipStatus.push('<tr><td>'+ship+'</td>'+'<td align=center>'+ship_info.hits+'</td><td align=center style="color:red">'+status+'</td></tr>');
 		};
 		$('.ship_info').html('<table class="fleet">'+shipStatus.join('\n')+'</table>');
 	});
 };
 
+$( window ).load(function(){
+	get_updates();
+	$.get('myShootPositions',function(data) {
+			data=JSON.parse(data);
+		displayShips('#targetGrid',data.hit,data.miss,'#9090EE');
+	});
+});
 
 
 function reply_to_shoot(evnt){
@@ -46,6 +56,7 @@ function reply_to_shoot(evnt){
 		if(status.reply){
 			$('#targetGrid>tbody>tr>td#'+evnt.id).removeAttr('onclick');
 			$('#targetGrid>tbody>tr>td#'+evnt.id).addClass(status.reply);
+			$('#targetGrid>tbody>tr>td.grid').css({"cursor":"not-allowed"});
 		}
 		else if(status.error)
 			display_Message(status.error);
@@ -72,6 +83,6 @@ function getCookie(){
 };
 
 if(getCookie()){
-	var position_updates = setInterval(get_updates,1000);	
+	var position_updates = setInterval(get_updates,1000);
 	var ship_updates = setInterval(get_ship_info,1000);
 };

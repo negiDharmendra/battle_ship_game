@@ -61,3 +61,9 @@ th{
 	color:green;
 	text-align: center;
 }
+a{
+	float: right;
+    margin-right: 50px;
+    font-size: 30px;
+    color: black;
+}
