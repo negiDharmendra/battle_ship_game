@@ -38,6 +38,7 @@ var addPlayer=function(req,res){
 			'Content-Type':'text/html',
 			'Set-Cookie':'name='+uniqueID});
 		var logMessage = uniqueID +'➽ has joined the game';
+		console.log("players list------->",palyers);
 		log.log_message('appendFile','players.log',logMessage);
 	}catch(err){
 		log.log_message('appendFile','errors.log','line-44 '+uniqueID+'➽'+err.message);
@@ -56,7 +57,8 @@ var readyAnnounement = function(req,res){
 			'Content-Type':'text/html'});
 	}
 	catch(err){
-		log.log_message('appendFile','errors.log','line-60 '+req.playerId+'➽'+err.message);
+		res.end(err.message);
+		log.log_message('appendFile','errors.log','line-61 '+req.playerId+'➽'+err.message);
 	}
 	finally{
 		res.end();
@@ -111,11 +113,14 @@ var deliver_latest_updates = function(req,res){
 			updates.position = ld.compact(updates.position);
 		 	updates.gotHit = ld.difference(updates.position,player.usedPositions);
 		 	updates.turn = activePlayer?activePlayer.playerId :null;
-		 	updates.gameEnd={player:player.isAlive,opponentPlayer:opponentPlayer.isAlive};
+		 	if(!player.isAlive||!opponentPlayer.isAlive)
+		 		updates.gameEnd = player.isAlive;
+		 	else
+		 		updates.gameEnd = null;
 		}
 	 	res.end(JSON.stringify(updates));
 	}catch(err){
-		log.log_message('appendFile','errors.log','line-118 '+req.playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','line-123 '+req.playerId+'➽'+err.message);
 	}
 	finally{
 		res.end();
@@ -134,7 +139,7 @@ var serveShipInfo = function(req,res){
 		res.end(JSON.stringify(fleetStatus));
 	}
 	catch(err){
-		log.log_message('appendFile','errors.log','line-137 '+req.playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','line-142 '+req.playerId+'➽'+err.message);
 	}
 	finally{
 		res.end();
@@ -151,7 +156,7 @@ var validateShoot = function(req,res){
 			status.end='You won the Game '+player.name;
 	}catch(err){
 		status.error = err.message;
-		log.log_message('appendFile','errors.log','line-154 '+req.playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','line-159 '+req.playerId+'➽'+err.message);
 	};
 	res.end(JSON.stringify(status));
 };
@@ -178,14 +183,12 @@ var respondToRestartGame = function(req,res){
 		players[playerId] =  new battleship.Player(playerName);
 		players[playerId].playerId = playerId;
 		battleship.game.turn=null;
-		delete battleship.game.allplayers.indexOf(playerId);
-		battleship.game.allplayers = ld.compact(battleship.game.allplayers);
 		res.writeHead(301,{
 			'Location':'deploy.html',
 			'Content-Type':'text/html'});
 		log.log_message('appendFile','players.log',req.playerId+' has restarted the game');
 	}catch(err){
-		log.log_message('appendFile','errors.log','line-154 '+req.playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','line-193 '+req.playerId+'➽'+err.message);
 	}finally{
 		res.end();
 	}
@@ -194,14 +197,12 @@ var respondToQuitGame = function(req,res){
 	try{
 		var playerId = req.playerId;
 		delete players[playerId];
-		delete battleship.game.allplayers.indexOf(playerId);
-		battleship.game.allplayers = ld.compact(battleship.game.allplayers);
 		res.writeHead(301,{
 			'Location':'/',
 			'Content-Type':'text/html'});
 		log.log_message('appendFile','players.log',req.playerId+' has quit the game');
 	}catch(err){
-		log.log_message('appendFile','errors.log','line-154 '+req.playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','line-209 '+req.playerId+'➽'+err.message);
 	}finally{
 		res.end();
 	};

@@ -9,10 +9,23 @@ table td, div {
 	text-align: center;
 }
 #header{
+	display: inline-block;
+	height: auto;
+	width: 100%;
+	background: #939393;
+}
+#header .game_name{
+	float: left; 
 	font-size: 40px;
 	font-weight: bold;
-	height: auto;
-	background: #939393;
+	margin: 0 0 0 42%;
+}
+#header a{
+	float: right;
+    margin: 1% 2% 0 0;
+    font-size: 20px;
+    color: rgba(26, 26, 222, 0.53);
+    text-decoration: none;
 }
 h2{
 	font-size: 24px;
@@ -73,15 +86,16 @@ h2{
 	font-size: 20px;
 	font-weight: bolder;
 	text-align: left;
+	padding-left: 10px;
 }
 .ship_info td {
 	width: 150px;
 	height: 45px;
 	vertical-align: middle;
 	font-size: 18px;
-	
 }
 .ship_info td:nth-child(1){
+	padding-left: 10px;
 	text-align: left;
 }
 .ship_info{
@@ -101,9 +115,5 @@ h2{
 }
 .sunk{
 	background-color: rgba(238, 144, 144, 0.37);
-a{
-	float: right;
-    margin-right: 50px;
-    font-size: 30px;
-    color: black;
 }
+

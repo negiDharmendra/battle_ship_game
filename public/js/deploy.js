@@ -1,8 +1,3 @@
-function providePositions(e){
-	var positions = getPositions(e.target.id);
-	$('.harbor>input').val(positions.join(' '));
-};
-
 function vertical(position,size){
 	var charcode = position[0].charCodeAt();
 	var positions = [];
@@ -23,8 +18,10 @@ function horizontal(position,size){
 
 function displayPosition(e){
 	var positions = getPositions(e.target.id);
-	positions.forEach(function(id){
-		$('.ocean_grid td#'+id).addClass('hover');});
+	if($('.harbor>#position_of_ship>option').length>0){
+		positions.forEach(function(id){
+			$('.ocean_grid td#'+id).addClass('hover');});
+	};
 };
 
 function hidePosition(e){
@@ -47,8 +44,8 @@ function getPositions(startingPosition){
 function reply_to_deployment(evnt){
 	evnt = evnt.target;
 	var position = getPositions(evnt.id).join(' ');
-	var shipName = $(".harbor>#position_of_ship>[value]").val();
-	$.post('deployShip','name='+shipName+'&positions='+position+'&playerId='+getCookie(),function(data){
+	var shipName = $(".harbor>#position_of_ship>option:selected").val();
+	$.post('deployShip','name='+shipName+'&positions='+position,function(data){
 		var reply = JSON.parse(data);
 		displayDeployedShip(reply,position);
 	});
@@ -78,7 +75,6 @@ function display_Message(message){
 }
 
 $( window ).load(function(){
-	$('.ocean_grid td').click(providePositions);
 	if($('.harbor>#position_of_ship>option').length>0){
 	    $('.ocean_grid td').mouseover(displayPosition);
 	    $('.ocean_grid td').mouseleave(hidePosition);
@@ -86,4 +82,5 @@ $( window ).load(function(){
     $('.ocean_grid td').click(function(evnt){
 		reply_to_deployment(evnt);
 	});
+
 });

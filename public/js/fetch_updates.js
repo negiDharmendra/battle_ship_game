@@ -4,19 +4,14 @@ function get_updates(){
 		var updates=JSON.parse(data);
 		var gameEnd=updates.gameEnd;
 		displayShips('#oceanGrid',updates.gotHit,updates.position,'lightgreen');
-		displayTurnMessage(updates.turn);
-		if(!gameEnd.player || !gameEnd.opponentPlayer){
-			gameOver();
-			if(!gameEnd.player)
-				display_gameover('You lost the game');
-			if(!gameEnd.opponentPlayer)
-				display_gameover('You won the game');
-		}
+		if(gameEnd===true)display_gameover('You won the game'),stop_updates();
+		else if(gameEnd===false) display_gameover('You lost the game'),stop_updates();
+		else displayTurnMessage(updates.turn);
 	};
 };
 function displayTurnMessage(turn){
 	if(!turn)
-		display_Message('Your opponent player haven\'t started yet.');
+		display_Message('Your opponent is not ready');
 	else if(turn==getCookie()){
 		display_Message('Your Turn');
 		$('#targetGrid>tbody>tr>td.grid').css({"cursor":"default"});
@@ -31,7 +26,7 @@ function displayTurnMessage(turn){
 }
 
 function display_gameover(message){
-	var sampleHtml = '<div class="game_screen"><div class="gameStatus">{{gameStatus}}</br></br> If you wants to play again click on restart otherwise click on quit"</div>'+
+	var sampleHtml = '<div class="game_screen"><div class="gameStatus">{{gameStatus}}</br></br></div>'+
 	'<div class="restartOrQuit"><form method="POST" action="restartGame"><button>Restart</button>'+
 	'</form><form method="POST" action="quitGame"><button>Quit</button></form></div></div>';
 	var template = Handlebars.compile(sampleHtml);
@@ -85,10 +80,11 @@ function reply_to_shoot(evnt){
 	});
 };
 
-function gameOver(){
+function stop_updates(){
 	clearInterval(position_updates);
 	clearInterval(ship_updates)
 	$('#targetGrid>tbody>tr>.grid').removeAttr('onclick');
+	$('.message').html('');
 };
 function display_Message(message){
 	$('.message').html('<p>'+message+'</p>');
@@ -98,6 +94,6 @@ function getCookie(){
 };
 
 if(getCookie()||$(window).unload()){
-	var position_updates = setInterval(get_updates,1);	
+	var position_updates = setInterval(get_updates,1000);	
 	var ship_updates = setInterval(get_ship_info,1000);
 };
