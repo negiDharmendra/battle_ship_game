@@ -266,12 +266,13 @@ describe('fleet',function(){
 	beforeEach(function () {
 		player = new sh.Player('Manu');
 		deployShip(player);
-		opponentPlayer = new sh.Player('Sanu');
-		deployShip(opponentPlayer);
 	});
 	it('players should not have repeated ship',function () {
+		chai.expect(function() {
+		 	player.deployShip('battleship',['I1','I2','I3','I4']);
+		}).to.throw(Error,/^Can not afford more Ships$/);
+		player.usedPositions.should.have.length(17);
 		player.fleet.should.have.all.keys('battleship','carrier','cruiser','destroyer','submarine');
-		opponentPlayer.fleet.should.have.all.keys('battleship','carrier','cruiser','destroyer','submarine');
 	});
 });
 

@@ -169,7 +169,7 @@ var get_player=function(id){
 };
 
 var autheniction=function(req,res,next){
-	cookiehandler.validateUser(req,res,next,players);	
+	cookiehandler.validateUser(req,res,next,players);
 };
 var respondToRestartGame = function(req,res){
 	try{
@@ -178,8 +178,6 @@ var respondToRestartGame = function(req,res){
 		players[playerId] =  new battleship.Player(playerName);
 		players[playerId].playerId = playerId;
 		battleship.game.turn=null;
-		delete battleship.game.allplayers.indexOf(playerId);
-		battleship.game.allplayers = ld.compact(battleship.game.allplayers);
 		res.writeHead(301,{
 			'Location':'deploy.html',
 			'Content-Type':'text/html'});
@@ -194,8 +192,6 @@ var respondToQuitGame = function(req,res){
 	try{
 		var playerId = req.playerId;
 		delete players[playerId];
-		delete battleship.game.allplayers.indexOf(playerId);
-		battleship.game.allplayers = ld.compact(battleship.game.allplayers);
 		res.writeHead(301,{
 			'Location':'/',
 			'Content-Type':'text/html'});

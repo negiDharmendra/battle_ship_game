@@ -51,6 +51,8 @@ sh.Player.prototype = {
 			throw new Error('Position is already used');
 		else if(!sh.game.validateSize(position,ship))
 			throw new Error('Ship size is not Valid');
+		else if(this.fleet[ship].onPositions)
+		 	throw new Error('Can not afford more Ships');
 		else{
 			this.usedPositions=this.usedPositions.concat(position);
 			this.fleet[ship].onPositions=position;
