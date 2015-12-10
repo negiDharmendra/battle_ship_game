@@ -174,7 +174,7 @@ var get_player=function(id){
 };
 
 var autheniction=function(req,res,next){
-	cookiehandler.validateUser(req,res,next,players);	
+	cookiehandler.validateUser(req,res,next,players);
 };
 var respondToRestartGame = function(req,res){
 	try{
