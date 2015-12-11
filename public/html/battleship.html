@@ -9,7 +9,6 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 	<script type="text/javascript" src="../js/grid.js"></script>
 	<script type="text/javascript" src="../js/fetch_updates.js"></script>
-
 </head>
 <body>
 <div id="container">
@@ -50,6 +49,31 @@
 					<td>Submarine</td>
 					<td></td>
 					<td>Alive</td>
+				</tr>
+			</table>
+		</div>
+		<div class="indications">
+			<table border="1">
+			<tr><th>Color</th><th>Indicates</th></tr>
+				<tr>
+					<td><svg width="40" height="40"><rect x="10" y="10" width="20" height="20" fill='lightgreen'/></td>
+					<td>Ships</td>
+				</tr>
+				<tr>
+					<td><svg width="40" height="40"><rect x="10" y="10" width="20" height="20" fill='#EE9090'/></td>
+					<td>Hit</td>
+				</tr>
+				<tr>
+					<td><svg width="40" height="40"><rect x="10" y="10" width="20" height="20" fill='#9090EE'/></td>
+					<td>Miss</td>
+				</tr>
+				<tr>
+					<td><svg width="40" height="40"><rect x="10" y="10" width="20" height="20" fill='rgba(144, 238, 144, 0.38)'/></td>
+					<td>Alive</td>
+				</tr>
+				<tr>
+					<td><svg width="40" height="40"><rect x="10" y="10" width="20" height="20" fill='rgba(238, 144, 144, 0.37)'/></td>
+					<td>Sunk</td>
 				</tr>
 			</table>
 		</div>
