@@ -6,67 +6,6 @@ exports.sh = sh;
 
 var emitter=new Events();
 
-sh.Ship = function(name,holes){
-	this.name =  name;
-	this.holes = holes;
-	Object.defineProperties(this,{
-		name:{writable:false},
-		holes:{writable:false}
-	});
-};
-
-sh.Ship.prototype = {
-	hittedHoles :0,
-	isSunk : function() {
-		return this.hittedHoles==this.holes;
-	}
-};
-
-sh.Player = function(player_name){
-	var self=this;
-	this.name = player_name;
-	var holes = [4,5,3,2,3];
-	this.isAlive = true;
-	var ships=['battleship','carrier','cruiser','destroyer','submarine'];
-	this.fleet={};
-	ships.forEach(function(ship,i){
-		self.fleet[ship]= new sh.Ship(ship,holes[i]);
-	});
-	Object.defineProperty(this,'usedPositions',{value:[],enumerable:false,writable:true});
-	Object.defineProperty(this,'sunkShips',{value:[],enumerable:false,writable:true});
-	Object.defineProperty(this,'readyState',{value:false,enumerable:false,writable:true});
-	Object.defineProperty(this,'isAlive',{enumerable:false,writable:true});
-
-};
-
-
-sh.Player.prototype = {
-	deployShip:function(ship,position){
-		var isPositionUsed = ld.intersection(this.usedPositions,position).length;
-		if(!sh.game.validateAlignment(position))
-			throw new Error('Can not Deploy Ship Diagonally');
-		else if(!sh.game.validatePosition(position))
-			throw new Error('Position Not Valid.');
-		else if(isPositionUsed>0)
-			throw new Error('Position is already used');
-		else if(!sh.game.validateSize(position,ship))
-			throw new Error('Ship size is not Valid');
-		else if(this.fleet[ship].onPositions)
-		 	throw new Error('Can not afford more Ships');
-		else{
-			this.usedPositions=this.usedPositions.concat(position);
-			this.fleet[ship].onPositions=position;
-			return true;
-		}
-	},
-	ready:function(){
-		if(this.usedPositions.length==17)
-			emitter.emit('READY',this);
-		else
-			throw new Error ('Can not announce READY');
-	}
-};
-
 sh.inRange = function(pos){
 	return ld.inRange(parseInt(pos.slice(1)),1,11) && ld.inRange(pos[0].charCodeAt(),65,75);
 };
@@ -118,14 +57,6 @@ sh.getUniqueId=(function(){
 	return function(){return id++;};
 })();
 
-emitter.on('READY',function(player){
-	player.readyState=true;
-	sh.game.allplayers.push(player.playerId);
-	if (ld.uniq(sh.game.allplayers).length==2){
-		sh.game.turn = sh.game.allplayers[0];
-		sh.game.allplayers=[];
-	};
-});
 
 sh.shoot = function(opponentPlayer,position){
 	if(!this.readyState)
@@ -156,8 +87,8 @@ sh.destroy = function(opponentPlayer,position){
 	delete opponentPlayer.usedPositions[index];
 	opponentPlayer.usedPositions = ld.compact(opponentPlayer.usedPositions);
 	for(var ship in opponentPlayer.fleet){
-		if(opponentPlayer.fleet[ship].onPositions.indexOf(position) >= 0){
-			opponentPlayer.fleet[ship].hittedHoles++;
+		if(opponentPlayer.fleet[ship].positions.indexOf(position) >= 0){
+			opponentPlayer.fleet[ship].vanishedLives++;
 			hittedShip=ship;
 		};
 	};
