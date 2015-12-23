@@ -9,7 +9,6 @@ var ld = require('lodash');
 var cookie_parser = require('cookie-parser');
 var players = {};
 
-
 var loadUser  = function(req,res,next){
 	req.user =  players[req.cookies.userName];
 	next();
@@ -23,7 +22,6 @@ var addPlayer=function(req,res){
 		players[uniqueID].playerId = uniqueID;
 		res.cookie('userName',uniqueID);
 		res.redirect('/html/deploy.html');
-		console.log("players list------->",palyers);
 		var logMessage = uniqueID +'➽ has joined the game';
 		log.log_message('appendFile','players.log',logMessage);
 	}catch(err){
@@ -56,10 +54,10 @@ var deployShips = function(req,res,next){
 	try{
 		var player = req.user;
 		status = player.deployShip(req.body.name,req.body.positions.trim().split(' '));
-		log.log_message('appendFile','players.log',req.playerId+' has deployed his '+req.body.name);
+		log.log_message('appendFile','players.log',req.user.playerId+' has deployed his '+req.body.name);
 	}catch(err){
 		status = err.message;
-		log.log_message('appendFile','errors.log','line-94 '+req.playerId+'➽'+err.message+' for '+req.body.name);
+		log.log_message('appendFile','errors.log','line-94 '+req.user.playerId+'➽'+err.message+' for '+req.body.name);
 	}
 	finally{
 		res.send(JSON.stringify(status));
@@ -73,11 +71,122 @@ var readyAnnounement = function(req,res){
 		res.redirect('/html/battleship.html');
 	}
 	catch(err){
-		log.log_message('appendFile','errors.log','line-61 '+req.playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','line-61 '+req.user.playerId+'➽'+err.message);
 		res.send(err.message);
 	}
 };
 
+var deliver_latest_updates = function(req,res){
+	try{
+		var updates = {position:[],gotHit:[],turn:''};
+		var player = req.user;
+		var opponentPlayer=get_opponentPlayer(req.user.playerId) || {isAlive:true};
+		var activePlayer = players[game.game.turn];
+		if(player && player.readyState){
+			for(var ship in player.fleet)
+				updates.position=updates.position.concat(player.fleet[ship].positions);
+			updates.position = ld.compact(updates.position);
+		 	updates.gotHit = ld.difference(updates.position,player.usedPositions);
+		 	updates.turn = activePlayer?activePlayer.playerId :null;
+		 	if(!player.isAlive||!opponentPlayer.isAlive)
+		 		updates.gameEnd = player.isAlive;
+		 	else
+		 		updates.gameEnd = null;
+		}
+	 	res.end(JSON.stringify(updates));
+	}catch(err){
+		log.log_message('appendFile','errors.log','line-123 '+req.user+'➽'+err.message);
+	}
+	finally{
+		res.end();
+	};
+};
+
+var validateShoot = function(req,res){
+	var status = {};
+	try{
+		var player = req.user;
+		var opponentPlayer = get_opponentPlayer(req.user.playerId);
+		status.reply = game.shoot.call(player,opponentPlayer,req.body.position);
+		if(!opponentPlayer.isAlive)
+			status.end='You won the Game '+player.name;
+	}catch(err){
+		status.error = err.message;
+		log.log_message('appendFile','errors.log','line-159 '+req.user.playerId+'➽'+err.message);
+	};
+	res.end(JSON.stringify(status));
+};
+
+var getMyshootPositions =function (req,res){
+	var status={hit:[],miss:[]};
+	try{
+		var player=req.user;
+		status.hit=player.hit || [];
+		status.miss=player.miss || [];
+	res.end(JSON.stringify(status));
+	}catch(e){
+		console.log(e.message);
+	}
+	finally{
+	res.end();
+	}
+};
+
+var serveShipInfo = function(req,res){
+	try{
+		var player = req.user;
+		var fleetStatus={};
+		for(var ship in player.fleet){
+			var ship_status = player.fleet[ship].isSunk();
+			var hits = player.fleet[ship].hittedHoles;
+			fleetStatus[ship] = {hits:hits,status:ship_status};
+		};
+		res.end(JSON.stringify(fleetStatus));
+	}
+	catch(err){
+		log.log_message('appendFile','errors.log','line-142 '+req.user.playerId+'➽'+err.message);
+	}
+	finally{
+		res.end();
+	};
+};
+
+var respondToRestartGame = function(req,res){
+	try{
+		var playerId = req.user.playerId;
+		var playerName = players[playerId].name;
+		players[playerId] =  new Player(playerName);
+		players[playerId].playerId = playerId;
+		game.game.turn=null;
+		res.redirect('/html/deploy.html');
+		log.log_message('appendFile','players.log',req.user.playerId+' has restarted the game');
+	}catch(err){
+		log.log_message('appendFile','errors.log','line-193 '+req.user.playerId+'➽'+err.message);
+	}
+	finally{
+		res.end();
+	}
+};
+var respondToQuitGame = function(req,res){
+	try{
+		var playerId = req.user.playerId;
+		delete players[playerId];
+		res.redirect('/html/index.html');
+		log.log_message('appendFile','players.log',+playerId+' has quit the game');
+	}catch(err){
+		log.log_message('appendFile','errors.log','line-209 '+playerId+'➽'+err.message);
+	}finally{
+		res.end();
+	};
+};
+
+var respondToPlayerInQueue = function(req,res){
+	var noOfPlayers = Object.keys(players).length;
+	if(noOfPlayers < 2)
+		res.end('true');
+	else
+		res.end('false');
+};
 
 app.use(express.static('./public'));
 
@@ -92,6 +201,30 @@ app.use(cookie_parser());
 app.use(loadUser);
 app.post('/html/deployShip',deployShips);
 app.post('/html/deploy.html',readyAnnounement);
+app.get('/html/get_updates',function(req,res){
+	deliver_latest_updates(req,res);
+});
+app.post('/html/shoot',function(req,res){
+	validateShoot(req,res);
+});
+app.get('/html/shipInfo',function(req,res){
+	serveShipInfo(req,res);
+});
+app.get('/html/myShootPositions',function(req,res){
+	getMyshootPositions(req,res);
+});
+app.post('/html/players_queue.html',function(req,res){
+	inform_players(req,res);
+});
+app.post('/html/restartGame',function(req,res){
+	respondToRestartGame(req,res);
+});
+app.post('/html/quitGame',function(req,res){
+	respondToQuitGame(req,res);
+});
 
+app.get('/html/queryGameOver',function(req,res){
+	respondToPlayerInQueue(req,res);
+});
 
 module.exports = app;

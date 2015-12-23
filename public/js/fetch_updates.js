@@ -90,7 +90,7 @@ function display_Message(message){
 	$('.message').html('<p>'+message+'</p>');
 };
 function getCookie(){
-	return $.cookie('name');
+	return $.cookie('userName');
 };
 
 if(getCookie()||$(window).unload()){
