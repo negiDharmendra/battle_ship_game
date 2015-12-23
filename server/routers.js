@@ -25,7 +25,7 @@ var addPlayer=function(req,res){
 		var logMessage = uniqueID +'➽ has joined the game';
 		log.log_message('appendFile','players.log',logMessage);
 	}catch(err){
-		log.log_message('appendFile','errors.log','line-44 '+uniqueID+'➽'+err.message);
+		log.log_message('appendFile','errors.log','addPlayer '+uniqueID+'➽'+err.message);
 		res.send();
 	}
 
@@ -41,7 +41,7 @@ var inform_players = function(req,res){
 	else addPlayer(req,res);
 };
 
-var get_opponentPlayer = function(player_id){
+var getOpponentPlayer = function(player_id){
 	var ids = Object.keys(players);
 	delete ids[ids.indexOf(player_id)];
 	var id = ld.compact(ids);
@@ -49,7 +49,7 @@ var get_opponentPlayer = function(player_id){
 	return players[id];
 };
 
-var deployShips = function(req,res,next){
+var deployShips = function(req,res){
 	var status = '';
 	try{
 		var player = req.user;
@@ -57,7 +57,7 @@ var deployShips = function(req,res,next){
 		log.log_message('appendFile','players.log',req.user.playerId+' has deployed his '+req.body.name);
 	}catch(err){
 		status = err.message;
-		log.log_message('appendFile','errors.log','line-94 '+req.user.playerId+'➽'+err.message+' for '+req.body.name);
+		log.log_message('appendFile','errors.log','deployShip '+req.user.playerId+'➽'+err.message+' for '+req.body.name);
 	}
 	finally{
 		res.send(JSON.stringify(status));
@@ -71,7 +71,7 @@ var readyAnnounement = function(req,res){
 		res.redirect('/html/battleship.html');
 	}
 	catch(err){
-		log.log_message('appendFile','errors.log','line-61 '+req.user.playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','readyAnnounement '+req.user.playerId+'➽'+err.message);
 		res.send(err.message);
 	}
 };
@@ -80,7 +80,7 @@ var deliver_latest_updates = function(req,res){
 	try{
 		var updates = {position:[],gotHit:[],turn:''};
 		var player = req.user;
-		var opponentPlayer=get_opponentPlayer(req.user.playerId) || {isAlive:true};
+		var opponentPlayer=getOpponentPlayer(req.user.playerId) || {isAlive:true};
 		var activePlayer = players[game.game.turn];
 		if(player && player.readyState){
 			for(var ship in player.fleet)
@@ -95,7 +95,7 @@ var deliver_latest_updates = function(req,res){
 		}
 	 	res.end(JSON.stringify(updates));
 	}catch(err){
-		log.log_message('appendFile','errors.log','line-123 '+req.user+'➽'+err.message);
+		log.log_message('appendFile','errors.log','deliver_latest_updates '+req.user+'➽'+err.message);
 	}
 	finally{
 		res.end();
@@ -106,13 +106,13 @@ var validateShoot = function(req,res){
 	var status = {};
 	try{
 		var player = req.user;
-		var opponentPlayer = get_opponentPlayer(req.user.playerId);
+		var opponentPlayer = getOpponentPlayer(req.user.playerId);
 		status.reply = game.shoot.call(player,opponentPlayer,req.body.position);
 		if(!opponentPlayer.isAlive)
 			status.end='You won the Game '+player.name;
 	}catch(err){
 		status.error = err.message;
-		log.log_message('appendFile','errors.log','line-159 '+req.user.playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','validateShoot '+req.user.playerId+'➽'+err.message);
 	};
 	res.end(JSON.stringify(status));
 };
@@ -144,7 +144,7 @@ var serveShipInfo = function(req,res){
 		res.end(JSON.stringify(fleetStatus));
 	}
 	catch(err){
-		log.log_message('appendFile','errors.log','line-142 '+req.user.playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','serveShipInfo '+req.user.playerId+'➽'+err.message);
 	}
 	finally{
 		res.end();
@@ -161,7 +161,7 @@ var respondToRestartGame = function(req,res){
 		res.redirect('/html/deploy.html');
 		log.log_message('appendFile','players.log',req.user.playerId+' has restarted the game');
 	}catch(err){
-		log.log_message('appendFile','errors.log','line-193 '+req.user.playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','respondToRestartGame '+req.user.playerId+'➽'+err.message);
 	}
 	finally{
 		res.end();
@@ -174,7 +174,7 @@ var respondToQuitGame = function(req,res){
 		res.redirect('/html/index.html');
 		log.log_message('appendFile','players.log',+playerId+' has quit the game');
 	}catch(err){
-		log.log_message('appendFile','errors.log','line-209 '+playerId+'➽'+err.message);
+		log.log_message('appendFile','errors.log','respondToQuitGame '+playerId+'➽'+err.message);
 	}finally{
 		res.end();
 	};
