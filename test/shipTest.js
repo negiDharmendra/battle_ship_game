@@ -1,7 +1,8 @@
 var expect = require('chai').expect;
 var assert = require('chai').assert;
 var should = require('chai').should();
-var Ship = require('../library/ship.js');
+var Ship = require('../library/ship');
+var Player = require('../library/player.js')
 var sinon = require('sinon');
  
  describe('Ship',function(){
@@ -18,18 +19,6 @@ var sinon = require('sinon');
 	});
 	describe("setPosition",function(){
 		it("will set the ship's positions on the provieded positions",function(){
-			var player = {deployShip:function(name,positions){this.fleet[name].setPosition(positions);},
-				shoot:function(position){
-					var shipGotHit;
-					var ships = Object.keys(this.fleet);
-					var player = this;
-					ships.forEach(function(ship){
-						if(player.fleet[ship].positions.indexOf(position)>=0)
-							shipGotHit=ship,player.fleet[ship].vanishedLives.push(position);
-					});
-					return shipGotHit;
-				}
-			};
  			var ship = new Ship('Battleship',4);
 			var player = {deployShip:function(name,positions){this.fleet[name].positions = positions}};
  			player.fleet = {"Battleship":ship};
@@ -47,7 +36,8 @@ var sinon = require('sinon');
 	describe("isSunk",function(){
 		it("should say false if number of vanishedLives are less than ship lives",function(){
 			var ship = new Ship('Battleship',4);
-			(ship.isSunk()).should.equal(false);
+			ship.isSunk= sinon.spy()
+			ship.isSunk.called.should.equal(false);
 		});
 	});
  })
