@@ -23,7 +23,7 @@ describe("get",function(){
 	});
 	
 })
-describe("post",function(){
+describe("player",function(){
 	describe("First Player",function(){
 		it("should logged in the user and redirect to the deploy.html",function(done){
 			supertest(routers)
@@ -208,6 +208,43 @@ describe("post",function(){
 			.get('/html/myShootPositions')
 			.set("Cookie","userName=Dharmendra_3")
 			.expect(/A1/)
+			.expect(200,done)
+		})
+	})
+	describe('queue',function(){
+		it('should redirect if already two player is added ',function(done){
+			supertest(routers)
+			.post('/html/players_queue.html')
+			.set('Cookie',"userName=seetaram_4")
+			.expect('Location','/html/players_queue.html')
+			.expect(302,done)
+		})
+	})
+	describe('restart the game',function(){
+		it('should send deployment page when player want restart the game',function(done){
+			supertest(routers)
+			.post('/html/restartGame')
+			.set("Cookie","userName=Dharmendra_3")
+			.expect('Location','/html/deploy.html')
+			.expect('Content-Type',/text\/plain/)
+			.expect(302,done)
+		})
+	})
+	describe('quit the game',function(){
+		it('should send login page when player want quit the game',function(done){
+			supertest(routers)
+			.post('/html/quitGame')
+			.set("Cookie","userName=Dharmendra_3")
+			.expect('Location','/html/index.html')
+			.expect('Content-Type',/text\/plain/)
+			.expect(302,done)
+		})
+	})
+	describe('response that player who in queue',function(){
+		it('should send login page when player want quit the game',function(done){
+			supertest(routers)
+			.get('/html/queryGameOver')
+			.expect('true')
 			.expect(200,done)
 		})
 	})
