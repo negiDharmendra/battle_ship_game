@@ -7,10 +7,10 @@ var game = require('../library/game.js').sh;
 var Player = require('../library/player.js');
 var ld = require('lodash');
 var cookie_parser = require('cookie-parser');
-var players = {};
+
 
 var loadUser  = function(req,res,next){
-	req.user =  players[req.cookies.userName];
+	req.user =  app.players[req.cookies.userName];
 	next();
 }
 
@@ -18,8 +18,8 @@ var addPlayer=function(req,res){
 	var uniqueID ;
 	try{
 		uniqueID = req.body.name+'_'+game.getUniqueId();
-		players[uniqueID] =  new Player(req.body.name);
-		players[uniqueID].playerId = uniqueID;
+		app.players[uniqueID] =  new Player(req.body.name);
+		app.players[uniqueID].playerId = uniqueID;
 		res.cookie('userName',uniqueID);
 		res.redirect('/html/deploy.html');
 		var logMessage = uniqueID +'➽ has joined the game';
@@ -36,17 +36,17 @@ var holdPlayer = function(req,res){
 	res.redirect('/html/players_queue.html');
 };
 var inform_players = function(req,res){
-	if(Object.keys(players).length >= 2)
+	if(Object.keys(app.players).length >= 2)
 		holdPlayer(req,res);
 	else addPlayer(req,res);
 };
 
 var getOpponentPlayer = function(player_id){
-	var ids = Object.keys(players);
+	var ids = Object.keys(app.players);
 	delete ids[ids.indexOf(player_id)];
 	var id = ld.compact(ids);
 	id = id.shift();
-	return players[id];
+	return app.players[id];
 };
 
 var deployShips = function(req,res){
@@ -81,7 +81,7 @@ var deliver_latest_updates = function(req,res){
 		var updates = {position:[],gotHit:[],turn:''};
 		var player = req.user;
 		var opponentPlayer=getOpponentPlayer(req.user.playerId) || {isAlive:true};
-		var activePlayer = players[game.game.turn];
+		var activePlayer = app.players[game.game.turn];
 		if(player && player.readyState){
 			for(var ship in player.fleet)
 				updates.position=updates.position.concat(player.fleet[ship].positions);
@@ -154,9 +154,9 @@ var serveShipInfo = function(req,res){
 var respondToRestartGame = function(req,res){
 	try{
 		var playerId = req.user.playerId;
-		var playerName = players[playerId].name;
-		players[playerId] =  new Player(playerName);
-		players[playerId].playerId = playerId;
+		var playerName = app.players[playerId].name;
+		app.players[playerId] =  new Player(playerName);
+		app.players[playerId].playerId = playerId;
 		game.game.turn=null;
 		res.redirect('/html/deploy.html');
 		log.log_message('appendFile','players.log',req.user.playerId+' has restarted the game');
@@ -170,7 +170,7 @@ var respondToRestartGame = function(req,res){
 var respondToQuitGame = function(req,res){
 	try{
 		var playerId = req.user.playerId;
-		delete players[playerId];
+		delete app.players[playerId];
 		res.redirect('/html/index.html');
 		log.log_message('appendFile','players.log',+playerId+' has quit the game');
 	}catch(err){
@@ -181,7 +181,7 @@ var respondToQuitGame = function(req,res){
 };
 
 var respondToPlayerInQueue = function(req,res){
-	var noOfPlayers = Object.keys(players).length;
+	var noOfPlayers = Object.keys(app.players).length;
 	if(noOfPlayers < 2)
 		res.end('true');
 	else
@@ -190,7 +190,7 @@ var respondToPlayerInQueue = function(req,res){
 
 app.use(express.static('./public'));
 
-var players = {};
+
 app.get('/',function(req,res){
 	res.redirect('/html/index.html');
 });

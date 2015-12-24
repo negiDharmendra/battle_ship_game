@@ -1,6 +1,7 @@
 var routers = require("../server/routers.js");
 var supertest = require("supertest"); 
 var fs = require("fs");
+routers.players = {};
 
 describe("get",function(){
 	describe("/",function(){
@@ -172,6 +173,7 @@ describe("player",function(){
 	});
 	describe("First Player shoot when it is not his turn",function(){
 		it("should validate shoot",function(done){
+
 			supertest(routers)
 			.post("/html/shoot")
 			.set("Cookie","userName=Dharmendra_3")
