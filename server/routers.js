@@ -2,12 +2,12 @@ var express =  require('express');
 var app = express();
 var body_parser = require('./body_parser.js');
 var log = require('./log.js');
-
 var game = require('../library/game.js').sh;
 var Player = require('../library/player.js');
 var ld = require('lodash');
 var cookie_parser = require('cookie-parser');
 
+app.game = game;
 
 var loadUser  = function(req,res,next){
 	req.user =  app.players[req.cookies.userName];
@@ -17,7 +17,7 @@ var loadUser  = function(req,res,next){
 var addPlayer=function(req,res){
 	var uniqueID ;
 	try{
-		uniqueID = req.body.name+'_'+game.getUniqueId();
+		uniqueID = req.body.name+'_'+app.game.getUniqueId();
 		app.players[uniqueID] =  new Player(req.body.name);
 		app.players[uniqueID].playerId = uniqueID;
 		res.cookie('userName',uniqueID);
@@ -28,22 +28,21 @@ var addPlayer=function(req,res){
 		log.log_message('appendFile','errors.log','addPlayer '+uniqueID+'➽'+err.message);
 		res.send();
 	}
-
 };
 
 var holdPlayer = function(req,res){
 	res.cookie('userName',req.body.name);
 	res.redirect('/html/players_queue.html');
 };
-var inform_players = function(req,res){
+var informPlayers = function(req,res){
 	if(Object.keys(app.players).length >= 2)
 		holdPlayer(req,res);
 	else addPlayer(req,res);
 };
 
-var getOpponentPlayer = function(player_id){
+var getOpponentPlayer = function(playerId){
 	var ids = Object.keys(app.players);
-	delete ids[ids.indexOf(player_id)];
+	delete ids[ids.indexOf(playerId)];
 	var id = ld.compact(ids);
 	id = id.shift();
 	return app.players[id];
@@ -76,12 +75,12 @@ var readyAnnounement = function(req,res){
 	}
 };
 
-var deliver_latest_updates = function(req,res){
+var deliverLatestUpdates = function(req,res){
 	try{
 		var updates = {position:[],gotHit:[],turn:''};
 		var player = req.user;
 		var opponentPlayer=getOpponentPlayer(req.user.playerId) || {isAlive:true};
-		var activePlayer = app.players[game.game.turn];
+		var activePlayer = app.players[app.game.game.turn];
 		if(player && player.readyState){
 			for(var ship in player.fleet)
 				updates.position=updates.position.concat(player.fleet[ship].positions);
@@ -107,7 +106,7 @@ var validateShoot = function(req,res){
 	try{
 		var player = req.user;
 		var opponentPlayer = getOpponentPlayer(req.user.playerId);
-		status.reply = game.shoot.call(player,opponentPlayer,req.body.position);
+		status.reply = app.game.shoot.call(player,opponentPlayer,req.body.position);
 		if(!opponentPlayer.isAlive)
 			status.end='You won the Game '+player.name;
 	}catch(err){
@@ -137,9 +136,9 @@ var serveShipInfo = function(req,res){
 		var player = req.user;
 		var fleetStatus={};
 		for(var ship in player.fleet){
-			var ship_status = player.fleet[ship].isSunk();
+			var shipStatus = player.fleet[ship].isSunk();
 			var hits = player.fleet[ship].hittedHoles;
-			fleetStatus[ship] = {hits:hits,status:ship_status};
+			fleetStatus[ship] = {hits:hits,status:shipStatus};
 		};
 		res.end(JSON.stringify(fleetStatus));
 	}
@@ -157,7 +156,7 @@ var respondToRestartGame = function(req,res){
 		var playerName = app.players[playerId].name;
 		app.players[playerId] =  new Player(playerName);
 		app.players[playerId].playerId = playerId;
-		game.game.turn=null;
+		app.game.game.turn=null;
 		res.redirect('/html/deploy.html');
 		log.log_message('appendFile','players.log',req.user.playerId+' has restarted the game');
 	}catch(err){
@@ -196,13 +195,13 @@ app.get('/',function(req,res){
 });
 app.use(body_parser);
 
-app.post('/html/index.html',inform_players);
+app.post('/html/index.html',informPlayers);
 app.use(cookie_parser());
 app.use(loadUser);
 app.post('/html/deployShip',deployShips);
 app.post('/html/deploy.html',readyAnnounement);
 app.get('/html/get_updates',function(req,res){
-	deliver_latest_updates(req,res);
+	deliverLatestUpdates(req,res);
 });
 app.post('/html/shoot',function(req,res){
 	validateShoot(req,res);
@@ -214,7 +213,7 @@ app.get('/html/myShootPositions',function(req,res){
 	getMyshootPositions(req,res);
 });
 app.post('/html/players_queue.html',function(req,res){
-	inform_players(req,res);
+	informPlayers(req,res);
 });
 app.post('/html/restartGame',function(req,res){
 	respondToRestartGame(req,res);
