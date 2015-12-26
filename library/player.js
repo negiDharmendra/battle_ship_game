@@ -28,13 +28,13 @@ var Player = function(player_name){
 Player.prototype = {
 	deployShip:function(ship,position){
 		var isPositionUsed = ld.intersection(this.usedPositions,position).length;
-		if(!sh.game.validateAlignment(position))
+		if(!this.validateAlignment(position))
 			throw new Error('Can not Deploy Ship Diagonally');
-		else if(!sh.game.validatePosition(position))
+		else if(!this.validatePosition(position))
 			throw new Error('Position Not Valid.');
 		else if(isPositionUsed>0)
 			throw new Error('Position is already used');
-		else if(!sh.game.validateSize(position,ship))
+		else if(!this.validateSize(position,ship))
 			throw new Error('Ship size is not Valid');
 		else if(this.fleet[ship].positions.length!=0)
 		 	throw new Error('Can not afford more Ships');
@@ -44,12 +44,53 @@ Player.prototype = {
 			return true;
 		}
 	},
+	checkRange : function(pos){
+		return ld.inRange(parseInt(pos.slice(1)),1,11) && ld.inRange(pos[0].charCodeAt(),65,75);
+	},
+	notDeployedDiagonally : function(position){
+		return function(pos){
+			return (position[0][0]==pos[0]) || (parseInt(pos.slice(1))==+position[0].slice(1));
+		};
+	},
+	isEqualToRange : function(pos){
+		pos=pos.sort(function(a,b){return a-b;});
+		var range=ld.range(pos[0],ld.last(pos)+1,1);
+		return pos.toString()==range.toString();
+	},
+	isInSequence : function(position){
+		var alphabet=[],numbers=[];
+		position.forEach(function(e){
+			alphabet.push(e[0].charCodeAt());
+			numbers.push(+e.slice(1));
+		});
+		if(ld.uniq(numbers).length==1)
+			return this.isEqualToRange(alphabet);
+		if(ld.uniq(alphabet).length==1)
+			return this.isEqualToRange(numbers);
+		return false;
+	},
+	validatePosition : function(position){
+			var range = position.every(this.checkRange);
+			var duplicate=(position.length==ld.unique(position).length);
+			var sequence=this.isInSequence(position);
+			return range && duplicate && sequence;
+	},
+	validateAlignment:function(position){
+		var alignment = position.every(this.notDeployedDiagonally(position));
+		return alignment;
+	},
+	validateSize:function(position,shipName){
+		var shipsSize = {battleship:4, carrier:5, cruiser:3, destroyer:2, submarine:3};
+		var validSize =(position.length == shipsSize[shipName]);
+		return validSize;
+	},
 	ready:function(){
 		if(this.usedPositions.length==17)
 			emitter.emit('READY',this);
 		else
 			throw new Error ('Can not announce READY');
-	}
+	},
+
 };
 
 

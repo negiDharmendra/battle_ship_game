@@ -18,7 +18,7 @@ var sinon = require('sinon');
  		});
 	});
 	describe("setPosition",function(){
-		it("will set the ship's positions on the provieded positions",function(){
+		it("will set the ship on the provieded positions",function(){
  			var ship = new Ship('Battleship',4);
 			var player = {deployShip:function(name,positions){this.fleet[name].positions = positions}};
  			player.fleet = {"Battleship":ship};

@@ -54,7 +54,7 @@ describe("Dynamic request based on State of Game",function(){
 		});
 	});
 	describe("/html/deploy.html",function(){
-		it("should redirect the player to battleship.html",function(done){
+		it("should redirect player to battleship.html",function(done){
 			routers.players ={Dharmendra_3:{
 					ready:sinon.spy()}};
 
@@ -68,7 +68,7 @@ describe("Dynamic request based on State of Game",function(){
 	});
 
 	describe("/html/deploy.html",function(){
-		it("should not redirect the player to battleship.html and return Error",function(done){
+		it("should not redirect player to battleship.html and return Error",function(done){
 			routers.players ={Dharmendra_6:{
 				ready:sinon.stub().withArgs().throws('Error','Can Not announce ready')}};
 					
@@ -152,8 +152,8 @@ describe("Dynamic request based on State of Game",function(){
 				.expect(200,done);
 		});
 	});
-	describe('ship information to the player',function(){
-		it('info of ship',function(done){
+	describe('serveShipInfo',function(){
+		it('should provide the ships information to player',function(done){
 			routers.players = {Dharmendra_3:{playerId:'Dharmendra_3',
 			fleet:{battleship:{isSunk:sinon.stub().returns(false),hittedHoles:3}}
 				}
@@ -177,8 +177,8 @@ describe("Dynamic request based on State of Game",function(){
 			.expect(200,done)
 		})
 	})
-	describe('queue',function(){
-		it('should redirect if already two player is added ',function(done){
+	describe('holdPlayer',function(){
+		it('should redirect player if game is started ',function(done){
 			routers.players = { Dharmendra_3:{playerId:'Dharmendra_3'},
 				Vikas_4:{playerId:'Vikas_4'}														};
 
@@ -190,7 +190,7 @@ describe("Dynamic request based on State of Game",function(){
 		})
 	})
 	describe('restart the game',function(){
-		it('should send deployment page when player want restart the game',function(done){
+		it('should redirect to the deploy.html page when player wants to restart the game',function(done){
 			routers.players = { Dharmendra_3:{playerId:'Dharmendra_3'},
 				Vikas_4:{playerId:'Vikas_4'}	
 			};
@@ -202,7 +202,7 @@ describe("Dynamic request based on State of Game",function(){
 		})
 	})
 	describe('quit the game',function(){
-		it('should send login page when player want quit the game',function(done){
+		it('should redirect to the index.html page when player wants to quit the game',function(done){
 			routers.players = { Dharmendra_3:{playerId:'Dharmendra_3'},
 				Vikas_4:{playerId:'Vikas_4'}	
 			};
@@ -215,16 +215,15 @@ describe("Dynamic request based on State of Game",function(){
 				.expect(302,done)
 		})
 	})
-	describe('response that player who in queue',function(){
-		it('should send login page when player want quit the game',function(done){
+	describe('respondToPlayerInQueue',function(){
+		it('should informs player in queue that he can join game',function(done){
 			routers.players = { Dharmendra_3:{playerId:'Dharmendra_3'}};
-
 			supertest(routers)
 				.get('/html/queryGameOver')
 				.expect('true')
 				.expect(200,done)
 		})
-		it('should not hold the player when game is running',function(done){
+		it('should not hold player when game is running',function(done){
 			routers.players = { Dharmendra_3:{playerId:'Dharmendra_3'},
 				Vikas_4:{playerId:'Vikas_4'}	
 			};

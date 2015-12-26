@@ -15,7 +15,7 @@ sh.notDeployedDiagonally = function(position){
 	};
 };
 
-var is_equal_to_range=function(pos){
+var isEqualToRange=function(pos){
 	pos=pos.sort(function(a,b){return a-b;});
 	var range=ld.range(pos[0],ld.last(pos)+1,1);
 	return pos.toString()==range.toString();
@@ -28,9 +28,9 @@ sh.is_in_sequence=function(position){
 		numbers.push(+e.slice(1));
 	});
 	if(ld.uniq(numbers).length==1)
-		return is_equal_to_range(alphabet);
+		return isEqualToRange(alphabet);
 	if(ld.uniq(alphabet).length==1)
-		return is_equal_to_range(numbers);
+		return isEqualToRange(numbers);
 	return false;
 };
 
