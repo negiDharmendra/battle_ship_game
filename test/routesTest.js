@@ -4,7 +4,16 @@ var sinon = require('sinon');
 var chai = require('chai');
 var expect = chai.expect;
 
-routers.players = {};
+var players = {};
+var game ={ game: 
+   { validatePosition: sinon.stub().returns(true),
+     validateAlignment: sinon.stub().returns(true),
+     validateSize: sinon.stub().returns(true),
+   },
+  getUniqueId: sinon.spy()
+};
+
+routers =routers.createController(game,players);
 
 describe("get",function(){
 	describe("/",function(){
@@ -81,10 +90,12 @@ describe("Dynamic request based on State of Game",function(){
 	});
 	describe("Player shoot",function(){
 		it("should validate shoot for miss ",function(done){
+			routers.game.shoot = sinon.stub().withArgs().returns("miss");
 			routers.game.game.turn = 'Vikas_4';
 			routers.players ={Dharmendra_6:
 			{readyState:true,usedPositions:['A2'],playerId:'Dharmendra_6',isAlive:true},
 			Vikas_4:{readyState:true,playerId:'Vikas_4'}};
+
 
 			supertest(routers)
 			.post("/html/shoot")
@@ -96,6 +107,7 @@ describe("Dynamic request based on State of Game",function(){
 	});
 	describe("Player shoot when it is not his turn",function(){
 		it("should validate shoot",function(done){
+			routers.game.shoot = sinon.stub().withArgs().throws("Error","Opponent turn");
 			routers.game.game.turn = 'Vikas_4';
 			routers.players ={Dharmendra_6:
 			{readyState:true,usedPositions:['A2'],playerId:'Dharmendra_6',isAlive:true},
@@ -112,6 +124,7 @@ describe("Dynamic request based on State of Game",function(){
 
 	describe("Player shoot on invalid position ",function(){
 		it("should validate shoot",function(done){
+			routers.game.shoot = sinon.stub().withArgs().throws("Error","Invalid position");
 			routers.game.game.turn = 'Dharmendra_6';
 			routers.players ={Dharmendra_6:
 			{readyState:true,playerId:'Dharmendra_6',isAlive:true},
