@@ -1,170 +1,134 @@
-var sh = require('../library/game.js').sh;
-var Player = require('../library/player.js');
+var Game = require('../library/game.js');
+// var Player = require('../library/player.js');
 var chai = require('chai');
 var should=chai.should();
 var ld = require('lodash');
 
+// var deployShip = function(player){
+// 	var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
+// 	var deployedCarrier = player.deployShip('carrier',['C6','C7','C8','C9','C10']);
+// 	var deployedSubmarine = player.deployShip('submarine',['H5','I5','J5']);
+// 	var deployedBattleship = player.deployShip('battleship',['E3','E4','E5','E6']);
+// 	var deployedDestroyer = player.deployShip('destroyer',['G7','H7']);
+// };
 
-var deployShip = function(player){
-	var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
-	var deployedCarrier = player.deployShip('carrier',['C6','C7','C8','C9','C10']);
-	var deployedSubmarine = player.deployShip('submarine',['H5','I5','J5']);
-	var deployedBattleship = player.deployShip('battleship',['E3','E4','E5','E6']);
-	var deployedDestroyer = player.deployShip('destroyer',['G7','H7']);
-};
-describe('shoot',function(){
-	var player,opponentPlayer;
-	var shoot=sh.shoot;
-	beforeEach(function () {
-		player = new Player('Manu');
-		deployShip(player);
-		opponentPlayer = new Player('Shanu');
-		deployShip(opponentPlayer);
-	});
-	it('player can not shoot if it is not his turn',function(){
-		player.ready();
-		opponentPlayer.ready();
-		player.playerId = 1;
-		sh.game.turn = 2;
-		chai.expect(function(){
-			shoot.call(player,opponentPlayer,'A1');
-		}).to.throw(Error,/^Opponent turn$/);
-	});
-	it('player can shoot only if it is his turn',function(){
-		player.ready();
-		opponentPlayer.ready();
-		player.playerId = 1;
-		sh.game.turn = 1;
-		chai.expect(function(){
-			shoot.call(player,opponentPlayer,'A1');
-		}).to.not.throw(Error);
-	});
-	it('player can not shoot on invalid position',function(){
-		player.ready();
-		opponentPlayer.ready();
-		player.playerId = 1;
-		opponentPlayer.playerId = 2;
-		sh.game.turn = 1;
-		chai.expect(function(){
-			shoot.call(player,opponentPlayer,'A12');
-		}).to.throw(Error,/^Invalid position$/);
-	});
-	it('after every shoot hit or miss event will be invoked and turn will be changed',function(){
-		player.ready();
-		opponentPlayer.ready();
-		player.playerId = 1;
-		opponentPlayer.playerId = 2;
-		sh.game.turn = 1;
-		shoot.call(player,opponentPlayer,'A1');
-		chai.expect(sh.game.turn).to.be.equal(2);
-	});
-	it('hit makes the changes in opponentPlayer usedPositions and fleet',function(){
-		player.ready();
-		opponentPlayer.ready();
-		player.playerId = 1;
-		opponentPlayer.playerId = 2;
-		sh.game.turn = 1;
-		shoot.call(player,opponentPlayer,'A1');
-    	opponentPlayer.usedPositions.should.have.length(16);
-    	chai.expect(opponentPlayer.fleet.cruiser.vanishedLives).to.be.equal(1);
-	});
-	it('can not shoot if not announced ready',function() {
-		player.playerId = 1;
-		opponentPlayer.playerId = 2;
-		sh.game.turn = 1;
-    	chai.expect(function() {shoot.call(player,opponentPlayer,'A1');}).to.throw(Error,/^Not announced ready$/);
-	})
-});
+// describe('sunk',function(){
+// 	var player,opponentPlayer;
+// 		player = new Player('Manu');
+// 		deployShip(player);	
+// 		opponentPlayer = new Player('Shanu');
+// 		deployShip(opponentPlayer);
+// 		player.playerId=1;
+// 		opponentPlayer.playerId=2;
+// 	var shoot=player.shoot;
+// 		player.ready();
+// 		opponentPlayer.ready();
+// 		shoot.call(player,opponentPlayer,'G7');
+// 		shoot.call(opponentPlayer,player,'A2');
+// 		shoot.call(player,opponentPlayer,'H7');
+// 		shoot.call(opponentPlayer,player,'C1');
+// 		shoot.call(player,opponentPlayer,'C2');
+// 	it('checks whether ship is sunk or not',function(){
+// 			chai.expect(opponentPlayer.fleet.destroyer.isSunk()).to.be.true;
+// 			chai.expect(opponentPlayer.fleet.carrier.isSunk()).to.be.false;
+// 		});
+// });
 
 
 
-
-describe('sunk',function(){
-	var player,opponentPlayer;
-	var shoot=sh.shoot;
-		player = new Player('Manu');
-		deployShip(player);
-		opponentPlayer = new Player('Shanu');
-		deployShip(opponentPlayer);
-		player.playerId=1;
-		opponentPlayer.playerId=2;
-		player.ready();
-		opponentPlayer.ready();
-		shoot.call(player,opponentPlayer,'G7');
-		shoot.call(opponentPlayer,player,'A2');
-		shoot.call(player,opponentPlayer,'H7');
-		shoot.call(opponentPlayer,player,'C1');
-		shoot.call(player,opponentPlayer,'C2');
-	it('checks whether ship is sunk or not',function(){
-			chai.expect(opponentPlayer.fleet.destroyer.isSunk()).to.be.true;
-			chai.expect(opponentPlayer.fleet.carrier.isSunk()).to.be.false;
+describe('Game',function(){
+	describe('player',function(){
+		it('can join the game',function(){
+			var player1 = {playerId:1,name:'guruji'};
+			var game = new Game(player1);
+			chai.expect(game.players).all.keys('1');
 		});
-});
-
-describe('READY event',function(){
-	var player;
-	beforeEach(function(){
-		player = new Player('arun');
-		player.playerId=1;
 	});
-	it('can be invoked by player when he had deployed all ships',function(){
-		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
-		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
-		var deployedSubmarine = player.deployShip('submarine',['C2','D2','E2']);
-		var deployedDestroyer= player.deployShip('destroyer',['E5','E6']);
-		var deployedCarrier = player.deployShip('carrier',['I1','I2','I3','I4','I5']);
-		chai.expect(function(){player.ready()}).to.not.throw('Announced READY');
+	describe('players',function(){
+		it('can join the game',function(){
+			var player1 = {playerId:1,name:'guruji'};
+			var player2 = {playerId:2,name:'guptaji'};
+			var game = new Game(player1);
+			game.addPlayer(player2);
+			chai.expect(game.players).all.keys('1','2');
+		});
 	});
-	it('can not be invoked by player when he had not deployed all ships',function(){
-		var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
-		var deployedBattleship = player.deployShip('battleship',['J1','J2','J3','J4']);
-		chai.expect(function(){player.ready()}).to.throw(Error,/^Can not announce READY$/);
+	it('can not have more than two players',function(){
+		var player1 = {playerId:1,name:'guruji'};
+		var player2 = {playerId:2,name:'guptaji'};
+		var player3 = {playerId:3,name:'googleji'};
+		var game = new Game(player1);
+		game.addPlayer(player2);
+		var addThirdPlayer = function(){game.addPlayer(player3)};
+		chai.expect(addThirdPlayer).to.throw(Error,/^Can not join the running game$/)
+	})
+	describe('access players',function(){
+		var player1 = {playerId:1,name:'guruji'};
+		var player2 = {playerId:2,name:'guptaji'};
+		var game = new Game(player1);
+		game.addPlayer(player2);
+		it('getPlayer gives first player',function(){
+			chai.assert.deepEqual(game.getPlayer(1),player1);
+		});
+		it('getPlayer throws an error for unauthorized player',function(){
+			var getPlayer = function(){ game.getPlayer(3)};
+			chai.expect(getPlayer).to.throw(Error,/^player is unauthorized$/);
+		});
+		it('getOpponentplayer gives opponent player',function(){
+			chai.assert.deepEqual(game.getOpponentplayer(1),player2);
+		});
+		it('getOpponentplayer throws an error for unauthorized player',function(){
+			var getOpponentplayer = function(){ game.getOpponentplayer(3)};
+			chai.expect(getOpponentplayer).to.throw(Error,/^player is unauthorized$/);
+		});
 	});
-});
-
-
-describe('who play first',function(){
-	var player,opponentPlayer;
-	beforeEach(function () {
-		player = new Player('Manu');
-		deployShip(player);
-		opponentPlayer = new Player('Shanu');
-		deployShip(opponentPlayer);
+	describe('validatePosition',function(){
+		var game = new Game('player1');
+		it('informs player whether the position of ship is valid',function(){
+			var isValid = game.validatePosition(['A1','A2','A3','A4','A5']);
+			chai.expect(isValid).to.true;
+		});
+		it('says position is not valid if any of the position is not found in the available positions',function(){
+			var isValid = game.validatePosition(['A1','A2','A3','A4','Z5']);
+			chai.expect(isValid).to.false;
+		});
+		it('says position is not valid even ship fix in horizontal but number is greater than 10',function(){
+			var isValid = game.validatePosition(['A11','A12','A13','A14','A15']);
+			chai.expect(isValid).to.false;
+		});
+		it('says position is not valid even ship fix in vertical but number is greater than 10',function(){
+			var isValid = game.validatePosition(['B11','B12','B13','B14','B15']);
+			chai.expect(isValid).to.false;
+		});
 	});
-	it('when ready event emit first 2 time who say ready first they will start',function(){
-		player.playerId = 1;
-		opponentPlayer.playerId = 2;
-		player.ready();
-		opponentPlayer.ready();
-		chai.expect(sh.game.turn).to.be.equal(1);
+	describe('validateAlignment',function(){
+		var game = new Game('player1');
+		it('says position is valid if player diploy his ship horizontally',function(){
+			var isValid = game.validateAlignment(['A1','A2','A3']);
+			chai.expect(isValid).to.true;
+		});
+		it('says position is valid if player diploy his ship vertically',function(){
+			var isValid = game.validateAlignment(['A1','B1','C1']);
+			chai.expect(isValid).to.true;
+		});
+		it('says position is not valid if player diploy his ship diagonally',function(){
+			var isValid = game.validateAlignment(['A1','B2','C3']);
+			chai.expect(isValid).to.false;
+		});
 	});
-});
-
-describe('fleet',function(){
-	var player,opponentPlayer;
-	beforeEach(function () {
-		player = new Player('Manu');
-		deployShip(player);
-	});
-	it('players should not have repeated ship',function () {
-		chai.expect(function() {
-		 	player.deployShip('battleship',['I1','I2','I3','I4']);
-		}).to.throw(Error,/^Can not afford more Ships$/);
-		player.usedPositions.should.have.length(17);
-		player.fleet.should.have.all.keys('battleship','carrier','cruiser','destroyer','submarine');
-	});
-});
-
-describe('destroy',function () {
-	var player,opponentPlayer;
-	beforeEach(function () {
-		player = new Player('Manu');
-		deployShip(player);
-		opponentPlayer = new Player('Sanu');
-		deployShip(opponentPlayer);
-	});
-	it('destroyes the opponent ship',function () {
-		var targetShip=sh.destroy(opponentPlayer,'A1');
-		chai.expect(targetShip).to.be.equal('cruiser');
+	describe('validateSize',function(){
+		var game = new Game('player1');
+		it('says ship size is valid if provided positions are equal to ship size',function(){
+			var isValid=game.validateSize(['A1','A2','A3'],'submarine');
+			chai.expect(isValid).to.true;
+		});
+		it('says ship size is not valid if provided positions are less than ship size',function(){
+			var isValid=game.validateSize(['A1','A2','A3'],'battleship');
+			chai.expect(isValid).to.false;
+		});
+		it('says ship size is not valid if provided positions are more than ship size',function(){
+			var isValid=game.validateSize(['A1','A2','A3'],'destroyer');
+			chai.expect(isValid).to.false;
+		});
 	});
 });

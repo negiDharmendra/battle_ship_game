@@ -11,7 +11,6 @@ describe("get",function(){
 		it("for / should redirect me to index.html",function(done){
 			supertest(routers)
 				 .get("/")
-				 .expect("Content-Type", /text\/plain/)
 				 .expect(302)
 				 .expect("Location","/html/index.html",done);
 		});
@@ -34,7 +33,6 @@ describe("Dynamic request based on State of Game",function(){
 			supertest(routers)
 				.post("/html/index.html")
 				.send("name=Dharmendra")
-				.expect("Content-Type", /text\/plain/)
 				.expect(302)
 				.expect("Location","/html/deploy.html",done);
 		});
