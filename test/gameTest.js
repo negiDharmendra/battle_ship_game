@@ -1,40 +1,7 @@
 var Game = require('../library/game.js');
-// var Player = require('../library/player.js');
 var chai = require('chai');
 var should=chai.should();
 var ld = require('lodash');
-
-// var deployShip = function(player){
-// 	var deployedCruiser = player.deployShip('cruiser',['A1','A2','A3']);
-// 	var deployedCarrier = player.deployShip('carrier',['C6','C7','C8','C9','C10']);
-// 	var deployedSubmarine = player.deployShip('submarine',['H5','I5','J5']);
-// 	var deployedBattleship = player.deployShip('battleship',['E3','E4','E5','E6']);
-// 	var deployedDestroyer = player.deployShip('destroyer',['G7','H7']);
-// };
-
-// describe('sunk',function(){
-// 	var player,opponentPlayer;
-// 		player = new Player('Manu');
-// 		deployShip(player);	
-// 		opponentPlayer = new Player('Shanu');
-// 		deployShip(opponentPlayer);
-// 		player.playerId=1;
-// 		opponentPlayer.playerId=2;
-// 	var shoot=player.shoot;
-// 		player.ready();
-// 		opponentPlayer.ready();
-// 		shoot.call(player,opponentPlayer,'G7');
-// 		shoot.call(opponentPlayer,player,'A2');
-// 		shoot.call(player,opponentPlayer,'H7');
-// 		shoot.call(opponentPlayer,player,'C1');
-// 		shoot.call(player,opponentPlayer,'C2');
-// 	it('checks whether ship is sunk or not',function(){
-// 			chai.expect(opponentPlayer.fleet.destroyer.isSunk()).to.be.true;
-// 			chai.expect(opponentPlayer.fleet.carrier.isSunk()).to.be.false;
-// 		});
-// });
-
-
 
 describe('Game',function(){
 	describe('player',function(){
@@ -80,6 +47,43 @@ describe('Game',function(){
 		it('getOpponentplayer throws an error for unauthorized player',function(){
 			var getOpponentplayer = function(){ game.getOpponentplayer(3)};
 			chai.expect(getOpponentplayer).to.throw(Error,/^player is unauthorized$/);
+		});
+	});
+	describe("gameStatus",function(){
+		it('should be started when a player create a game',function(){
+			var player1 = {playerId:1,name:'guruji'};
+			var game = new Game(player1);
+			chai.expect(game.status()).to.be.equals('Initialized');
+
+		});
+		it('should be running when second players join the game',function(){
+			var player1 = {playerId:1,name:'guruji'};
+			var player2 = {playerId:2,name:'guptaji'};
+			var game = new Game(player1);
+			game.addPlayer(player2);
+			chai.expect(game.status()).to.be.equals('Running');
+		});
+		it('should be game over when anyone of the player dies',function(){
+			var player1 = {playerId:1,name:'guruji',isAlive:true};
+			var player2= {playerId:2,name:'guptaji',isAlive:false};
+			var game = new Game(player1);
+			game.addPlayer(player2);
+
+			chai.expect(game.status()).to.be.equals('Game Over');
+		})
+
+	});
+	describe('destroy',function(){
+		it('should return which ship got hit',function(){
+			var player = {playerId:1,name:'guruji',usedPositions:['A1','A2','A3','D1','D2','D3'],fleet:{
+				submarine:{positions:['A1','A2','A3'],vanishedLives:0,},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,}
+			}};
+			var game = new Game(player);
+			var ship = game.destroy(player,'D1');
+			chai.assert.equal(ship,'cruiser');
+			chai.expect(player.fleet[ship].vanishedLives).to.equal(1);
+			chai.expect(player.usedPositions).to.deep.equal(['A1','A2','A3','D2','D3']);
 		});
 	});
 	describe('validatePosition',function(){
@@ -129,6 +133,48 @@ describe('Game',function(){
 		it('says ship size is not valid if provided positions are more than ship size',function(){
 			var isValid=game.validateSize(['A1','A2','A3'],'destroyer');
 			chai.expect(isValid).to.false;
+		});
+	});
+	describe('getUpdates',function(){
+		it('should give latest updates of game',function(){
+			var player1 = {playerId:1,name:'guruji',usedPositions:['A1','A2','A3','D1','D2','D3'],
+			readyState:true,isAlive:true,fleet:{
+				submarine:{positions:['A1','A2','A3'],vanishedLives:0,},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,}
+			}};
+			var player2= {playerId:2,name:'guptaji',usedPositions:['A1','A2','A3','D1','D2','D3'],
+			readyState:true,isAlive:true,fleet:{
+				submarine:{positions:['A1','A2','A3'],vanishedLives:0,},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,}
+			}};
+			var game = new Game(player1);
+			game.addPlayer(player2);
+			game.turn = 1;
+			var updates = game.getUpdates(1);
+
+			chai.expect(updates).to.have.all.keys('positions','gotHit','turn','gameEnd');
+			chai.expect(updates.positions).to.deep.equal(['A1','A2','A3','D1','D2','D3']);
+			chai.expect(updates.gotHit).to.deep.equal([]);
+			chai.expect(updates.turn).to.equal(1);
+			chai.expect(updates.gameEnd).to.equal(false);
+		});
+		it('should says game end if anyone of the player dies',function(){
+			var player1 = {playerId:1,name:'guruji',usedPositions:['A1','A2','A3','D1','D2','D3'],
+			readyState:true,isAlive:true,fleet:{
+				submarine:{positions:['A1','A2','A3'],vanishedLives:0,},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,}
+			}};
+			var player2= {playerId:2,name:'guptaji',usedPositions:['A1','A2','A3','D1','D2','D3'],
+			readyState:true,isAlive:false,fleet:{
+				submarine:{positions:['A1','A2','A3'],vanishedLives:0,},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,}
+			}};
+			var game = new Game(player1);
+			game.addPlayer(player2);
+			game.turn = 1;
+			var updates = game.getUpdates(1);
+
+			chai.expect(updates.gameEnd).to.equal(true);
 		});
 	});
 });

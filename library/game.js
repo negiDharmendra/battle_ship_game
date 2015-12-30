@@ -8,6 +8,19 @@ var Game = function (player) {
 };
 
 Game.prototype = {
+	status:function(player){
+		var players = Object.keys(this.players);
+		var self = this;
+		var playerStatus = players.some(function(player){
+			return self.players[player].isAlive == false;
+		});
+		if(playerStatus)
+			return('Game Over');
+		else if(players.length==1)
+			return('Initialized');
+		else if(players.length==2)
+			return('Running');
+	},
 	addPlayer:function(player){
 		if(Object.keys(this.players).length<2)
 			this.players[player.playerId] = player;
@@ -69,19 +82,35 @@ Game.prototype = {
 			return this.isEqualToRange(numbers);
 		return false;
 	},
-	destroy : function(player,position){
-	var hittedShip;
-	var index = player.usedPositions.indexOf(position);
-	delete player.usedPositions[index];
-	player.usedPositions = ld.compact(player.usedPositions);
-	for(var ship in player.fleet){
-		if(player.fleet[ship].positions.indexOf(position) >= 0){
-			player.fleet[ship].vanishedLives++;
-			hittedShip=ship;
+	destroy : function(opponentPlayer,position){
+		var hittedShip;
+		var index = opponentPlayer.usedPositions.indexOf(position);
+		delete opponentPlayer.usedPositions[index];
+		opponentPlayer.usedPositions = ld.compact(opponentPlayer.usedPositions);
+		for(var ship in opponentPlayer.fleet){
+			if(opponentPlayer.fleet[ship].positions.indexOf(position) >= 0){
+				opponentPlayer.fleet[ship].vanishedLives++;
+				hittedShip=ship;
+			};
 		};
-	};
-	return hittedShip;
+		return hittedShip;
+	},
+	getUpdates:function(playerId){
+		var updates = {positions:[],gotHit:[],turn:'',gameEnd:false};
+		var player = this.getPlayer(playerId);
+		var opponentPlayer = this.getOpponentplayer(playerId) || {isAlive:true};
+		if(player && player.readyState){
+			for(var ship in player.fleet)
+				updates.positions=updates.positions.concat(player.fleet[ship].positions);
+			updates.positions = ld.compact(updates.positions);
+		 	updates.gotHit = ld.difference(updates.positions,player.usedPositions);
+		 	updates.turn = this.turn;
+		 	if(!player.isAlive||!opponentPlayer.isAlive)
+		 		updates.gameEnd = true;
+		}
+		return updates;
 	}
+
 };
 
 module.exports = Game;
