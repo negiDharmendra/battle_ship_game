@@ -1,9 +1,12 @@
 var http = require('http');
-var requestController = require('./routers.js');
+var routers = require('./routers.js');
 var log = require('./log.js');
-requestController.players = {};
+var game = require('../library/game.js').sh;
+var players ={};
 
-http.createServer(requestController).listen(3000,function(){console.log("listening at port===>"+3000);
+var controller =routers.createController(game,players);
+
+http.createServer(controller).listen(3000,function(){console.log("listening at port===>"+3000);
    log.log_message('writeFile','players.log','server started at '+new Date().toLocaleTimeString());
    log.log_message('writeFile','errors.log','server started at '+new Date().toLocaleTimeString());
 });

@@ -2,12 +2,16 @@ var express =  require('express');
 var app = express();
 var body_parser = require('./body_parser.js');
 var log = require('./log.js');
-var game = require('../library/game.js').sh;
 var Player = require('../library/player.js');
 var ld = require('lodash');
 var cookie_parser = require('cookie-parser');
 
-app.game = game;
+app.createController = function(game,players){
+	app.game = game;
+	app.players = players;
+	return app;
+}
+
 
 var loadUser  = function(req,res,next){
 	req.user =  app.players[req.cookies.userName];
