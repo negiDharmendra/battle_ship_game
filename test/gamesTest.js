@@ -31,7 +31,7 @@ describe('Games',function () {
 	});
 	it('gives all the games which can be joined',function(){
 		var Game = function(){this.status=function(){
-			return 'initialized';
+			return 'Initialized';
 		}};
 		var games = new Games(Game);
 		var player = {};
@@ -41,7 +41,7 @@ describe('Games',function () {
 	});
 	it('gives null if there is no game that can be joined',function(){
 		var Game = function(){this.status=function(){
-			return 'initialized';
+			return 'Initialized';
 		}};
 		var games = new Games(Game);
 		var player = {};

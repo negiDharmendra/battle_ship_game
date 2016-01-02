@@ -156,7 +156,6 @@ describe('Game',function(){
 			chai.expect(updates.positions).to.deep.equal(['A1','A2','A3','D1','D2','D3']);
 			chai.expect(updates.gotHit).to.deep.equal([]);
 			chai.expect(updates.turn).to.equal(1);
-			chai.expect(updates.gameEnd).to.equal(false);
 		});
 		it('should says game end if anyone of the player dies',function(){
 			var player1 = {playerId:1,name:'guruji',usedPositions:['A1','A2','A3','D1','D2','D3'],

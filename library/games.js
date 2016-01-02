@@ -3,17 +3,17 @@ var ld = require('lodash');
 var Games = function (Game) {
 	this.allGames = {};
 	this.createGame = function(player){
-		player.playerId = this.getPlayerId();
+		player.playerId = player.name+'_'+this.getPlayerId();
 		var game = new Game(player);
 		game.gameId = this.getGameId();
 		this.allGames[game.gameId]=game;
 		return game;
-	},
+	};
 	this.joinGame = function(game,player){
-		player.playerId = this.getPlayerId();
+		player.playerId = player.name+'_'+this.getPlayerId();
 		return game.addPlayer(player);
-	}
-}
+	};
+};
 
 
 Games.prototype = {
@@ -35,7 +35,7 @@ Games.prototype = {
 		var initializedGames = {};
 		for(var game in games){
 			game = this.getGame(game);
-			if(game.status()=="initialized"){
+			if(game.status()=='Initialized'){
 				initializedGames[game.gameId]=game;
 			}
 		}

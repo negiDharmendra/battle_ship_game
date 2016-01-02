@@ -96,7 +96,7 @@ Game.prototype = {
 		return hittedShip;
 	},
 	getUpdates:function(playerId){
-		var updates = {positions:[],gotHit:[],turn:'',gameEnd:false};
+		var updates = {positions:[],gotHit:[],turn:'',gameEnd:null};
 		var player = this.getPlayer(playerId);
 		var opponentPlayer = this.getOpponentplayer(playerId) || {isAlive:true};
 		if(player && player.readyState){
@@ -106,7 +106,7 @@ Game.prototype = {
 		 	updates.gotHit = ld.difference(updates.positions,player.usedPositions);
 		 	updates.turn = this.turn;
 		 	if(!player.isAlive||!opponentPlayer.isAlive)
-		 		updates.gameEnd = true;
+		 		updates.gameEnd = player.isAlive;
 		}
 		return updates;
 	}
