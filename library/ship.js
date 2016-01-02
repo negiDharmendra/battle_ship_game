@@ -12,6 +12,10 @@ Ship.prototype = {
 	},
 	isSunk:function(){
 		return this.vanishedLives==this.lives;
+	},
+	gotHit:function(position){
+		if(this.positions.indexOf(position) >= 0)
+			this.vanishedLives++;return this.name;
 	}
 }
 module.exports = Ship;

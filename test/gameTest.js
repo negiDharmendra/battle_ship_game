@@ -76,12 +76,16 @@ describe('Game',function(){
 	describe('destroy',function(){
 		it('should return which ship got hit',function(){
 			var player = {playerId:1,name:'guruji',usedPositions:['A1','A2','A3','D1','D2','D3'],fleet:{
-				submarine:{positions:['A1','A2','A3'],vanishedLives:0,},
-				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,}
+				Cruiser:{name:'Cruiser',positions:['D1','D2','D3'],vanishedLives:0,
+					gotHit:function(position){
+						if(this.positions.indexOf(position) >= 0)
+							this.vanishedLives++;return this.name;
+					}
+				}
 			}};
 			var game = new Game(player);
 			var ship = game.destroy(player,'D1');
-			chai.assert.equal(ship,'cruiser');
+			chai.assert.equal(ship,'Cruiser');
 			chai.expect(player.fleet[ship].vanishedLives).to.equal(1);
 			chai.expect(player.usedPositions).to.deep.equal(['A1','A2','A3','D2','D3']);
 		});
