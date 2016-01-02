@@ -3,7 +3,7 @@ function get_updates(){
 	function success(data){
 		var updates=JSON.parse(data);
 		var gameEnd=updates.gameEnd;
-		displayShips('#oceanGrid',updates.gotHit,updates.position,'lightgreen');
+		displayShips('#oceanGrid',updates.gotHit,updates.positions,'lightgreen');
 		if(gameEnd===true)display_gameover('You won the game'),stop_updates();
 		else if(gameEnd===false) display_gameover('You lost the game'),stop_updates();
 		else displayTurnMessage(updates.turn);
@@ -43,6 +43,7 @@ function displayShips(gridId,gotHit,usedPosition,color) {
 function get_ship_info(){
 	$.get('shipInfo',function(data,status){
 		var ships = JSON.parse(data);
+		console.log(ships);
 		for (var ship in ships) {
 			var ship_info = ships[ship];
 			$('.ship_info .'+ship+' td:nth-child(2)').html(ship_info.hits)
@@ -72,11 +73,6 @@ function reply_to_shoot(evnt){
 			$('#targetGrid>tbody>tr>td#'+evnt.id).removeAttr('onclick');
 			$('#targetGrid>tbody>tr>td#'+evnt.id).addClass(status.reply);
 		}
-		if(status.end)
-			if(!gameEnd.player)
-				display_gameover('You lost the game');
-			else if(!gameEnd.opponentPlayer)
-				display_gameover('You won the game');
 	});
 };
 
