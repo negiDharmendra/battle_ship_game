@@ -83,6 +83,9 @@ describe('Game',function(){
 					}
 				}
 			}};
+			player.removeDamagePosition = function(position){
+				ld.remove(this.usedPositions,function(pos){return pos==position;});
+			}
 			var game = new Game(player);
 			var ship = game.destroy(player,'D1');
 			chai.assert.equal(ship,'Cruiser');

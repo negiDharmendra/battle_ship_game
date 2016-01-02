@@ -84,9 +84,7 @@ Game.prototype = {
 	},
 	destroy : function(opponentPlayer,position){
 		var hittedShip;
-		var index = opponentPlayer.usedPositions.indexOf(position);
-		delete opponentPlayer.usedPositions[index];
-		opponentPlayer.usedPositions = ld.compact(opponentPlayer.usedPositions);
+		opponentPlayer.removeDamagePosition(position);
 		for(var ship in opponentPlayer.fleet){
 			hittedShip = opponentPlayer.fleet[ship].gotHit(position);
 			if(hittedShip)return hittedShip;
