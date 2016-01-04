@@ -1,4 +1,8 @@
 .DS_Store
 data/
 node_modules/
+<<<<<<< HEAD
 coverage/
+=======
+coverage/
+>>>>>>> 1532d4eac7ad79e7783ba505b71bf7fbe186a934

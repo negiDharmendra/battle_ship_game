@@ -84,16 +84,11 @@ Game.prototype = {
 	},
 	destroy : function(opponentPlayer,position){
 		var hittedShip;
-		var index = opponentPlayer.usedPositions.indexOf(position);
-		delete opponentPlayer.usedPositions[index];
-		opponentPlayer.usedPositions = ld.compact(opponentPlayer.usedPositions);
+		opponentPlayer.removeDamagePosition(position);
 		for(var ship in opponentPlayer.fleet){
-			if(opponentPlayer.fleet[ship].positions.indexOf(position) >= 0){
-				opponentPlayer.fleet[ship].vanishedLives++;
-				hittedShip=ship;
-			};
+			hittedShip = opponentPlayer.fleet[ship].gotHit(position);
+			if(hittedShip)return hittedShip;
 		};
-		return hittedShip;
 	},
 	getUpdates:function(playerId){
 		var updates = {positions:[],gotHit:[],turn:'',gameEnd:null};

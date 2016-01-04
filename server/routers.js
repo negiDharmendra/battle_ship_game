@@ -161,6 +161,7 @@ app.post('/html/shoot', function(req, res) {
     validateShoot(req, res);
 });
 
+
 app.post('/html/quitGame', function(req, res) {
     respondToQuitGame(req, res);
 });
@@ -186,15 +187,6 @@ var respondToRestartGame = function(req,res){
      res.send();
  }
 };
-
-// app.post('/html/restartGame',function(req,res){
-//  respondToRestartGame(req,res);
-// });
-
-// app.get('/html/queryGameOver',function(req,res){
-//  respondToPlayerInQueue(req,res);
-// });
-
 
 app.createController = function(games) {
     app.games = games;

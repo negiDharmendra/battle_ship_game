@@ -68,7 +68,11 @@ Player.prototype = {
 		else
 			throw new Error ('Can not announce READY');
 	},
-
+	removeDamagePosition:function(position){
+		ld.remove(this.usedPositions,function(pos){
+			return pos==position;
+		});
+	}
 };
 
 
