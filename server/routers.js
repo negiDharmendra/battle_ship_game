@@ -170,27 +170,23 @@ app.get('/html/myShootPositions', function(req, res) {
 });
 
 
-// var respondToRestartGame = function(req,res){
-//  try{
-//      var playerId = req.user.playerId;
-//      var playerName = app.players[playerId].name;
-//      app.players[playerId] =  new Player(playerName);
-//      app.players[playerId].playerId = playerId;
-//      app.game.game.turn=null;
-//      res.redirect('/html/deploy.html');
-//      log.log_message('appendFile','players.log',req.user.playerId+' has restarted the game');
-//  }catch(err){
-//      log.log_message('appendFile','errors.log','respondToRestartGame '+req.user.playerId+'➽'+err.message);
-//  }
-//  finally{
-//      res.send();
-//  }
-// };
+var respondToRestartGame = function(req,res){
+ try{
+     var playerId = req.user.playerId;
+     var playerName = app.players[playerId].name;
+     app.players[playerId] =  new Player(playerName);
+     app.players[playerId].playerId = playerId;
+     app.game.game.turn=null;
+     res.redirect('/html/deploy.html');
+     log.log_message('appendFile','players.log',req.user.playerId+' has restarted the game');
+ }catch(err){
+     log.log_message('appendFile','errors.log','respondToRestartGame '+req.user.playerId+'➽'+err.message);
+ }
+ finally{
+     res.send();
+ }
+};
 
-
-// app.post('/html/players_queue.html',function(req,res){
-//  informPlayers(req,res);
-// });
 // app.post('/html/restartGame',function(req,res){
 //  respondToRestartGame(req,res);
 // });
