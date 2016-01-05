@@ -120,13 +120,8 @@ app.post('/html/newGame', function(req, res) {
     var player = new Player(req.cookies.userName);
     var game = app.games.createGame(player);
     res.cookie('userName', player.playerId);
-    if (game) {
-        res.cookie('gameId', game.gameId);
-        res.redirect('/html/deploy.html');
-    } else {
-        res.send('false');
-    }
- 
+    res.cookie('gameId', game.gameId);
+    res.redirect('/html/deploy.html');
 });
 
 app.get('/getAllGames', function(req, res) {
@@ -169,24 +164,6 @@ app.post('/html/quitGame', function(req, res) {
 app.get('/html/myShootPositions', function(req, res) {
     getMyshootPositions(req, res);
 });
-
-
-var respondToRestartGame = function(req,res){
- try{
-     var playerId = req.user.playerId;
-     var playerName = app.players[playerId].name;
-     app.players[playerId] =  new Player(playerName);
-     app.players[playerId].playerId = playerId;
-     app.game.game.turn=null;
-     res.redirect('/html/deploy.html');
-     log.log_message('appendFile','players.log',req.user.playerId+' has restarted the game');
- }catch(err){
-     log.log_message('appendFile','errors.log','respondToRestartGame '+req.user.playerId+'➽'+err.message);
- }
- finally{
-     res.send();
- }
-};
 
 app.createController = function(games) {
     app.games = games;
