@@ -1,0 +1,33 @@
+.header{
+	font-size:50px;
+	text-align: center;
+	color: black;
+	position: relative;
+	background: #939393;
+}
+.newGame {
+	height: 400px;
+	width: 1000px;
+	font-family: sans-serif;
+	text-align: center;	
+	margin:  12% 12% 12% 18%;
+	background:rgba(192,192,192, .38);
+	border-radius: 30px;
+	overflow:scroll;
+}
+
+p{
+	font-family: sans-serif;
+	font-size: 5mm;
+	font-weight: 100;
+}
+
+button {
+	font-weight: 400;
+	padding: 2%;
+	font-family: sans-serif;
+	border-radius: 10mm;
+	font-size:4.8mm;
+	color: black;
+	background-color: silver;
+}

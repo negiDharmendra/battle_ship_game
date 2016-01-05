@@ -8,6 +8,7 @@ function checkCookie(){
 };
 
 $(window).load(function(){
-	$.removeCookie('name',null, { path: '/' });
+	$.removeCookie('userName',null, { path: '/' });
+	$.removeCookie('gameId',null, { path: '/' });
 	checkCookie();
 });
