@@ -1,26 +1,25 @@
 var express = require('express');
-var app = express();
 var body_parser = require('./body_parser.js');
 var log = require('./log.js');
 var Player = require('../library/player.js');
-var ld = require('lodash');
 var cookie_parser = require('cookie-parser');
 
+var app = express();
 app.use(body_parser);
 app.use(cookie_parser());
 app.use(express.static('./public'));
 
 var loadUser = function(req, res, next) {
     req.game = app.games.getGame(req.cookies.gameId);
-    req.user = req.game.players[req.cookies.userName];
+    req.user = req.game.getPlayer(req.cookies.userName);
     next();
 };
 
 var deployShips = function(req, res) {
     var game = req.game;
+    var player = req.user;
     var status = '';
     try {
-        var player = req.user;
         status = player.deployShip(req.body.name, req.body.positions.trim().split(' '), game);
         log.log_message('appendFile', 'players.log', req.user.playerId + ' has deployed his ' + req.body.name);
     } catch (err) {
@@ -32,9 +31,9 @@ var deployShips = function(req, res) {
 };
 
 var readyAnnounement = function(req, res) {
+    var game = req.game;
+    var player = req.user;
     try {
-        var game = req.game;
-        var player = req.user;
         player.ready(game);
         res.redirect('/html/battleship.html');
     } catch (err) {
@@ -45,9 +44,9 @@ var readyAnnounement = function(req, res) {
 
 var validateShoot = function(req, res) {
     var game = req.game;
+    var player = req.user;
     var status = {};
     try {
-        var player = req.user;
         var opponentPlayer = game.getOpponentplayer(req.user.playerId);
         status.reply = player.shoot(opponentPlayer, req.body.position, game);
     } catch (err) {
@@ -59,8 +58,8 @@ var validateShoot = function(req, res) {
 
 
 var serveShipInfo = function(req, res) {
+    var player = req.user;
     try {
-        var player = req.user;
         var fleetStatus = {};
         for (var ship in player.fleet) {
             var shipStatus = player.fleet[ship].isSunk();
@@ -79,9 +78,9 @@ var serveShipInfo = function(req, res) {
 };
 
 var respondToQuitGame = function(req, res) {
+    var playerId = req.user.playerId;
+    var game = req.game;
     try {
-        var playerId = req.user.playerId;
-        var game = req.game;
         res.clearCookie('userName');
         res.clearCookie('gameId');
         game.deletePlayer(playerId);
@@ -95,9 +94,9 @@ var respondToQuitGame = function(req, res) {
 };
 
 var getMyshootPositions = function(req, res) {
+    var player = req.user;
     try {
         var status = {};
-        var player = req.user;
         status.hit = player.hit;
         status.miss = player.miss;
         res.send(JSON.stringify(status));
@@ -155,7 +154,6 @@ app.get('/html/shipInfo', function(req, res) {
 app.post('/html/shoot', function(req, res) {
     validateShoot(req, res);
 });
-
 
 app.post('/html/quitGame', function(req, res) {
     respondToQuitGame(req, res);

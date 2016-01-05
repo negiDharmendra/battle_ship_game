@@ -28,7 +28,6 @@ describe("get",function(){
 describe("redirection to allgame.html",function(){
 	describe("Player",function(){
 		it("should logged in the user and redirect to the allgame.html",function(done){
-			routers.players ={};
 			supertest(routers)
 				.post("/html/index.html")
 				.send("name=Dharmendra")
@@ -83,11 +82,13 @@ describe('player ',function(){
 })
 describe("/html/deployShip",function(){
 	it("should allow to deploy battleship",function(done){
-		var game = {players:{
-			Dharmendra_3:{
+		var player ={
 			deployShip:sinon.stub().returns(true),
-			playerId:'Dharmendra_3'}
-			}};
+			playerId:'Dharmendra_3'};
+		var game = {players:{
+			Dharmendra_3:player},
+			getPlayer:sinon.stub().returns(player)
+		};
 		routers.games={
 			getGame:sinon.stub().withArgs(100).returns(game)
 		}
@@ -102,14 +103,15 @@ describe("/html/deployShip",function(){
 });
 describe("/html/deploy.html",function(){
 	it("should redirect player to battleship.html",function(done){
-		var game = {players:{
-			Dharmendra_3:{
+		var player ={
 			ready:sinon.spy(),
-			playerId:'Dharmendra_3'}
-			}};
+			playerId:'Dharmendra_3'};
+		var game = {players:{Dharmendra_3:player},
+			getPlayer:sinon.stub().returns(player)
+		};
 		routers.games={
 			getGame:sinon.stub().withArgs(100).returns(game)
-		}
+		};
 
 		supertest(routers)
 			.post("/html/deploy.html")
@@ -121,11 +123,13 @@ describe("/html/deploy.html",function(){
 });
 describe("updates",function(){
 	it('should give updates when player say ready',function(done){
-		var game = {players:{
-			Dharmendra_3:{
-			playerId:'Dharmendra_3'}
-			},
-			getUpdates:sinon.spy()};
+		var player ={ playerId:'Dharmendra_3'};
+
+		var game = {players:{Dharmendra_3:player},
+			getPlayer:sinon.stub().returns(player),
+			getUpdates:sinon.spy(),
+		};
+
 		routers.games={
 			getGame:sinon.stub().withArgs(100).returns(game)
 		}
@@ -138,12 +142,19 @@ describe("updates",function(){
 
 describe("Player shoot",function(){
 	it("should validate shoot for miss ",function(done){
-		var game = {players:{
-			Dharmendra_6:{},
-			Vikas_4:{
-			readyState:true,playerId:'Vikas_4',shoot : sinon.stub().withArgs().returns("miss")},},
+	
+		var player ={ playerId:'Dharmendra_6'};
+		var player1 ={ playerId:'Vikas_4',
+			readyState:true,playerId:'Vikas_4',
+			shoot : sinon.stub().withArgs().returns("miss")};
+
+
+		var game = {players:{Dharmendra_6:player,Vikas_4:player1},
+			getPlayer:sinon.stub().returns(player1),
+			getUpdates:sinon.spy(),
 			getOpponentplayer : sinon.stub().withArgs(100).returns('true')
-			};
+		};
+
 		routers.games={
 			getGame:sinon.stub().withArgs(100).returns(game)
 		}
@@ -155,15 +166,21 @@ describe("Player shoot",function(){
 		.expect(200,done);
 	});
 });
-describe("Player can when it's not his turn",function(){
-	it("should validate shoot for miss ",function(done){
-		var game = {players:{
-			Dharmendra_6:{},
-			Vikas_4:{
-			readyState:true,playerId:'Vikas_4',shoot : sinon.stub().withArgs().throws("Error","Opponent turn")},},
+describe("Player can not shoot ",function(){
+	it("when it's not his turn",function(done){
+		var player ={ playerId:'Dharmendra_6'};
+		var player1 ={ playerId:'Vikas_4',
+		readyState:true,playerId:'Vikas_4',
+		shoot : sinon.stub().withArgs().throws("Error","Opponent turn")
+		};
+
+
+		var game = {players:{Dharmendra_6:player,Vikas_4:player1},
+			getPlayer:sinon.stub().returns(player1),
 			turn : 'Vikas_4',
-			getOpponentplayer : sinon.stub().withArgs(100).returns('true')
-			};
+			getOpponentplayer : sinon.stub().withArgs(100).returns('true'),
+		};
+
 		routers.games={
 			getGame:sinon.stub().withArgs(100).returns(game)
 		}
@@ -175,17 +192,26 @@ describe("Player can when it's not his turn",function(){
 		.expect(200,done);
 	});
 });
-describe("Player shoot on invalid position",function(){
-	it("should validate shoot for miss ",function(done){
-		var game = {players:{
-			Dharmendra_6:{},
-			Vikas_4:{
-			readyState:true,playerId:'Vikas_4',shoot : sinon.stub().withArgs().throws("Error","Invalid position")},},
-			getOpponentplayer : sinon.stub().withArgs(100).returns('true')
-			};
+describe("Player can not shoot ",function(){
+	it("on invalid position",function(done){
+
+		var player ={ playerId:'Dharmendra_6'};
+		var player1 ={ playerId:'Vikas_4',
+		readyState:true,playerId:'Vikas_4',
+		shoot : sinon.stub().withArgs().throws("Error","Invalid position")
+		};
+
+
+		var game = {players:{Dharmendra_6:player,Vikas_4:player1},
+			getPlayer:sinon.stub().returns(player1),
+			turn : 'Vikas_4',
+			getOpponentplayer : sinon.stub().withArgs(100).returns('true'),
+		};
+
 		routers.games={
 			getGame:sinon.stub().withArgs(100).returns(game)
 		}
+
 		supertest(routers)
 		.post("/html/shoot")
 		.set("Cookie","userName=Vikas_4")
@@ -196,13 +222,20 @@ describe("Player shoot on invalid position",function(){
 });
 describe("Player shoot",function(){
 	it("should validate shoot for hit ",function(done){
-		var game = {players:{
-			Dharmendra_6:{
-			readyState:true,usedPositions:['A2'],playerId:'Vikas_4',isAlive:true},
-			Vikas_4:{
-			readyState:true,playerId:'Vikas_4',shoot : sinon.stub().withArgs().returns("hit")},},
-			getOpponentplayer : sinon.stub().withArgs(100).returns('true')
-			};
+
+		var player ={ playerId:'Dharmendra_6',readyState:true,usedPositions:['A2'],isAlive:true};
+		var player1 ={ playerId:'Vikas_4',
+		readyState:true,playerId:'Vikas_4',
+		shoot : sinon.stub().withArgs().returns("hit")
+		};
+
+
+		var game = {players:{Dharmendra_6:player,Vikas_4:player1},
+			getPlayer:sinon.stub().returns(player1),
+			turn : 'Vikas_4',
+			getOpponentplayer : sinon.stub().withArgs(100).returns('true'),
+		};
+
 		routers.games={
 			getGame:sinon.stub().withArgs(100).returns(game)
 		}
@@ -216,8 +249,10 @@ describe("Player shoot",function(){
 });
 describe('serveShipInfo',function(){
 	it('should provide the ships information to player',function(done){
-		var game = {players:{
-			Dharmendra_3:{playerId:'Dharmendra_3',fleet:{battleship:{isSunk:sinon.stub().returns(false),vanishedLives:3}}}}};
+		var player = {playerId:'Dharmendra_3',fleet:{battleship:{isSunk:sinon.stub().returns(false),vanishedLives:3}}};
+		var game = {players:{Dharmendra_3:player},
+		getPlayer:sinon.stub().returns(player)
+		};
 		routers.games={
 			getGame:sinon.stub().withArgs(100).returns(game)
 		}
@@ -231,8 +266,12 @@ describe('serveShipInfo',function(){
 })
 describe('shoot positions',function(){
 	it('should give shoot information',function(done){
-		var game = {players:{
-			Dharmendra_3:{playerId:'Dharmendra_3',hit:['A1']}}};
+
+		var player ={playerId:'Dharmendra_3',hit:['A1']};
+
+		var game = {players:{Dharmendra_3:player},
+			getPlayer:sinon.stub().returns(player)
+		};
 		routers.games={
 			getGame:sinon.stub().withArgs(100).returns(game)
 		}
@@ -245,10 +284,14 @@ describe('shoot positions',function(){
 })
 describe('reponse to quit game',function(){
 	it('player can quit game',function(done){
+		var player ={playerId:'Dharmendra_3'};
 		var game = {players:{
-			Dharmendra_3:{playerId:'Dharmendra_3'}}};
+			Dharmendra_3:player},
+		getPlayer:sinon.stub().returns(player),
+		deletePlayer:sinon.stub().withArgs().returns(true)
+		};
 		routers.games={
-			getGame:sinon.stub().withArgs(100).returns(game)
+			getGame:sinon.stub().withArgs(100).returns(game),
 		}
 		supertest(routers)
 		.post('/html/quitGame')
