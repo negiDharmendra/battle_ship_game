@@ -104,8 +104,10 @@ Game.prototype = {
 		 		updates.gameEnd = player.isAlive;
 		}
 		return updates;
+	},
+	deletePlayer:function(id){
+		return delete this.players[id];
 	}
-
 };
 
 module.exports = Game;

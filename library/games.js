@@ -46,9 +46,6 @@ Games.prototype = {
 	},
 	ensureValidGame : function(gameId){
 		return !!this.getGame(gameId);
-	},
-	restartGame : function(game){
-		//pending
 	}
 }
 

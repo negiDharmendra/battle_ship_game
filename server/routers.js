@@ -84,7 +84,7 @@ var respondToQuitGame = function(req, res) {
         var game = req.game;
         res.clearCookie('userName');
         res.clearCookie('gameId');
-        delete game.players[playerId];
+        game.deletePlayer(playerId);
         res.redirect('/html/index.html');
         log.log_message('appendFile', 'players.log', +playerId + ' has quit the game');
     } catch (err) {
