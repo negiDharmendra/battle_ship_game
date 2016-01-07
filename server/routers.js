@@ -49,7 +49,8 @@ var readyAnnounement = function(req, res) {
         res.redirect('/html/battleship.html');
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'readyAnnounement ' + req.user.playerId + '➽' + err.message);
-        res.send(err.message);
+        res.redirect('/html/deploy.html');
+        // res.send(err.message);
     }
 };
 
