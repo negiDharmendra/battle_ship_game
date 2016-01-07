@@ -25,6 +25,11 @@ function displayTurnMessage(turn){
 	}
 }
 
+function play(){
+   var audio = document.getElementById("audio");
+   audio.play();
+}
+
 function display_gameover(message){
 	var sampleHtml = '<div class="game_screen"><div class="gameStatus">{{gameStatus}}</br></br></div>'+
 	'<div class="restartOrQuit"><form method="POST" action="restartGame"><button>Restart</button>'+
@@ -70,6 +75,7 @@ function reply_to_shoot(evnt){
 	$.post("shoot",{position:evnt.id},function(data){
 		var status = JSON.parse(data);
 		if(status.reply){
+			play();
 			$('#targetGrid>tbody>tr>td#'+evnt.id).removeAttr('onclick');
 			$('#targetGrid>tbody>tr>td#'+evnt.id).addClass(status.reply);
 		}

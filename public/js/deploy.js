@@ -54,12 +54,16 @@ function reply_to_deployment(evnt){
 function getCookie(){
 	return $.cookie('name');
 };
-
+function play(){
+   var audio = document.getElementById("audio");
+   audio.play();
+}
 function displayDeployedShip(reply,position){
 	if(reply == true) {
 		position.trim().split(' ').forEach(function(ele){
 			$('.ocean_grid>table>tbody>tr>#'+ele).css('background','lightgreen');
 		});
+		play();
 		$('.harbor>#position_of_ship>option:selected').remove();
 		if($('.harbor>#position_of_ship>option').length == 0){
 			$('.harbor').html('Deployed all ships</br>'+'<form method="POST"><button id="ready" type="submit">Ready</button></form>');
