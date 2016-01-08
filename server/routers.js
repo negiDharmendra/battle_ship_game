@@ -88,6 +88,7 @@ var serveShipInfo = function(req, res) {
 
 var respondToQuitGame = function(req, res) {
     var playerId = req.user.playerId;
+
     var game = req.game;
     try {
         res.clearCookie('userName');
@@ -103,6 +104,7 @@ var respondToQuitGame = function(req, res) {
 var respondToRestartGame = function(req, res) {
     var playerId = req.user.playerId;
     var playerName = req.user.name;
+    console.log("rstart",playerName)
     var game = req.game;
     try {
         game.deletePlayer(playerId);

@@ -25,6 +25,11 @@ function displayTurnMessage(turn){
 	}
 }
 
+function stop_play(id){
+   var audio = document.getElementById(id);
+   audio.pause();
+};
+
 function play(id){
    var audio = document.getElementById(id);
    audio.play();
@@ -71,7 +76,8 @@ $( window ).load(function(){
 
 var play_hit_or_miss_sound = function(reply){
 	if(reply=='hit') play('audio_for_hit')
-	else play('audio_for_miss');
+	if(reply=='miss') play('audio_for_miss');
+	if(!reply) play('opponent_turn');
 }
 function reply_to_shoot(evnt){
 	evnt = evnt.target;
