@@ -84,9 +84,10 @@ function displayDeployedShip(reply, position) {
 
 function get_updates() {
     $.get('get_updates', success);
-
     function success(data) {
         var updates = JSON.parse(data);
+        var readyTemplate = '<form method="POST"><button id="ready" type="submit">Ready</button></form>';
+        if(updates.ships.length==5)$('.harbor').html(readyTemplate);
         updates.ships.forEach(manageShipSelectionList);
         displayShips('.ocean_grid', updates.positions, 'lightgreen');
     };
@@ -112,6 +113,7 @@ function display_Message(message) {
 
 
 $(window).load(function() {
+    get_updates();
     if ($('.harbor>#position_of_ship>option').length > 0) {
         $('.ocean_grid td').mouseover(displayPosition);
         $('.ocean_grid td').mouseleave(hidePosition);

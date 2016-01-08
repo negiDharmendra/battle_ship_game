@@ -6,13 +6,17 @@
 	background: #939393;
 }
 .newGame {
-	height: 400px;
-	width: 1000px;
+	height: 300px;
+	width: 60%;
 	font-family: sans-serif;
 	text-align: center;	
-	margin:  12% 12% 12% 18%;
-	background:rgba(192,192,192, .38);
+	margin:  auto;
+	margin-top:  10%;
+	background:rgba(192,192,192, .18);
 	border-radius: 30px;
+}
+#joinGame{
+	height: 230px;
 	overflow:scroll;
 }
 
@@ -22,12 +26,21 @@ p{
 	font-weight: 100;
 }
 
-button {
-	font-weight: 400;
-	padding: 2%;
+#newGame button ,.joinGame button{
+	height: 40px;
+	margin: 1% 0 1% 0;
 	font-family: sans-serif;
 	border-radius: 10mm;
 	font-size:4.8mm;
 	color: black;
 	background-color: silver;
+}
+
+.joinGame button{
+	height: 30px;
+	width: 100px;
+}
+
+#newGame button:hover, .joinGame button:hover{
+	background-color: #ECECEC;
 }

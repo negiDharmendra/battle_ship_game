@@ -50,7 +50,6 @@ var readyAnnounement = function(req, res) {
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'readyAnnounement ' + req.user.playerId + '➽' + err.message);
         res.redirect('/html/deploy.html');
-        // res.send(err.message);
     }
 };
 
