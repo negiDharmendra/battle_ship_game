@@ -159,7 +159,7 @@ describe('Game',function(){
 			game.turn = 1;
 			var updates = game.getUpdates(1);
 
-			chai.expect(updates).to.have.all.keys('positions','gotHit','turn','gameEnd');
+			chai.expect(updates).to.have.all.keys('positions','ships','gotHit','turn','gameEnd');
 			chai.expect(updates.positions).to.deep.equal(['A1','A2','A3','D1','D2','D3']);
 			chai.expect(updates.gotHit).to.deep.equal([]);
 			chai.expect(updates.turn).to.equal(1);

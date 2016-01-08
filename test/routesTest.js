@@ -90,7 +90,8 @@ describe("/html/deployShip",function(){
 			getPlayer:sinon.stub().returns(player)
 		};
 		routers.games={
-			getGame:sinon.stub().withArgs(100).returns(game)
+			getGame:sinon.stub().withArgs(100).returns(game),
+			ensureValidGame:sinon.stub().returns(true)
 		}
 
 		supertest(routers)
@@ -110,7 +111,8 @@ describe("/html/deploy.html",function(){
 			getPlayer:sinon.stub().returns(player)
 		};
 		routers.games={
-			getGame:sinon.stub().withArgs(100).returns(game)
+			getGame:sinon.stub().withArgs(100).returns(game),
+			ensureValidGame:sinon.stub().returns(true)
 		};
 
 		supertest(routers)
@@ -131,7 +133,8 @@ describe("updates",function(){
 		};
 
 		routers.games={
-			getGame:sinon.stub().withArgs(100).returns(game)
+			getGame:sinon.stub().withArgs(100).returns(game),
+			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
 		.get('/html/get_updates')
@@ -156,7 +159,8 @@ describe("Player shoot",function(){
 		};
 
 		routers.games={
-			getGame:sinon.stub().withArgs(100).returns(game)
+			getGame:sinon.stub().withArgs(100).returns(game),
+			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
 		.post("/html/shoot")
@@ -182,7 +186,8 @@ describe("Player can not shoot ",function(){
 		};
 
 		routers.games={
-			getGame:sinon.stub().withArgs(100).returns(game)
+			getGame:sinon.stub().withArgs(100).returns(game),
+			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
 		.post("/html/shoot")
@@ -209,7 +214,8 @@ describe("Player can not shoot ",function(){
 		};
 
 		routers.games={
-			getGame:sinon.stub().withArgs(100).returns(game)
+			getGame:sinon.stub().withArgs(100).returns(game),
+			ensureValidGame:sinon.stub().returns(true)
 		}
 
 		supertest(routers)
@@ -237,7 +243,8 @@ describe("Player shoot",function(){
 		};
 
 		routers.games={
-			getGame:sinon.stub().withArgs(100).returns(game)
+			getGame:sinon.stub().withArgs(100).returns(game),
+			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
 		.post("/html/shoot")
@@ -254,7 +261,8 @@ describe('serveShipInfo',function(){
 		getPlayer:sinon.stub().returns(player)
 		};
 		routers.games={
-			getGame:sinon.stub().withArgs(100).returns(game)
+			getGame:sinon.stub().withArgs(100).returns(game),
+			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
 			.get('/html/shipInfo')
@@ -273,7 +281,8 @@ describe('shoot positions',function(){
 			getPlayer:sinon.stub().returns(player)
 		};
 		routers.games={
-			getGame:sinon.stub().withArgs(100).returns(game)
+			getGame:sinon.stub().withArgs(100).returns(game),
+			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
 		.get('/html/myShootPositions')
@@ -307,9 +316,14 @@ describe('reponse to restart game',function(){
 		var player3 ={playerId:'vikas_4',name:'Dharmendra'};
 		game = {players:{players:{Dharmendra_6:player1,Vikas_4:player2}},
 			getPlayer:sinon.stub().returns(player3),
-			deletePlayer:sinon.stub().withArgs().returns(true)};
+			deletePlayer:sinon.stub().withArgs().returns(true)
+		};
+
 		routers.games={getGame:sinon.stub().withArgs(100).returns(game),
-			joinGame : sinon.stub().returns(game)}
+			joinGame : sinon.stub().returns(game),
+			ensureValidGame:sinon.stub().returns(true)
+		};
+
 		supertest(routers)
 		.post('/html/restartGame')
 		.set("Cookie","userName=Dharmendra_3")
