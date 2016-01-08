@@ -91,12 +91,15 @@ Game.prototype = {
 		};
 	},
 	getUpdates:function(playerId){
-		var updates = {positions:[],gotHit:[],turn:'',gameEnd:null};
+		var updates = {positions:[],ships:[],gotHit:[],turn:'',gameEnd:null};
 		var player = this.getPlayer(playerId);
 		var opponentPlayer = this.getOpponentplayer(playerId) || {isAlive:true};
-		if(player && player.readyState){
-			for(var ship in player.fleet)
+		if(player){
+			for(var ship in player.fleet){
 				updates.positions=updates.positions.concat(player.fleet[ship].positions);
+				if(player.fleet[ship].positions.length>0)
+					updates.ships.push(ship);
+			}
 			updates.positions = ld.compact(updates.positions);
 		 	updates.gotHit = ld.difference(updates.positions,player.usedPositions);
 		 	updates.turn = this.turn;
@@ -104,8 +107,10 @@ Game.prototype = {
 		 		updates.gameEnd = player.isAlive;
 		}
 		return updates;
+	},
+	deletePlayer:function(id){
+		return delete this.players[id];
 	}
-
 };
 
 module.exports = Game;
