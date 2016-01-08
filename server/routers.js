@@ -94,7 +94,7 @@ var respondToQuitGame = function(req, res) {
         res.clearCookie('gameId');
         game.deletePlayer(playerId);
         res.redirect('/html/index.html');
-        log.log_message('appendFile', 'players.log', +playerId + ' has quit the game');
+        log.log_message('appendFile', 'players.log', playerId + ' has quit the game');
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'respondToQuitGame ' + playerId + '➽' + err.message);
     }
@@ -110,7 +110,7 @@ var respondToRestartGame = function(req, res) {
         app.games.joinGame(game, player);
         res.cookie('userName', player.playerId);
         res.redirect('/html/deploy.html');
-        log.log_message('appendFile', 'players.log', + playerId + ' has restarted the game');
+        log.log_message('appendFile', 'players.log', playerId + ' has restarted the game');
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'respondToRestartGame ' + playerId + '➽' + err.message);
     } finally {
