@@ -1,83 +1,108 @@
 <html>
+
 <head>
-	<title>Battle SHip</title>
-	<link rel="stylesheet" href="../styles/reset.css">
-	<link rel="shortcut icon" type="image/png" href="../image/b.ico"/>
-	<link rel="stylesheet" href="../styles/battleship.css">
-	<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>	
-	<script type="text/javascript" src="../js/grid.js"></script>
-	<script type="text/javascript" src="../js/fetch_updates.js"></script>
+    <title>Battle SHip</title>
+    <link rel="stylesheet" href="../styles/reset.css">
+    <link rel="shortcut icon" type="image/png" href="../image/b.ico" />
+    <link rel="stylesheet" href="../styles/battleship.css">
+    <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+    <script type="text/javascript" src="../js/grid.js"></script>
+    <script type="text/javascript" src="../js/fetch_updates.js"></script>
 </head>
+
 <body>
-<div id="container">
-	<div id="header" >
-		<div class="game_name">BATTLE SHIP</div>
-		<a href="help.html" target="blank">HELP</a>
-	</div>
-	<div id="info_board">
-		<div class="message"></div><br>
-	</div>
-	<div class="game_screen">
-		<div id="ocean_grid"></div>
-		<div id="target_grid"></div>
-		<div class="ship_info">
-			<table>
-				<tr><th>Ship Name</th><th>Hit</th><th>Status</th></tr>
-				<tr class="battleship alive">
-					<td>Battleship</td>
-					<td></td>
-					<td>Alive</td>
-				</tr>
-				<tr class="cruiser alive">
-					<td>Cruiser</td>
-					<td></td>
-					<td>Alive</td>
-				</tr>
-				<tr class="carrier alive">
-					<td>Carrier</td>
-					<td></td>
-					<td>Alive</td>
-				</tr>
-				<tr class="destroyer alive">
-					<td>Destroyer</td>
-					<td></td>
-					<td>Alive</td>
-				</tr>
-				<tr class="submarine alive">
-					<td>Submarine</td>
-					<td></td>
-					<td>Alive</td>
-				</tr>
-			</table>
-		</div>
-		<div class="indications">
-			<table border="1">
-			<tr><th>Color</th><th>Indicates</th></tr>
-				<tr>
-					<td><svg width="40" height="40"><rect x="10" y="10" width="20" height="20" fill='lightgreen'/></td>
-					<td>Ships</td>
-				</tr>
-				<tr>
-					<td><svg width="40" height="40"><rect x="10" y="10" width="20" height="20" fill='#EE9090'/></td>
-					<td>Hit</td>
-				</tr>
-				<tr>
-					<td><svg width="40" height="40"><rect x="10" y="10" width="20" height="20" fill='#9090EE'/></td>
-					<td>Miss</td>
-				</tr>
-				<tr>
-					<td><svg width="40" height="40"><rect x="10" y="10" width="20" height="20" fill='rgba(144, 238, 144, 0.38)'/></td>
-					<td>Alive</td>
-				</tr>
-				<tr>
-					<td><svg width="40" height="40"><rect x="10" y="10" width="20" height="20" fill='rgba(238, 144, 144, 0.37)'/></td>
-					<td>Sunk</td>
-				</tr>
-			</table>
-		</div>
-	</div>
-</div>
+    <div id="container">
+        <div id="header">
+            <div class="game_name">BATTLE SHIP</div>
+            <a href="help.html" target="blank">HELP</a>
+        </div>
+        <div id="info_board">
+            <div class="message"></div>
+            <br>
+        </div>
+        <div class="game_screen">
+            <div id="ocean_grid"></div>
+            <div id="target_grid"></div>
+            <div class="ship_info">
+                <table>
+                    <tr>
+                        <th>Ship Name</th>
+                        <th>Hit</th>
+                        <th>Status</th>
+                    </tr>
+                    <tr class="battleship alive">
+                        <td>Battleship</td>
+                        <td></td>
+                        <td>Alive</td>
+                    </tr>
+                    <tr class="cruiser alive">
+                        <td>Cruiser</td>
+                        <td></td>
+                        <td>Alive</td>
+                    </tr>
+                    <tr class="carrier alive">
+                        <td>Carrier</td>
+                        <td></td>
+                        <td>Alive</td>
+                    </tr>
+                    <tr class="destroyer alive">
+                        <td>Destroyer</td>
+                        <td></td>
+                        <td>Alive</td>
+                    </tr>
+                    <tr class="submarine alive">
+                        <td>Submarine</td>
+                        <td></td>
+                        <td>Alive</td>
+                    </tr>
+                </table>
+                </br>
+                <table>
+                    <tr>
+                        <th>Color</th>
+                        <th>Indicates</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <svg width="40" height="40">
+                                <rect x="10" y="10" width="20" height="20" fill='lightgreen' />
+                        </td>
+                        <td>Ships</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <svg width="40" height="40">
+                                <rect x="10" y="10" width="20" height="20" fill='#EE9090' />
+                        </td>
+                        <td>Hit</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <svg width="40" height="40">
+                                <rect x="10" y="10" width="20" height="20" fill='#9090EE' />
+                        </td>
+                        <td>Miss</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <svg width="40" height="40">
+                                <rect x="10" y="10" width="20" height="20" fill='rgba(144, 238, 144, 0.38)' />
+                        </td>
+                        <td>Alive</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <svg width="40" height="40">
+                                <rect x="10" y="10" width="20" height="20" fill='rgba(238, 144, 144, 0.37)' />
+                        </td>
+                        <td>Sunk</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
