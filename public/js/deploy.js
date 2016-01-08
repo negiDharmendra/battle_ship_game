@@ -66,11 +66,17 @@ function getCookie() {
     return $.cookie('name');
 };
 
+function play(){
+   var audio = document.getElementById("audio");
+   audio.play();
+}
+
 function displayDeployedShip(reply, position) {
     if (reply == true) {
         position.trim().split(' ').forEach(function(ele) {
             $('.ocean_grid>table>tbody>tr>#' + ele).css('background', 'lightgreen');
         });
+        play();
         $('.harbor>#position_of_ship>option:selected').remove();
     } else
         display_Message(reply);
@@ -92,7 +98,6 @@ function manageShipSelectionList(ship) {
 };
 
 function displayShips(gridId, usedPosition, color) {
-    console.log(gridId, usedPosition, color);
     for (var i = 0; i < usedPosition.length; i++)
         $(gridId + ' tbody tr td#' + usedPosition[i]).css('background', color);
 
