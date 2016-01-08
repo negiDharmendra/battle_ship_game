@@ -93,6 +93,24 @@ var respondToQuitGame = function(req, res) {
     };
 };
 
+var respondToRestartGame = function(req, res) {
+    var playerId = req.user.playerId;
+    var playerName = req.user.name;
+    var game = req.game;
+    try {
+        game.deletePlayer(playerId);
+        var player = new Player(playerName);
+        app.games.joinGame(game, player);
+        res.cookie('userName', player.playerId);
+        res.redirect('/html/deploy.html');
+        log.log_message('appendFile', 'players.log', + playerId + ' has restarted the game');
+    } catch (err) {
+        log.log_message('appendFile', 'errors.log', 'respondToRestartGame ' + playerId + '➽' + err.message);
+    } finally {
+        res.end();
+    };
+};
+
 var getMyshootPositions = function(req, res) {
     var player = req.user;
     try {
@@ -153,6 +171,10 @@ app.get('/html/shipInfo', function(req, res) {
 
 app.post('/html/shoot', function(req, res) {
     validateShoot(req, res);
+});
+
+app.post('/html/restartGame', function(req, res) {
+    respondToRestartGame(req, res);
 });
 
 app.post('/html/quitGame', function(req, res) {

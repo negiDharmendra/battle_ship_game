@@ -43,7 +43,6 @@ function displayShips(gridId,gotHit,usedPosition,color) {
 function get_ship_info(){
 	$.get('shipInfo',function(data,status){
 		var ships = JSON.parse(data);
-		console.log(ships);
 		for (var ship in ships) {
 			var ship_info = ships[ship];
 			$('.ship_info .'+ship+' td:nth-child(2)').html(ship_info.hits)

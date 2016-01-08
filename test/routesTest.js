@@ -300,3 +300,20 @@ describe('reponse to quit game',function(){
 		.expect(302,done)
 	})
 })
+describe('reponse to restart game',function(){
+	it('player can restart game',function(done){
+		var player1 ={playerId:'Dharmendra_3',name:'Dharmendra'};
+		var player2 ={playerId:'vikas_3',name:'vikas'};
+		var player3 ={playerId:'vikas_4',name:'Dharmendra'};
+		game = {players:{players:{Dharmendra_6:player1,Vikas_4:player2}},
+			getPlayer:sinon.stub().returns(player3),
+			deletePlayer:sinon.stub().withArgs().returns(true)};
+		routers.games={getGame:sinon.stub().withArgs(100).returns(game),
+			joinGame : sinon.stub().returns(game)}
+		supertest(routers)
+		.post('/html/restartGame')
+		.set("Cookie","userName=Dharmendra_3")
+		.expect('Location','/html/deploy.html')
+		.expect(302,done)
+	})
+})

@@ -106,6 +106,9 @@ Game.prototype = {
 		return updates;
 	},
 	deletePlayer:function(id){
+		var playerId = ld.remove(this.readyPlayers,function(key){
+				return id == key;
+			});
 		return delete this.players[id];
 	}
 };
