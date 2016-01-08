@@ -25,10 +25,11 @@ function displayTurnMessage(turn){
 	}
 }
 
-function play(){
-   var audio = document.getElementById("audio");
+function play(id){
+   var audio = document.getElementById(id);
    audio.play();
-}
+};
+
 
 function display_gameover(message){
 	var sampleHtml = '<div class="game_screen"><div class="gameStatus">{{gameStatus}}</br></br></div>'+
@@ -69,13 +70,16 @@ $( window ).load(function(){
 	});
 });
 
-
+var play_hit_or_miss_sound = function(reply){
+	if(reply=='hit') play('audio_for_hit')
+	else play('audio_for_miss');
+}
 function reply_to_shoot(evnt){
 	evnt = evnt.target;
 	$.post("shoot",{position:evnt.id},function(data){
 		var status = JSON.parse(data);
+		play_hit_or_miss_sound(status.reply);
 		if(status.reply){
-			play();
 			$('#targetGrid>tbody>tr>td#'+evnt.id).removeAttr('onclick');
 			$('#targetGrid>tbody>tr>td#'+evnt.id).addClass(status.reply);
 		}
