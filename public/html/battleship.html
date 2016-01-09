@@ -1,21 +1,21 @@
 <html>
 
 <head>
-    <title>Battle SHip</title>
+    <title>Battleship</title>
     <link rel="stylesheet" href="../styles/reset.css">
     <link rel="shortcut icon" type="image/png" href="../image/b.ico" />
     <link rel="stylesheet" href="../styles/battleship.css">
+    <link rel="stylesheet" href="../styles/dropnav.css">
     <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-    <script type="text/javascript" src="../js/grid.js"></script>
     <script type="text/javascript" src="../js/fetch_updates.js"></script>
 </head>
 
 <body>
-	<audio id="audio_for_hit" src="../audio/Bomb.mp3" ></audio>
-	<audio id="audio_for_miss" src="../audio/button-10.mp3" ></audio>
-    <audio id="opponent_turn" src="../audio/turn_sound.mp3" ></audio>
+    <audio id="audio_for_hit" src="../audio/Bomb.mp3"></audio>
+    <audio id="audio_for_miss" src="../audio/button-10.mp3"></audio>
+    <audio id="opponent_turn" src="../audio/turn_sound.mp3"></audio>
     <div id="container">
         <div id="header">
             <div class="game_name">BATTLE SHIP</div>
@@ -26,8 +26,306 @@
             <br>
         </div>
         <div class="game_screen">
-            <div id="ocean_grid"></div>
-            <div id="target_grid"></div>
+            <div id="ocean_grid">
+                <h2>OCEAN </h2>
+                <table id="oceanGrid">
+                    <tbody>
+                        <tr>
+                            <td class="th"></td>
+                            <td class="th">1</td>
+                            <td class="th">2</td>
+                            <td class="th">3</td>
+                            <td class="th">4</td>
+                            <td class="th">5</td>
+                            <td class="th">6</td>
+                            <td class="th">7</td>
+                            <td class="th">8</td>
+                            <td class="th">9</td>
+                            <td class="th">10</td>
+                        </tr>
+                        <tr>
+                            <td class="th">A</td>
+                            <td id="A1" class="grid" title="A1"></td>
+                            <td id="A2" class="grid" title="A2"></td>
+                            <td id="A3" class="grid" title="A3"></td>
+                            <td id="A4" class="grid" title="A4"></td>
+                            <td id="A5" class="grid" title="A5"></td>
+                            <td id="A6" class="grid" title="A6"></td>
+                            <td id="A7" class="grid" title="A7"></td>
+                            <td id="A8" class="grid" title="A8"></td>
+                            <td id="A9" class="grid" title="A9"></td>
+                            <td id="A10" class="grid" title="A10"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">B</td>
+                            <td id="B1" class="grid" title="B1"></td>
+                            <td id="B2" class="grid" title="B2"></td>
+                            <td id="B3" class="grid" title="B3"></td>
+                            <td id="B4" class="grid" title="B4"></td>
+                            <td id="B5" class="grid" title="B5"></td>
+                            <td id="B6" class="grid" title="B6"></td>
+                            <td id="B7" class="grid" title="B7"></td>
+                            <td id="B8" class="grid" title="B8"></td>
+                            <td id="B9" class="grid" title="B9"></td>
+                            <td id="B10" class="grid" title="B10"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">C</td>
+                            <td id="C1" class="grid" title="C1"></td>
+                            <td id="C2" class="grid" title="C2"></td>
+                            <td id="C3" class="grid" title="C3"></td>
+                            <td id="C4" class="grid" title="C4"></td>
+                            <td id="C5" class="grid" title="C5"></td>
+                            <td id="C6" class="grid" title="C6"></td>
+                            <td id="C7" class="grid" title="C7"></td>
+                            <td id="C8" class="grid" title="C8"></td>
+                            <td id="C9" class="grid" title="C9"></td>
+                            <td id="C10" class="grid" title="C10"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">D</td>
+                            <td id="D1" class="grid" title="D1"></td>
+                            <td id="D2" class="grid" title="D2"></td>
+                            <td id="D3" class="grid" title="D3"></td>
+                            <td id="D4" class="grid" title="D4"></td>
+                            <td id="D5" class="grid" title="D5"></td>
+                            <td id="D6" class="grid" title="D6"></td>
+                            <td id="D7" class="grid" title="D7"></td>
+                            <td id="D8" class="grid" title="D8"></td>
+                            <td id="D9" class="grid" title="D9"></td>
+                            <td id="D10" class="grid" title="D10"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">E</td>
+                            <td id="E1" class="grid" title="E1"></td>
+                            <td id="E2" class="grid" title="E2"></td>
+                            <td id="E3" class="grid" title="E3"></td>
+                            <td id="E4" class="grid" title="E4"></td>
+                            <td id="E5" class="grid" title="E5"></td>
+                            <td id="E6" class="grid" title="E6"></td>
+                            <td id="E7" class="grid" title="E7"></td>
+                            <td id="E8" class="grid" title="E8"></td>
+                            <td id="E9" class="grid" title="E9"></td>
+                            <td id="E10" class="grid" title="E10"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">F</td>
+                            <td id="F1" class="grid" title="F1"></td>
+                            <td id="F2" class="grid" title="F2"></td>
+                            <td id="F3" class="grid" title="F3"></td>
+                            <td id="F4" class="grid" title="F4"></td>
+                            <td id="F5" class="grid" title="F5"></td>
+                            <td id="F6" class="grid" title="F6"></td>
+                            <td id="F7" class="grid" title="F7"></td>
+                            <td id="F8" class="grid" title="F8"></td>
+                            <td id="F9" class="grid" title="F9"></td>
+                            <td id="F10" class="grid" title="F10"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">G</td>
+                            <td id="G1" class="grid" title="G1"></td>
+                            <td id="G2" class="grid" title="G2"></td>
+                            <td id="G3" class="grid" title="G3"></td>
+                            <td id="G4" class="grid" title="G4"></td>
+                            <td id="G5" class="grid" title="G5"></td>
+                            <td id="G6" class="grid" title="G6"></td>
+                            <td id="G7" class="grid" title="G7"></td>
+                            <td id="G8" class="grid" title="G8"></td>
+                            <td id="G9" class="grid" title="G9"></td>
+                            <td id="G10" class="grid" title="G10"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">H</td>
+                            <td id="H1" class="grid" title="H1"></td>
+                            <td id="H2" class="grid" title="H2"></td>
+                            <td id="H3" class="grid" title="H3"></td>
+                            <td id="H4" class="grid" title="H4"></td>
+                            <td id="H5" class="grid" title="H5"></td>
+                            <td id="H6" class="grid" title="H6"></td>
+                            <td id="H7" class="grid" title="H7"></td>
+                            <td id="H8" class="grid" title="H8"></td>
+                            <td id="H9" class="grid" title="H9"></td>
+                            <td id="H10" class="grid" title="H10"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">I</td>
+                            <td id="I1" class="grid" title="I1"></td>
+                            <td id="I2" class="grid" title="I2"></td>
+                            <td id="I3" class="grid" title="I3"></td>
+                            <td id="I4" class="grid" title="I4"></td>
+                            <td id="I5" class="grid" title="I5"></td>
+                            <td id="I6" class="grid" title="I6"></td>
+                            <td id="I7" class="grid" title="I7"></td>
+                            <td id="I8" class="grid" title="I8"></td>
+                            <td id="I9" class="grid" title="I9"></td>
+                            <td id="I10" class="grid" title="I10"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">J</td>
+                            <td id="J1" class="grid" title="J1"></td>
+                            <td id="J2" class="grid" title="J2"></td>
+                            <td id="J3" class="grid" title="J3"></td>
+                            <td id="J4" class="grid" title="J4"></td>
+                            <td id="J5" class="grid" title="J5"></td>
+                            <td id="J6" class="grid" title="J6"></td>
+                            <td id="J7" class="grid" title="J7"></td>
+                            <td id="J8" class="grid" title="J8"></td>
+                            <td id="J9" class="grid" title="J9"></td>
+                            <td id="J10" class="grid" title="J10"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="target_grid">
+                <h2>TARGET </h2>
+                <table id="targetGrid">
+                    <tbody>
+                        <tr>
+                            <td class="th"></td>
+                            <td class="th">1</td>
+                            <td class="th">2</td>
+                            <td class="th">3</td>
+                            <td class="th">4</td>
+                            <td class="th">5</td>
+                            <td class="th">6</td>
+                            <td class="th">7</td>
+                            <td class="th">8</td>
+                            <td class="th">9</td>
+                            <td class="th">10</td>
+                        </tr>
+                        <tr>
+                            <td class="th">A</td>
+                            <td id="A1" class="grid" title="A1" onclick="reply_to_shoot(event)"></td>
+                            <td id="A2" class="grid" title="A2" onclick="reply_to_shoot(event)"></td>
+                            <td id="A3" class="grid" title="A3" onclick="reply_to_shoot(event)"></td>
+                            <td id="A4" class="grid" title="A4" onclick="reply_to_shoot(event)"></td>
+                            <td id="A5" class="grid" title="A5" onclick="reply_to_shoot(event)"></td>
+                            <td id="A6" class="grid" title="A6" onclick="reply_to_shoot(event)"></td>
+                            <td id="A7" class="grid" title="A7" onclick="reply_to_shoot(event)"></td>
+                            <td id="A8" class="grid" title="A8" onclick="reply_to_shoot(event)"></td>
+                            <td id="A9" class="grid" title="A9" onclick="reply_to_shoot(event)"></td>
+                            <td id="A10" class="grid" title="A10" onclick="reply_to_shoot(event)"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">B</td>
+                            <td id="B1" class="grid" title="B1" onclick="reply_to_shoot(event)"></td>
+                            <td id="B2" class="grid" title="B2" onclick="reply_to_shoot(event)"></td>
+                            <td id="B3" class="grid" title="B3" onclick="reply_to_shoot(event)"></td>
+                            <td id="B4" class="grid" title="B4" onclick="reply_to_shoot(event)"></td>
+                            <td id="B5" class="grid" title="B5" onclick="reply_to_shoot(event)"></td>
+                            <td id="B6" class="grid" title="B6" onclick="reply_to_shoot(event)"></td>
+                            <td id="B7" class="grid" title="B7" onclick="reply_to_shoot(event)"></td>
+                            <td id="B8" class="grid" title="B8" onclick="reply_to_shoot(event)"></td>
+                            <td id="B9" class="grid" title="B9" onclick="reply_to_shoot(event)"></td>
+                            <td id="B10" class="grid" title="B10" onclick="reply_to_shoot(event)"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">C</td>
+                            <td id="C1" class="grid" title="C1" onclick="reply_to_shoot(event)"></td>
+                            <td id="C2" class="grid" title="C2" onclick="reply_to_shoot(event)"></td>
+                            <td id="C3" class="grid" title="C3" onclick="reply_to_shoot(event)"></td>
+                            <td id="C4" class="grid" title="C4" onclick="reply_to_shoot(event)"></td>
+                            <td id="C5" class="grid" title="C5" onclick="reply_to_shoot(event)"></td>
+                            <td id="C6" class="grid" title="C6" onclick="reply_to_shoot(event)"></td>
+                            <td id="C7" class="grid" title="C7" onclick="reply_to_shoot(event)"></td>
+                            <td id="C8" class="grid" title="C8" onclick="reply_to_shoot(event)"></td>
+                            <td id="C9" class="grid" title="C9" onclick="reply_to_shoot(event)"></td>
+                            <td id="C10" class="grid" title="C10" onclick="reply_to_shoot(event)"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">D</td>
+                            <td id="D1" class="grid" title="D1" onclick="reply_to_shoot(event)"></td>
+                            <td id="D2" class="grid" title="D2" onclick="reply_to_shoot(event)"></td>
+                            <td id="D3" class="grid" title="D3" onclick="reply_to_shoot(event)"></td>
+                            <td id="D4" class="grid" title="D4" onclick="reply_to_shoot(event)"></td>
+                            <td id="D5" class="grid" title="D5" onclick="reply_to_shoot(event)"></td>
+                            <td id="D6" class="grid" title="D6" onclick="reply_to_shoot(event)"></td>
+                            <td id="D7" class="grid" title="D7" onclick="reply_to_shoot(event)"></td>
+                            <td id="D8" class="grid" title="D8" onclick="reply_to_shoot(event)"></td>
+                            <td id="D9" class="grid" title="D9" onclick="reply_to_shoot(event)"></td>
+                            <td id="D10" class="grid" title="D10" onclick="reply_to_shoot(event)"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">E</td>
+                            <td id="E1" class="grid" title="E1" onclick="reply_to_shoot(event)"></td>
+                            <td id="E2" class="grid" title="E2" onclick="reply_to_shoot(event)"></td>
+                            <td id="E3" class="grid" title="E3" onclick="reply_to_shoot(event)"></td>
+                            <td id="E4" class="grid" title="E4" onclick="reply_to_shoot(event)"></td>
+                            <td id="E5" class="grid" title="E5" onclick="reply_to_shoot(event)"></td>
+                            <td id="E6" class="grid" title="E6" onclick="reply_to_shoot(event)"></td>
+                            <td id="E7" class="grid" title="E7" onclick="reply_to_shoot(event)"></td>
+                            <td id="E8" class="grid" title="E8" onclick="reply_to_shoot(event)"></td>
+                            <td id="E9" class="grid" title="E9" onclick="reply_to_shoot(event)"></td>
+                            <td id="E10" class="grid" title="E10" onclick="reply_to_shoot(event)"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">F</td>
+                            <td id="F1" class="grid" title="F1" onclick="reply_to_shoot(event)"></td>
+                            <td id="F2" class="grid" title="F2" onclick="reply_to_shoot(event)"></td>
+                            <td id="F3" class="grid" title="F3" onclick="reply_to_shoot(event)"></td>
+                            <td id="F4" class="grid" title="F4" onclick="reply_to_shoot(event)"></td>
+                            <td id="F5" class="grid" title="F5" onclick="reply_to_shoot(event)"></td>
+                            <td id="F6" class="grid" title="F6" onclick="reply_to_shoot(event)"></td>
+                            <td id="F7" class="grid" title="F7" onclick="reply_to_shoot(event)"></td>
+                            <td id="F8" class="grid" title="F8" onclick="reply_to_shoot(event)"></td>
+                            <td id="F9" class="grid" title="F9" onclick="reply_to_shoot(event)"></td>
+                            <td id="F10" class="grid" title="F10" onclick="reply_to_shoot(event)"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">G</td>
+                            <td id="G1" class="grid" title="G1" onclick="reply_to_shoot(event)"></td>
+                            <td id="G2" class="grid" title="G2" onclick="reply_to_shoot(event)"></td>
+                            <td id="G3" class="grid" title="G3" onclick="reply_to_shoot(event)"></td>
+                            <td id="G4" class="grid" title="G4" onclick="reply_to_shoot(event)"></td>
+                            <td id="G5" class="grid" title="G5" onclick="reply_to_shoot(event)"></td>
+                            <td id="G6" class="grid" title="G6" onclick="reply_to_shoot(event)"></td>
+                            <td id="G7" class="grid" title="G7" onclick="reply_to_shoot(event)"></td>
+                            <td id="G8" class="grid" title="G8" onclick="reply_to_shoot(event)"></td>
+                            <td id="G9" class="grid" title="G9" onclick="reply_to_shoot(event)"></td>
+                            <td id="G10" class="grid" title="G10" onclick="reply_to_shoot(event)"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">H</td>
+                            <td id="H1" class="grid" title="H1" onclick="reply_to_shoot(event)"></td>
+                            <td id="H2" class="grid" title="H2" onclick="reply_to_shoot(event)"></td>
+                            <td id="H3" class="grid" title="H3" onclick="reply_to_shoot(event)"></td>
+                            <td id="H4" class="grid" title="H4" onclick="reply_to_shoot(event)"></td>
+                            <td id="H5" class="grid" title="H5" onclick="reply_to_shoot(event)"></td>
+                            <td id="H6" class="grid" title="H6" onclick="reply_to_shoot(event)"></td>
+                            <td id="H7" class="grid" title="H7" onclick="reply_to_shoot(event)"></td>
+                            <td id="H8" class="grid" title="H8" onclick="reply_to_shoot(event)"></td>
+                            <td id="H9" class="grid" title="H9" onclick="reply_to_shoot(event)"></td>
+                            <td id="H10" class="grid" title="H10" onclick="reply_to_shoot(event)"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">I</td>
+                            <td id="I1" class="grid" title="I1" onclick="reply_to_shoot(event)"></td>
+                            <td id="I2" class="grid" title="I2" onclick="reply_to_shoot(event)"></td>
+                            <td id="I3" class="grid" title="I3" onclick="reply_to_shoot(event)"></td>
+                            <td id="I4" class="grid" title="I4" onclick="reply_to_shoot(event)"></td>
+                            <td id="I5" class="grid" title="I5" onclick="reply_to_shoot(event)"></td>
+                            <td id="I6" class="grid" title="I6" onclick="reply_to_shoot(event)"></td>
+                            <td id="I7" class="grid" title="I7" onclick="reply_to_shoot(event)"></td>
+                            <td id="I8" class="grid" title="I8" onclick="reply_to_shoot(event)"></td>
+                            <td id="I9" class="grid" title="I9" onclick="reply_to_shoot(event)"></td>
+                            <td id="I10" class="grid" title="I10" onclick="reply_to_shoot(event)"></td>
+                        </tr>
+                        <tr>
+                            <td class="th">J</td>
+                            <td id="J1" class="grid" title="J1" onclick="reply_to_shoot(event)"></td>
+                            <td id="J2" class="grid" title="J2" onclick="reply_to_shoot(event)"></td>
+                            <td id="J3" class="grid" title="J3" onclick="reply_to_shoot(event)"></td>
+                            <td id="J4" class="grid" title="J4" onclick="reply_to_shoot(event)"></td>
+                            <td id="J5" class="grid" title="J5" onclick="reply_to_shoot(event)"></td>
+                            <td id="J6" class="grid" title="J6" onclick="reply_to_shoot(event)"></td>
+                            <td id="J7" class="grid" title="J7" onclick="reply_to_shoot(event)"></td>
+                            <td id="J8" class="grid" title="J8" onclick="reply_to_shoot(event)"></td>
+                            <td id="J9" class="grid" title="J9" onclick="reply_to_shoot(event)"></td>
+                            <td id="J10" class="grid" title="J10" onclick="reply_to_shoot(event)"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="ship_info">
                 <table>
                     <tr>
