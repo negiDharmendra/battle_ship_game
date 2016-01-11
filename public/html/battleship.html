@@ -4,8 +4,8 @@
     <title>Battleship</title>
     <link rel="stylesheet" href="../styles/reset.css">
     <link rel="shortcut icon" type="image/png" href="../image/b.ico" />
-    <link rel="stylesheet" href="../styles/battleship.css">
     <link rel="stylesheet" href="../styles/dropnav.css">
+    <link rel="stylesheet" href="../styles/battleship.css">
     <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
@@ -19,7 +19,19 @@
     <div id="container">
         <div id="header">
             <div class="game_name">BATTLE SHIP</div>
-            <a href="help.html" target="blank">HELP</a>
+            <div class="dropmenu">
+                <ul id="drop-nav">
+                    <li><a href="#">PLAYER_NAME</a>
+                        <ul>
+                            <li><a href="help.html" target="blank">HELP</a></li>
+                            <li><a href="https://github.com/negiDharmendra/battle_ship_game#readme">FEEDBACK</a></li>
+                            <li>
+                                <form method="POST" action="quitGame"> <a href="#" onclick="this.parentNode.submit()">QUIT</a> </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div id="info_board">
             <div class="message"></div>
