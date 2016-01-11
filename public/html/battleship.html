@@ -10,6 +10,13 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
     <script type="text/javascript" src="../js/fetch_updates.js"></script>
+    <script type="text/javascript">
+        function displayPlayerName(){
+            var playerName = $.cookie('userName').split('_')[0];
+            $('#drop-nav>li>a>pre').html(playerName.toUpperCase());
+        }
+        $(window).load(displayPlayerName);
+    </script>
 </head>
 
 <body>
@@ -21,10 +28,10 @@
             <div class="game_name">BATTLE SHIP</div>
             <div class="dropmenu">
                 <ul id="drop-nav">
-                    <li><a href="#">PLAYER_NAME</a>
+                    <li><a href="#"><pre>PLAYER NAME</pre></a>
                         <ul>
                             <li><a href="help.html" target="blank">HELP</a></li>
-                            <li><a href="https://github.com/negiDharmendra/battle_ship_game#readme">FEEDBACK</a></li>
+                            <li><a href="https://github.com/negiDharmendra/battle_ship_game#readme" target="blank">FEEDBACK</a></li>
                             <li>
                                 <form method="POST" action="quitGame"> <a href="#" onclick="this.parentNode.submit()">QUIT</a> </form>
                             </li>
