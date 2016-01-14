@@ -1,6 +1,7 @@
 .dropmenu{
-  width: 300px;
+  width: 10px;
   float:right;
+  margin-right: 100px;
 }
 ul#drop-nav li{
   color: #000000;
