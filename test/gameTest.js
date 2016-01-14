@@ -183,4 +183,29 @@ describe('Game',function(){
 			chai.expect(updates.gameEnd).to.equal(true);
 		});
 	});
+
+	describe('serveShipInfo',function(){
+		it('should give latest status of the fleet',function(){
+			var player1 = {playerId:1,name:'guruji',usedPositions:['A1','A2','A3','D1','D2','D3'],
+			readyState:true,isAlive:true,fleet:{
+				submarine:{positions:['A1','A2','A3'],vanishedLives:3,isSunk:true},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:2,isSunk:false}
+			}};
+			var player2= {playerId:2,name:'guptaji',usedPositions:['A1','A2','A3','D1','D2','D3'],
+			readyState:true,isAlive:true,fleet:{
+				submarine:{positions:['A1','A2','A3'],vanishedLives:3,isSunk:true},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:1,isSunk:false}
+			}};
+			var game = new Game(player1);
+			game.addPlayer(player2);
+			game.turn = 1;
+			var shipInfo = game.serveShipInfo(1);
+			chai.expect(shipInfo).to.have.all.keys('cruiser','submarine');
+			chai.expect(shipInfo.cruiser).to.have.all.keys('hits','status');
+			chai.expect(shipInfo.cruiser.hits).to.equal(2);
+			chai.expect(shipInfo.submarine.hits).to.equal(3);
+			chai.expect(shipInfo.cruiser.status).to.equal(false);
+			chai.expect(shipInfo.submarine.status).to.equal(true);
+		});
+	});
 });

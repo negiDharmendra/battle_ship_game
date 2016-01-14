@@ -258,7 +258,8 @@ describe('serveShipInfo',function(){
 	it('should provide the ships information to player',function(done){
 		var player = {playerId:'Dharmendra_3',fleet:{battleship:{isSunk:sinon.stub().returns(false),vanishedLives:3}}};
 		var game = {players:{Dharmendra_3:player},
-		getPlayer:sinon.stub().returns(player)
+		getPlayer:sinon.stub().returns(player),
+		serveShipInfo:sinon.stub().returns({"battleship":{"hits":3,status:false}})
 		};
 		routers.games={
 			getGame:sinon.stub().withArgs(100).returns(game),

@@ -1,5 +1,5 @@
 var ld = require('lodash');
-
+var log = require('../server/log.js');
 var Game = function (player) {
 	this.players = {};
 	this.players[player.playerId] = player;
@@ -107,6 +107,23 @@ Game.prototype = {
 		 		updates.gameEnd = player.isAlive;
 		}
 		return updates;
+	},
+	serveShipInfo : function(playerId) {
+	    try {
+	    	var player = this.getPlayer(playerId);
+	        var fleetStatus = {};
+	        for (var ship in player.fleet) {
+	            var shipStatus = player.fleet[ship].isSunk;
+	            var hits = player.fleet[ship].vanishedLives;
+	            fleetStatus[ship] = {
+	                hits: hits,
+	                status: shipStatus
+	            };
+	        };
+	        return fleetStatus;
+	    } catch (err) {
+	        log.log_message('appendFile', 'errors.log', 'serveShipInfo ' + playerId + '➽' + err.message);
+	    }
 	},
 	deletePlayer:function(id){
 		var playerId = ld.remove(this.readyPlayers,function(key){

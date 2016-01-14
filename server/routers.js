@@ -69,22 +69,10 @@ var validateShoot = function(req, res) {
 
 
 var serveShipInfo = function(req, res) {
-    var player = req.user;
-    try {
-        var fleetStatus = {};
-        for (var ship in player.fleet) {
-            var shipStatus = player.fleet[ship].isSunk();
-            var hits = player.fleet[ship].vanishedLives;
-            fleetStatus[ship] = {
-                hits: hits,
-                status: shipStatus
-            };
-        };
-        res.send(JSON.stringify(fleetStatus));
-    } catch (err) {
-        log.log_message('appendFile', 'errors.log', 'serveShipInfo ' + req.user.playerId + '➽' + err.message);
-    }
+    var game = req.game;
+    res.send(JSON.stringify(game.serveShipInfo(req.user.playerId)));
 };
+
 
 var respondToQuitGame = function(req, res) {
     var playerId = req.user.playerId;
@@ -104,7 +92,6 @@ var respondToQuitGame = function(req, res) {
 var respondToRestartGame = function(req, res) {
     var playerId = req.user.playerId;
     var playerName = req.user.name;
-    console.log("rstart",playerName)
     var game = req.game;
     try {
         game.deletePlayer(playerId);
