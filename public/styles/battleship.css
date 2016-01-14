@@ -1,118 +1,155 @@
-#container{
-	background-color: white;
-	width: auto;
-	height: 320px;
+#container {
+    background-color: white;
+    width: auto;
+    height: 320px;
 }
-table td, div {
-	font-family: sans-serif;
-	text-transform: uppercase;
-	text-align: center;
+
+table td,
+div {
+    font-family: sans-serif;
+    text-transform: uppercase;
+    text-align: center;
 }
-#header{
-	display: inline-block;
-	height: auto;
-	width: 100%;
-	background: #939393;
+
+#header {
+    display: inline-block;
+    height: auto;
+    width: 100%;
+    background: #939393;
 }
-#header .game_name{
-	float: left; 
-	font-size: 40px;
-	font-weight: bold;
-	margin: 0 0 0 42%;
+
+#header .game_name {
+    float: left;
+    font-size: 40px;
+    font-weight: bold;
+    margin: 0 0 0 42%;
 }
-#header a{
-	float: right;
+
+#header a {
+    float: right;
     margin: 1% 2% 0 0;
     font-size: 20px;
     color: rgba(26, 26, 222, 0.53);
     text-decoration: none;
 }
-h2{
-	font-size: 24px;
-	margin: 0px 0px 15px 0px;
-}
-#info_board{
-	width: 100%;
-	height: 100px;
-	margin-top:20px;
-}
-.game_screen #ocean_grid , .game_screen #target_grid {
-	float: left;
-	margin: 2% 0 0 5%;
-}
-#oceanGrid, #targetGrid{
-	width: 495px;
-	height: 495px;
-	border:1;
-}
-.grid{
-	width: 45px;
-	height: 45px;
-	background-color: #E9E9E9;
-	border-color: white;
-}
-.th{
-	vertical-align: middle;
-	font-size: 12px;
-	color: #939393;
+
+#header #playerName {
+    width: 29%;
+    float: left;
+    text-align: right;
+    margin: 1% 0 0 1%;
+    font-size: 20px;
+    overflow-x: scroll;
 }
 
-.hover:hover{
-	opacity: .4;
+h2 {
+    font-size: 24px;
+    margin: 0px 0px 15px 0px;
 }
 
-.message{
-	font-weight: 100;
-	font-size: 28px;
-	color:green;
+#info_board {
+    width: 100%;
+    height: 100px;
+    margin-top: 20px;
 }
-.restartOrQuit{
-	margin:2% 0 0 33%;
+
+.game_screen #ocean_grid,
+.game_screen #target_grid {
+    float: left;
+    margin: 2% 0 0 5%;
 }
-.restartOrQuit button{
-	float: left;
-	margin: 0 0 0 10%;
-	font-size: 20px;
-	border-radius: 10px;
-	width: 100px;
-	background: #E9E9E9;
+
+#oceanGrid,
+#targetGrid {
+    width: 495px;
+    height: 495px;
+    border: 1;
 }
-.game_screen>.gameStatus{
-	font-size: 28px;
-	margin:5% 0 0 0;
-	color: rgba(53,53,51,0.64);
+
+.grid {
+    width: 45px;
+    height: 45px;
+    background-color: #E9E9E9;
+    border-color: white;
 }
-.ship_info th, .indications th{
-	font-size: 20px;
-	font-weight: bolder;
-	text-align: left;
-	padding-left: 10px;
+
+.th {
+    vertical-align: middle;
+    font-size: 12px;
+    color: #939393;
 }
-.ship_info td,.indications td{
-	width: 150px;
-	height: 45px;
-	vertical-align: middle;
-	font-size: 18px;
+
+.hover:hover {
+    opacity: .4;
 }
-.ship_info td:nth-child(1),.indications td:nth-child(1){
-	padding-left: 10px;
-	text-align: left;
+
+.message {
+    font-weight: 100;
+    font-size: 28px;
+    color: green;
 }
-.ship_info, .indications{
-	width: 250px;
-	height: 250px;
-	float: left;
-	margin: 3.8% 0 0 5%;
+
+.restartOrQuit {
+    margin: 2% 0 0 33%;
 }
-.hit{
-	background: #EE9090;
+
+.restartOrQuit button {
+    float: left;
+    margin: 0 0 0 10%;
+    font-size: 20px;
+    border-radius: 10px;
+    width: 100px;
+    background: #E9E9E9;
 }
-.miss{
-	background: #9090EE;
+
+.game_screen>.gameStatus {
+    font-size: 28px;
+    margin: 5% 0 0 0;
+    color: rgba(53, 53, 51, 0.64);
 }
-.alive{
-	background-color: rgba(144, 238, 144, 0.38);
+
+.ship_info th,
+.indications th {
+    font-size: 20px;
+    font-weight: bolder;
+    text-align: left;
+    padding-left: 10px;
 }
-.sunk{
-	background-color: rgba(238, 144, 144, 0.37);
+
+.ship_info td,
+.indications td {
+    width: 150px;
+    height: 45px;
+    vertical-align: middle;
+    font-size: 18px;
+}
+
+.ship_info td:nth-child(1),
+.indications td:nth-child(1) {
+    padding-left: 10px;
+    text-align: left;
+}
+
+.ship_info,
+.indications {
+    width: 250px;
+    height: 250px;
+    float: left;
+    margin: 3.8% 0 0 5%;
+}
+
+.hit {
+    background: #EE9090;
+}
+
+.miss {
+    background: #9090EE;
+}
+
+.alive {
+    background-color: rgba(144, 238, 144, 0.38);
+}
+
+.sunk {
+    background-color: rgba(238, 144, 144, 0.37);
 }
