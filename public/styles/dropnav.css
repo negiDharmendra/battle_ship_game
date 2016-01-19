@@ -32,6 +32,6 @@ ul li:hover ul {
   visibility: visible;
 }
 
-ul li:hover ul li {
-  
+ul{
+  list-style-type:none; 
 }
