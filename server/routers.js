@@ -19,7 +19,7 @@ var loadUser = function(req, res, next) {
         } else
             res.redirect('/html/index.html');
     } catch (err) {
-        log.log_message('appendFile', 'errors.log', 'loadUser ➽' + err.message );
+        log.log_message('appendFile', 'errors.log', 'loadUser ➽' + err.message);
         res.redirect('/html/index.html');
     }
 };
@@ -136,7 +136,7 @@ var redirectPlayerToState = function(req, res) {
         } else
             res.redirect('/html/index.html');
     } catch (err) {
-       log.log_message('appendFile', 'errors.log', 'redirectPlayerToState ➽' + err.message);
+        log.log_message('appendFile', 'errors.log', 'redirectPlayerToState ➽' + err.message);
         res.redirect('/html/index.html');
     }
 };
@@ -200,7 +200,7 @@ app.post('/html/deploy.html', readyAnnouncement);
 
 app.get('/html/get_updates', getUpdates);
 
-app.post('/html/restartGame',respondToRestartGame);
+app.post('/html/restartGame', respondToRestartGame);
 
 app.get('/html/shipInfo', serveShipInfo);
 

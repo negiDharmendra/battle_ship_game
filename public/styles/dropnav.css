@@ -31,3 +31,7 @@ ul li:hover ul {
   opacity: 1;
   visibility: visible;
 }
+
+ul{
+  list-style-type:none; 
+}
