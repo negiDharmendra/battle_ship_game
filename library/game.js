@@ -109,21 +109,17 @@ Game.prototype = {
 		return updates;
 	},
 	serveShipInfo : function(playerId) {
-	    try {
-	    	var player = this.getPlayer(playerId);
-	        var fleetStatus = {};
-	        for (var ship in player.fleet) {
-	            var shipStatus = player.fleet[ship].isSunk;
-	            var hits = player.fleet[ship].vanishedLives;
-	            fleetStatus[ship] = {
-	                hits: hits,
-	                status: shipStatus
-	            };
-	        };
-	        return fleetStatus;
-	    } catch (err) {
-	        log.log_message('appendFile', 'errors.log', 'serveShipInfo ' + playerId + '➽' + err.message);
-	    }
+    	var player = this.getPlayer(playerId);
+        var fleetStatus = {};
+        for (var ship in player.fleet) {
+            var shipStatus = player.fleet[ship].isSunk;
+            var hits = player.fleet[ship].vanishedLives;
+            fleetStatus[ship] = {
+                hits: hits,
+                status: shipStatus
+            };
+        };
+        return fleetStatus;
 	},
 	deletePlayer:function(id){
 		var playerId = ld.remove(this.readyPlayers,function(key){

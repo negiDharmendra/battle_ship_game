@@ -69,8 +69,12 @@ var validateShoot = function(req, res) {
 
 
 var serveShipInfo = function(req, res) {
-    var game = req.game;
-    res.send(JSON.stringify(game.serveShipInfo(req.user.playerId)));
+    try{
+        var game = req.game;
+        res.send(JSON.stringify(game.serveShipInfo(req.user.playerId)));
+    }catch (err) {
+        log.log_message('appendFile', 'errors.log', 'serveShipInfo ' + playerId + '➽' + err.message);
+    }
 };
 
 

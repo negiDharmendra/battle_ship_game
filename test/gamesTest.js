@@ -2,7 +2,6 @@ var Games = require('../library/games.js');
 var chai = require('chai');
 var sinon = require('sinon');
 
-
 describe('Games',function () {
 	var Game;
 	var games;
