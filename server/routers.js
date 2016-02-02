@@ -162,11 +162,19 @@ var joinGame = function(req, res) {
 var getAllGames = function(req, res) {
     try {
         var games = app.games.getInitializedGames();
-        if (Object.keys(games).length)
-            res.send(JSON.stringify(Object.keys(games)));
+        if (Object.keys(games).length){
+            var gameIds = {};
+            for (var game in games) {
+                var player = games[game].players;
+                var playerId = Object.keys(player);
+                var playerName = player[playerId[0]].name;
+                gameIds[game] = playerName;
+            }
+            res.send(JSON.stringify(gameIds));
+        }
         else
             res.send('false');
-    } catch (e) {
+    } catch (err) {
         log.log_message('appendFile', 'errors.log', 'getAllGames ➽' + err.message);
     }
 }

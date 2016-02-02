@@ -38,7 +38,9 @@ describe("redirection to allgame.html",function(){
 })		
 describe("all games",function(){
 	it('should get all game on allGame.html',function(done){
-	var allgames ={game1:{},game2:{}};
+	var player1 = {name:'vikas'};
+	var players = {'Vikas_1':player1};
+	var allgames ={game1:{players:players},game2:{players:players}};
 	var game = {};
 	var games ={
 		getInitializedGames : sinon.stub().returns(allgames),
@@ -49,7 +51,7 @@ describe("all games",function(){
 		supertest(routers)
 		.get('/getAllGames')
 		.set('Cookie','userName=vikas')
-		.expect('["game1","game2"]')
+		.expect('{"game1":"vikas","game2":"vikas"}')
 		.expect(200,done);
 	});
 });
