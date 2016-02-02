@@ -20,7 +20,7 @@ describe("get",function(){
 				 .get("/html/index.html")
 				 .expect("Content-Type", /text\/html/)
 				 .expect(200)
-				 .expect(/WELCOME TO BATTLESHIP GAME/,done);
+				 .expect(/BATTLESHIP GAME/,done);
 		});
 	});
 });
