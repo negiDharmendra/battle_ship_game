@@ -31,7 +31,7 @@ var deployShips = function(req, res) {
     var player = req.user;
     var status = '';
     try {
-        status = player.deployShip(req.body.name, req.body.positions.trim().split(' '), game);
+        status = player.deployShip(req.body.name, req.body.positions, game,req.body.alignment);
         log.log_message('appendFile', 'players.log', req.user.playerId + ' has deployed his ' + req.body.name);
     } catch (err) {
         status = err.message;
