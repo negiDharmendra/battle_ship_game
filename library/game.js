@@ -1,5 +1,4 @@
 var ld = require('lodash');
-var log = require('../server/log.js');
 var Game = function (player) {
 	this.players = {};
 	this.players[player.playerId] = player;

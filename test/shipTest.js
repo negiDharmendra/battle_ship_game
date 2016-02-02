@@ -2,8 +2,6 @@ var expect = require('chai').expect;
 var assert = require('chai').assert;
 var should = require('chai').should();
 var Ship = require('../library/ship');
-var Player = require('../library/player.js')
-var sinon = require('sinon');
  
  describe('Ship',function(){
  	describe("identity",function(){
@@ -46,8 +44,7 @@ var sinon = require('sinon');
 	describe("isSunk",function(){
 		it("should say false if number of vanishedLives are less than ship lives",function(){
 			var ship = new Ship('Battleship',4);
-			ship.isSunk= sinon.spy()
-			ship.isSunk.called.should.equal(false);
+			ship.isSunk().should.equal(false);
 		});
 	});
  })

@@ -1,8 +1,6 @@
 var Player = require('../library/player.js');
 var sinon = require('sinon');
 var chai = require('chai');
-var should = chai.should();
-
 
 var deployShip = function(player) {
     var game = {
@@ -11,10 +9,9 @@ var deployShip = function(player) {
         validateSize: sinon.stub().withArgs().returns(true),
     };
     var fleet = ['cruiser', 'carrier', 'submarine', 'battleship', 'destroyer'];
-    var positions = ['A1','C6','H5','E3','G7'
-    ];
+    var positions = ['A1', 'C6', 'H5', 'E3', 'G7'];
     fleet.forEach(function(ship, index) {
-        player.deployShip(ship, positions[index], game,'horizontal');
+        player.deployShip(ship, positions[index], game, 'horizontal');
     })
 };
 
@@ -37,17 +34,17 @@ describe('Player', function() {
                 validateSize: sinon.stub().withArgs().returns(true)
             };
             it('should able to deploy ship', function() {
-                var deployedShip = player.deployShip('cruiser', 'A1', game,'vertical');
+                var deployedShip = player.deployShip('cruiser', 'A1', game, 'vertical');
                 chai.assert.ok(deployedShip);
             });
             it('should have deployed ship position in usedPositions', function() {
-                var deployedShip = player.deployShip('cruiser', 'A1', game,'horizontal');
+                var deployedShip = player.deployShip('cruiser', 'A1', game, 'horizontal');
                 chai.assert.deepEqual(player.usedPositions, ['A1', 'A2', 'A3']);
             });
             it('should have all deployed ship position in usedPositions', function() {
-                var deployedCruiser = player.deployShip('cruiser', 'A1', game,'horizontal');
+                var deployedCruiser = player.deployShip('cruiser', 'A1', game, 'horizontal');
                 chai.assert.deepEqual(player.usedPositions, ['A1', 'A2', 'A3']);
-                var deployedBattleship = player.deployShip('battleship', 'J1', game,'horizontal');
+                var deployedBattleship = player.deployShip('battleship', 'J1', game, 'horizontal');
                 chai.assert.deepEqual(player.usedPositions, ['A1', 'A2', 'A3', 'J1', 'J2', 'J3', 'J4']);
             });
         });
@@ -66,7 +63,7 @@ describe('Player', function() {
                     validateSize: sinon.stub().withArgs().returns(true)
                 };
                 var deployedBattleship = function() {
-                    player.deployShip('battleship', 'A7', game,'horizontal')
+                    player.deployShip('battleship', 'A7', game, 'horizontal')
                 };
                 chai.expect(deployedBattleship).to.throw(Error, /^Position Not Valid.$/);
             });
@@ -76,9 +73,9 @@ describe('Player', function() {
                     validateAlignment: sinon.stub().withArgs().returns(true),
                     validateSize: sinon.stub().withArgs().returns(true)
                 };
-                var deployedCruiser = player.deployShip('cruiser', 'A1', game,'horizontal');
+                var deployedCruiser = player.deployShip('cruiser', 'A1', game, 'horizontal');
                 var deployedBattleship = function() {
-                    player.deployShip('battleship', 'A2', game,'horizontal')
+                    player.deployShip('battleship', 'A2', game, 'horizontal')
                 };
                 chai.assert.ok(deployedCruiser);
                 chai.expect(deployedBattleship).to.throw(Error, /^Position is already used$/);
@@ -198,26 +195,26 @@ describe('Player', function() {
     })
 });
 
-describe('allPosition',function(){
+describe('allPosition', function() {
     player = new Player('arun');
-    it('should give all position if alignment is horizontal',function(){
-        var allPosition = player.getAllPositionOfShip('battleship','A1','horizontal');
+    it('should give all position if alignment is horizontal', function() {
+        var allPosition = player.getAllPositionOfShip('battleship', 'A1', 'horizontal');
         chai.expect(allPosition).to.have.length(4);
-        chai.assert.deepEqual(allPosition,['A1','A2','A3','A4']);
+        chai.assert.deepEqual(allPosition, ['A1', 'A2', 'A3', 'A4']);
     });
-    it('should give all position if alignment is vertical',function(){
-        var allPosition = player.getAllPositionOfShip('cruiser','A1','vertical');
+    it('should give all position if alignment is vertical', function() {
+        var allPosition = player.getAllPositionOfShip('cruiser', 'A1', 'vertical');
         chai.expect(allPosition).to.have.length(3);
-        chai.assert.deepEqual(allPosition,['A1','B1','C1']);
+        chai.assert.deepEqual(allPosition, ['A1', 'B1', 'C1']);
     });
-    it('should give empty array if alignment is rather than horizontal or vertical',function(){
-        var allPosition = player.getAllPositionOfShip('battleship','A1','diagonal');
+    it('should give empty array if alignment is rather than horizontal or vertical', function() {
+        var allPosition = player.getAllPositionOfShip('battleship', 'A1', 'diagonal');
         chai.expect(allPosition).to.have.length(0);
-        chai.assert.deepEqual(allPosition,[]);
+        chai.assert.deepEqual(allPosition, []);
     });
-    it('should give empty array if alignment is undefined',function(){
-        var allPosition = player.getAllPositionOfShip('battleship','A1');
+    it('should give empty array if alignment is undefined', function() {
+        var allPosition = player.getAllPositionOfShip('battleship', 'A1');
         chai.expect(allPosition).to.have.length(0);
-        chai.assert.deepEqual(allPosition,[]);
+        chai.assert.deepEqual(allPosition, []);
     })
 });
