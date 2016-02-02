@@ -124,3 +124,9 @@ $(window).load(function() {
     });
     setInterval(get_updates,1000);
 });
+
+function displayPlayerName() {
+    var playerName = $.cookie('userName').split('_')[0];
+    $('#playerName').html(playerName.toUpperCase());
+}
+$(window).load(displayPlayerName);

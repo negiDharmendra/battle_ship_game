@@ -3,44 +3,18 @@
     width: auto;
     height: 320px;
 }
+.mainContent{
+    height: 764px;
+    width: 100%
+}
 
-table td,
-div {
+
+table td,div {
     font-family: sans-serif;
     text-transform: uppercase;
     text-align: center;
 }
 
-#header {
-    display: inline-block;
-    height: auto;
-    width: 100%;
-    background: #939393;
-}
-
-#header .game_name {
-    float: left;
-    font-size: 40px;
-    font-weight: bold;
-    margin: 0 0 0 42%;
-}
-
-#header a {
-    float: right;
-    margin: 1% 2% 0 0;
-    font-size: 20px;
-    color: rgba(26, 26, 222, 0.53);
-    text-decoration: none;
-}
-
-#header #playerName {
-    width: 29%;
-    float: left;
-    text-align: right;
-    margin: 1% 0 0 1%;
-    font-size: 20px;
-    overflow-x: scroll;
-}
 
 h2 {
     font-size: 24px;

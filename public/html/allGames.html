@@ -1,23 +1,36 @@
+<!DOCTYPE html>
 <html>
+
 <head>
-	<title>Games List</title>
-	<link rel="stylesheet" href="../styles/reset.css">
-	<link rel="shortcut icon" type="image/png" href="../image/b.ico"/>
-	<link rel="stylesheet" href="../styles/allgames.css">
-	<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src= "../js/createGame.js"></script>
+    <title>Games List</title>
+    <link rel="stylesheet" href="../styles/reset.css">
+    <link rel="stylesheet" href="../styles/common.css">
+    <link rel="shortcut icon" type="image/png" href="../image/b.ico" />
+    <link rel="stylesheet" href="../styles/allgames.css">
+    <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="../js/createGame.js"></script>
 </head>
+
 <body>
-	<div class="header">WELCOME TO BATTLESHIP GAME</div>
-	<div  class ="newGame">
-	<form id="newGame" method= "POST" action = "newGame">
-		<div>
-			<button>Create New Game</button>
-		</div>
-	</form>
-	<div id="joinGame">
-		
-	</div>
-	</div>
+    <div class="container">
+        <div class="header">BATTLESHIP GAME</div>
+        <div class="mainContent">
+            <div class="newGame">
+                <form id="newGame" method="POST" action="newGame">
+                    <div>
+                        <button>Create New Game</button>
+                    </div>
+                </form>
+                <div id="joinGame">
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="contactUs">Contact Us</div>
+            <div class="issue"> Issue</div>
+            <div class="help">Help</div>
+        </div>
+    </div>
 </body>
+
 </html>

@@ -1,27 +1,6 @@
-.header{
-	font-family: sans-serif;
-	text-align: center;
-	background: #939393;
-	font-size: 50px;
-}
-
-table td{
-	width: 45px;
-	height: 45px;
-	background-color: #E9E9E9;
-	text-align: center;
-	vertical-align: middle;
-	font-size: 18px;
-	color: black;
-	font-family: sans-serif;
-}
-
-th{
-	font-family: sans-serif;
-	text-align: center;
-	font-size: 12px;
-	vertical-align: middle;
-	color: #939393;
+.deployScreen{
+	width: 100%;
+	margin: 0 0 0 10%;
 }
 .harbor{
     width: 20%;
@@ -29,34 +8,56 @@ th{
 	margin: 4% 0 0 5%;
 	font-size: 24px;
 }
+.ocean_grid{
+	width: 50%;
+	margin: 0 0 0 10%;
+	float: left;
+}
+.harbor>select{
+	height: 30px;
+    width: 120px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bolder;
+    color: black;
+    background-color: silver;
+}
+
+table td{
+	width: 60px;
+	height: 60px;
+	background-color: #E9E9E9;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 18px;
+	color: black;
+}
+
+th{
+	text-align: center;
+	font-size: 12px;
+	vertical-align: middle;
+	color: #939393;
+}
 
 .hover{
 	background-color: lightgreen;
 }
-.ocean_grid{
-	margin: 3% 0 0 33%;
-	float: left;
+button {
+    height: 30px;
+    width: 75px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bolder;
+    color: black;
+    background-color: silver;
 }
-.harbor>select{
-	margin: 10px 0 0 0;
-	font-size: 20px;
-}
-.harbor>input{
-	margin: 10px 0 0 0px;
-	font-size: 18px;
-}
-.harbor button{
-	margin: 10px 0 0 0px;
-	font-size: 20px;
-	border-radius: 10px;
-}
-.harbor button:hover{
-	color: blue;
+.harbor button:hover,select:hover{
+	color: gray;
 }
 
 .information{
 	height: 40px;
-	font-family: sans-serif;
 	font-weight: 100;
 	font-size: 28px;
 	color:green;
@@ -66,5 +67,8 @@ a{
 	float:right;
     margin-right:50px;
     font-size: 30px;
-    /*color: black;*/
+}
+.mainContent{
+	width: 100%;
+	height: 767px;
 }

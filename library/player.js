@@ -53,6 +53,8 @@ Player.prototype = {
 		}
 	},
 	shoot : function(opponentPlayer,position,game){
+		if(!this.isAlive)
+			return 'miss';
 		if(!this.readyState)
 			throw new Error('Not announced ready');
 		if(game.turn != this.playerId)
