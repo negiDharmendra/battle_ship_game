@@ -31,7 +31,7 @@ var deployShips = function(req, res) {
     var player = req.user;
     var status = '';
     try {
-        status = player.deployShip(req.body.name, req.body.positions.trim().split(' '), game);
+        status = player.deployShip(req.body.name, req.body.positions, game,req.body.alignment);
         log.log_message('appendFile', 'players.log', req.user.playerId + ' has deployed his ' + req.body.name);
     } catch (err) {
         status = err.message;
@@ -69,8 +69,12 @@ var validateShoot = function(req, res) {
 
 
 var serveShipInfo = function(req, res) {
-    var game = req.game;
-    res.send(JSON.stringify(game.serveShipInfo(req.user.playerId)));
+    try{
+        var game = req.game;
+        res.send(JSON.stringify(game.serveShipInfo(req.user.playerId)));
+    }catch (err) {
+        log.log_message('appendFile', 'errors.log', 'serveShipInfo ' + playerId + '➽' + err.message);
+    }
 };
 
 
@@ -158,11 +162,19 @@ var joinGame = function(req, res) {
 var getAllGames = function(req, res) {
     try {
         var games = app.games.getInitializedGames();
-        if (Object.keys(games).length)
-            res.send(JSON.stringify(Object.keys(games)));
+        if (Object.keys(games).length){
+            var gameIds = {};
+            for (var game in games) {
+                var player = games[game].players;
+                var playerId = Object.keys(player);
+                var playerName = player[playerId[0]].name;
+                gameIds[game] = playerName;
+            }
+            res.send(JSON.stringify(gameIds));
+        }
         else
             res.send('false');
-    } catch (e) {
+    } catch (err) {
         log.log_message('appendFile', 'errors.log', 'getAllGames ➽' + err.message);
     }
 }

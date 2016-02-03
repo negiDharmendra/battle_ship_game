@@ -1,6 +1,6 @@
 var Game = require('../library/game.js');
 var chai = require('chai');
-var should=chai.should();
+var should = chai.should();
 var ld = require('lodash');
 
 describe('Game',function(){

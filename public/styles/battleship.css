@@ -1,79 +1,79 @@
-#container {
-    background-color: white;
-    width: auto;
-    height: 320px;
+.mainContent {
+    height: 760px;
+    width: 100%
+}
+
+.message {
+    width: 100%;
+    height: 30px;
+    margin-top: 10px;
+    font-weight: 200;
+    font-size: 28px;
+    color: green;
+}
+
+.game_screen {
+    width: 100%;
+    margin: auto;
+}
+
+.game_screen .oceanGrid {
+    display: inline-block;
+    float: left;
+    width: 20%;
+    height: 650px;
+    margin: 2% 0 0 12%;
+    text-align: left;
+}
+.oceanGridTable{
+    margin: 0 0 15% 10%;
+}
+.game_screen .targetGrid {
+    width: 40%;
+    float: left;
+    margin: 1% 0 0 0;
+    display: inline-block;
+}
+.oceanGrid p {
+    font-size: 24px;
+    padding-left: 25%;
 }
 
 table td,
 div {
-    font-family: sans-serif;
     text-transform: uppercase;
     text-align: center;
 }
 
-#header {
-    display: inline-block;
-    height: auto;
-    width: 100%;
-    background: #939393;
-}
-
-#header .game_name {
-    float: left;
-    font-size: 40px;
-    font-weight: bold;
-    margin: 0 0 0 42%;
-}
-
-#header a {
-    float: right;
-    margin: 1% 2% 0 0;
-    font-size: 20px;
-    color: rgba(26, 26, 222, 0.53);
-    text-decoration: none;
-}
-
-#header #playerName {
-    width: 29%;
-    float: left;
-    text-align: right;
-    margin: 1% 0 0 1%;
-    font-size: 20px;
-    overflow-x: scroll;
-}
-
 h2 {
     font-size: 24px;
-    margin: 0px 0px 15px 0px;
+    color: gray;
+    text-align: left;
+    margin: 0 0 2% 40%;
 }
 
-#info_board {
-    width: 100%;
-    height: 100px;
-    margin-top: 20px;
-}
 
-.game_screen #ocean_grid,
-.game_screen #target_grid {
-    float: left;
-    margin: 2% 0 0 5%;
-}
-
-#oceanGrid,
-#targetGrid {
-    width: 495px;
-    height: 495px;
-    border: 1;
-}
-
-.grid {
-    width: 45px;
-    height: 45px;
+.oceanGridTable .grid {
+    width: 15px;
+    height: 15px;
     background-color: #E9E9E9;
     border-color: white;
 }
 
-.th {
+.targetGridTable .grid {
+    width: 60px;
+    height: 60px;
+    background-color: #E9E9E9;
+    border-color: white;
+}
+
+.oceanGridTable .th {
+    vertical-align: middle;
+    font-size: 8px;
+    color: #939393;
+}
+
+.targetGridTable .th {
     vertical-align: middle;
     font-size: 12px;
     color: #939393;
@@ -81,12 +81,6 @@ h2 {
 
 .hover:hover {
     opacity: .4;
-}
-
-.message {
-    font-weight: 100;
-    font-size: 28px;
-    color: green;
 }
 
 .restartOrQuit {
@@ -107,47 +101,49 @@ h2 {
     margin: 5% 0 0 0;
     color: rgba(53, 53, 51, 0.64);
 }
-
-.ship_info th,
-.indications th {
-    font-size: 20px;
-    font-weight: bolder;
-    text-align: left;
-    padding-left: 10px;
+.ship_info{
+    width: 200px;
+    height: 250px;
+    float: left;
+    margin: 3.8% 0 0 2%;
 }
 
-.ship_info td,
-.indications td {
-    width: 150px;
+.ship_info th{
+    font-size: 20px;
+    font-weight: bolder;
+    width: 100px;
+    text-align: left;
+    background-color: rgba(233, 233, 233, 0.7);
+    color: rgba(102, 102, 102, 1);
+    padding-left: 10px;
+    font-weight: normal;
+}
+
+.ship_info td{
+    width: 100px;
     height: 45px;
     vertical-align: middle;
     font-size: 18px;
 }
 
-.ship_info td:nth-child(1),
-.indications td:nth-child(1) {
+.ship_info td:nth-child(1){
     padding-left: 10px;
     text-align: left;
 }
 
-.ship_info,
-.indications {
-    width: 250px;
-    height: 250px;
-    float: left;
-    margin: 3.8% 0 0 5%;
-}
 
-.hit {
+.targetGridTable .hit,
+.oceanGridTable .hit {
     background: #EE9090;
 }
 
-.miss {
+.targetGridTable .miss,
+.oceanGridTable .miss {
     background: #9090EE;
 }
 
 .alive {
-    background-color: rgba(144, 238, 144, 0.38);
+    background-color: rgba(233, 233, 233, 0.32);
 }
 
 .sunk {

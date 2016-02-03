@@ -1,20 +1,34 @@
+<!DOCTYPE html>
 <html>
+
 <head>
-	<title>Battleship</title>
-	<link rel="stylesheet" type="text/css" href="../styles/reset.css">
-	<link rel="stylesheet"  href="../styles/index.css">
-	<link rel="shortcut icon" type="image/png" href="../image/b.ico"/>
-	<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-	<script type="text/javascript" src="../js/checkCookie.js"></script>
+    <title>Battleship</title>
+    <link rel="stylesheet" type="text/css" href="../styles/reset.css">
+    <link rel="stylesheet" type="text/css" href="../styles/common.css">
+    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="shortcut icon" type="image/png" href="../image/b.ico" />
+    <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="../js/checkCookie.js"></script>
 </head>
+
 <body>
-	<div class="header">WELCOME TO BATTLESHIP GAME</div>
-	<div id="input">
-		<form method="post">
-			<input type="text" name="name" maxlength="25" required placeholder="Enter your name">
-			<button type="submit" id="submit_player_name">START</button>
-		</form>
-	</div>
+    <div class="container">
+        <div class="header">BATTLESHIP GAME</div>
+        <div class="mainContent">
+            <div id="input">
+                <form method="post">
+                    <input type="text" name="name" maxlength="20" required placeholder="Enter your name">
+                    <button type="submit" id="submit_player_name">START</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="contactUs"><a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=battleshipteam@gmail.com&body=my-text" target="blank">Contact Us</a></div>
+            <div class="issue"><a href="https://github.com/negiDharmendra/battle_ship_game/issues/" target="blank">Issue</a></div>
+            <div class="help"><a href="help.html" target="blank">Help</a></div>
+        </div>
+    </div>
 </body>
+
 </html>

@@ -56,7 +56,8 @@ function reply_to_deployment(evnt) {
     evnt = evnt.target;
     var position = getPositions(evnt.id).join(' ');
     var shipName = $(".harbor>#position_of_ship>option:selected").val();
-    $.post('deployShip', 'name=' + shipName + '&positions=' + position, function(data) {
+    var alignment = $(".harbor>#formation>option:selected").val();
+    $.post('deployShip', 'name=' + shipName + '&positions=' + evnt.id + '&alignment='+alignment, function(data) {
         var reply = JSON.parse(data);
         displayDeployedShip(reply, position);
     });
@@ -123,3 +124,9 @@ $(window).load(function() {
     });
     setInterval(get_updates,1000);
 });
+
+function displayPlayerName() {
+    var playerName = $.cookie('userName').split('_')[0];
+    $('#playerName').html(playerName.toUpperCase());
+}
+$(window).load(displayPlayerName);
