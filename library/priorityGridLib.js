@@ -6,6 +6,7 @@ var PriorityGrid = function(){
 			prorities.push({key:String.fromCharCode(i)+j,priority:1});
 	this.prorities = prorities;
 	this.prev = null;
+	this.hits =[];
 };
 
 PriorityGrid.prototype.getMaxPriority = function() {
@@ -32,6 +33,41 @@ PriorityGrid.prototype.getAdjacent = function(position){
 	return ld.compact(adjacent);
 };
 
+PriorityGrid.prototype.isHorizantalSequence = function(position1,position2){
+	var pos1 = position1.key.slice(0,1).charCodeAt();
+	var pos2 = position2.key.slice(0,1).charCodeAt();
+	return (pos2==pos1); 
+};
+
+PriorityGrid.prototype.isVerticalSequence = function(position1,position2){
+	var numeric1 = parseInt(position1.key.slice(1));
+	var numeric2 = parseInt(position2.key.slice(1));
+	return (numeric1==numeric2);	
+};
+
+
+PriorityGrid.prototype.generateVerticalSequence = function(position,size){
+	size = size || 5;
+	var sequence =[];
+	var alphnumeric = position.key.slice(0,1);
+	var numeric = parseInt(position.key.slice(1));
+	for (var i = 0; i < size ; i++) 
+		sequence.push(this.select(alphnumeric+(numeric+i)));
+	return ld.compact(sequence);
+};
+
+PriorityGrid.prototype.generateHorizantalSequence = function(position,size){
+	size = size || 5;
+	var sequence =[];
+	var charCode = String.fromCharCode;
+	var alphnumeric = position.key.slice(0,1).charCodeAt();
+	var numeric = parseInt(position.key.slice(1));
+	for (var i = 0; i < size ; i++) 
+		sequence.push(this.select(charCode(alphnumeric+i)+numeric));
+	return ld.compact(sequence);
+};
+
+
 PriorityGrid.prototype.incrementPriority = function(position){
 	if(position.priority != 0)
 		position.priority++;
@@ -46,43 +82,18 @@ PriorityGrid.prototype.removePriority = function(position){
 	position.priority = 0;
 };
 
-PriorityGrid.prototype.analyzePrevious = function(position){
-	if(this.prev.result =='hit'){
-		var prevPos = this.prev.position.key.slice(0,1);
-		var currPos = position.key.slice(0,1);
-		var next = parseInt(position.key.slice(1));
-		var num = currPos.charCodeAt();
-		if(prevPos == currPos){
-			var target1 = this.select(currPos+(next+1));
-			var target2 = this.select(currPos+(next-1));
-			this.incrementPriority(target1);
-			this.incrementPriority(target2);
-		}
-		else{
-			this.incrementPriority(String.fromCharCode(num+1) +next);
-			this.incrementPriority(String.fromCharCode(num+1) +next);
-		}
-		return true;
-	}
-	return false;
-};
-
-PriorityGrid.prototype.setPriority = function(position,result) {
+PriorityGrid.prototype.setResult = function(position,result){
 	var self = this;
 	if(result == 'hit'){
-		if(!this.analyzePrevious(position)){
+		this.hits.push(position);
+		this.hits.sort(function(a,b){return a.key-b.key;});
 		var adjacents = this.getAdjacent(position);
 		adjacents.forEach(function(pos){
-			if(pos.priority!=0)
-				self.incrementPriority(pos);
+			if(pos.priority!=0) self.incrementPriority(pos);
 		});
-		};
 	};
-};
-
-PriorityGrid.prototype.setResult = function(current,result){
-	if(!this.prev) this.prev = {position:current,result:result.reply};
-	this.setPriority(current,result.reply);
+	this.analyzePrevious();
+	this.prev = {position:position,result:result};
 };
 
 PriorityGrid.prototype.getPosition = function(){
@@ -90,5 +101,43 @@ PriorityGrid.prototype.getPosition = function(){
 	this.removePriority(position);
 	return position;
 };
+
+PriorityGrid.prototype.analyzePrevious = function(){
+	var self = this;
+	var primeSuspect =[];
+	this.hits.forEach(function(sample){
+		self.hits.forEach(function(sample2){
+			if(self.isHorizantalSequence(sample,sample2))
+				primeSuspect=primeSuspect.concat(self.generateHorizantalSequence(sample))
+			if(self.isVerticalSequence(sample,sample2))
+				primeSuspect=primeSuspect.concat(self.generateVerticalSequence(sample));
+		});
+	});
+	primeSuspect=ld.unique(primeSuspect);
+	primeSuspect=primeSuspect.filter(function(k){return k.priority>0;});
+	primeSuspect.forEach(function(sample){
+		if(sample.priority!=0)
+		self.incrementPriority(sample);
+	});
+};
+
+PriorityGrid.prototype.getFleet= function(){
+	var  i = 0;
+	var ships ={};
+	var shipSize = {
+            battleship: 4,
+            cruiser: 3,
+            carrier: 5,
+            destroyer: 2,
+            submarine: 3
+    };
+    var start = [this.select('A5'),this.select('C3'),this.select('B4'),this.select('G3'),this.select('H6')];
+    for(var ship  in shipSize){
+    	var values = this.generateHorizantalSequence(start[i++],shipSize[ship]);
+    	ships[ship]=values.map(function(f){return f.key;});
+    }
+    return ships;
+};
+
 
 module.exports = PriorityGrid;

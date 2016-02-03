@@ -63,8 +63,11 @@ var getUpdates = function(caller){
     		var updates = res.body;
     		if(updates.turn == caller.name)
                 emitter.emit('shoot',caller);
-            if(updates.gameEnd!==null)
-            	process.exit(0);
+            if(updates.gameEnd!==null){
+                clearInterval(caller.interval);
+            	emitter.emit('quitGame',caller);
+                return ;
+            }
     	};
     	bodyParser(res, sucess);
     });
@@ -94,15 +97,10 @@ emitter.on('joinGame', function(caller) {
     req.end();
 });
 
-var ships = {
-    battleship: ['E3', 'E4', 'E5', 'E6'],
-    carrier: ['C6', 'C7', 'C8', 'C9', 'C10'],
-    cruiser: ['H5', 'I5', 'J5'],
-    destroyer: ['G7', 'H7'],
-    submarine: ['A1', 'A2', 'A3']
-}
+
 
 emitter.on('deploy', function(caller) {
+    var ships = caller.grid.getFleet();
     var counter = 0;
     var options = {
         hostname: HOST,
@@ -145,7 +143,7 @@ emitter.on('sayReady', function(caller) {
     var req = caller.http.request(options, function(res) {
         if (res.statusCode == 302) {
             console.log('Announced Ready');
-            setInterval(getUpdates.bind(null,caller),2000);
+            caller.interval = setInterval(getUpdates.bind(null,caller),2000);
         }
     });
     req.write(caller.cookie);
@@ -154,7 +152,6 @@ emitter.on('sayReady', function(caller) {
 
 emitter.on('shoot',function(caller){
 	var current = caller.grid.getPosition();
-	console.log(current);
 	var options = {
         hostname: HOST,
         port: PORT,
@@ -166,7 +163,7 @@ emitter.on('shoot',function(caller){
     };
     var req = caller.http.request(options, function(res) {
     	var sucess = function(){
-    		caller.grid.setResult(current,res.body);
+    		caller.grid.setResult(current,res.body.reply);
     	};
         bodyParser(res, sucess);
     });
@@ -175,5 +172,21 @@ emitter.on('shoot',function(caller){
     req.end();
 });
 
-var b = new BotPlayer(102);
-b.start();
+emitter.on('quitGame', function(caller) {
+    var options = {
+        hostname: HOST,
+        port: PORT,
+        path: '/html/quitGame',
+        method: 'POST',
+        headers: {
+            'Cookie': caller.cookie
+        }
+    };
+    var req = caller.http.request(options, function(res) {
+        if(res.statusCode==302)
+            console.log('Auto Bot Quit'); 
+    });
+    req.write(caller.cookie);
+    req.end();
+});
+module.exports = BotPlayer;
