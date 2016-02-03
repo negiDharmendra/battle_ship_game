@@ -4,7 +4,7 @@ function get_updates() {
     function success(data) {
         var updates = JSON.parse(data);
         var gameEnd = updates.gameEnd;
-        displayShips('#oceanGrid', updates.gotHit, updates.positions, 'lightgreen');
+        displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen');
         if (gameEnd === true) display_gameover('You won the game'), stop_updates();
         else if (gameEnd === false) display_gameover('You lost the game'), stop_updates();
         else displayTurnMessage(updates.turn);
@@ -16,16 +16,16 @@ function displayTurnMessage(turn) {
         display_Message('Your opponent is not ready');
     else if (turn == getCookie()) {
         display_Message('Your Turn');
-        $('#targetGrid>tbody>tr>td.grid').css({
+        $('.targetGridTable>tbody>tr>td.grid').css({
             "cursor": "default"
         });
-        $('#targetGrid>tbody>tr>td.grid').addClass('hover');
+        $('.targetGridTable>tbody>tr>td.grid').addClass('hover');
     } else {
         display_Message('Opponent Turn');
-        $('#targetGrid>tbody>tr>td.grid').css({
+        $('.targetGridTable>tbody>tr>td.grid').css({
             "cursor": "not-allowed"
         });
-        $('#targetGrid>tbody>tr>td.grid').removeClass('hover');
+        $('.targetGridTable>tbody>tr>td.grid').removeClass('hover');
 
     }
 }
@@ -78,7 +78,7 @@ $(window).load(function() {
     get_updates();
     $.get('myShootPositions', function(data) {
         data = JSON.parse(data);
-        displayShips('#targetGrid', data.hit, data.miss, '#9090EE');
+        displayShips('.targetGridTable', data.hit, data.miss, '#9090EE');
     });
 });
 
@@ -96,8 +96,8 @@ function reply_to_shoot(evnt) {
         var status = JSON.parse(data);
         play_hit_or_miss_sound(status.reply);
         if (status.reply) {
-            $('#targetGrid>tbody>tr>td#' + evnt.id).removeAttr('onclick');
-            $('#targetGrid>tbody>tr>td#' + evnt.id).addClass(status.reply);
+            $('.targetGridTable>tbody>tr>td#' + evnt.id).removeAttr('onclick');
+            $('.targetGridTable>tbody>tr>td#' + evnt.id).addClass(status.reply);
         }
     });
 };
@@ -105,7 +105,7 @@ function reply_to_shoot(evnt) {
 function stop_updates() {
     clearInterval(position_updates);
     clearInterval(ship_updates)
-    $('#targetGrid>tbody>tr>.grid').removeAttr('onclick');
+    $('.targetGridTable>tbody>tr>.grid').removeAttr('onclick');
     $('.message').html('');
 };
 
