@@ -146,13 +146,13 @@ describe('Game',function(){
 		it('should give latest updates of game',function(){
 			var player1 = {playerId:1,name:'guruji',usedPositions:['A1','A2','A3','D1','D2','D3'],
 			readyState:true,isAlive:true,fleet:{
-				submarine:{positions:['A1','A2','A3'],vanishedLives:0,},
-				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,}
+				submarine:{positions:['A1','A2','A3'],vanishedLives:0,isSunk:function(){return false;}},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,isSunk:function(){return false;}}
 			}};
 			var player2= {playerId:2,name:'guptaji',usedPositions:['A1','A2','A3','D1','D2','D3'],
 			readyState:true,isAlive:true,fleet:{
-				submarine:{positions:['A1','A2','A3'],vanishedLives:0,},
-				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,}
+				submarine:{positions:['A1','A2','A3'],vanishedLives:0,isSunk:function(){return false;}},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,isSunk:function(){return false;}}
 			}};
 			var game = new Game(player1);
 			game.addPlayer(player2);
@@ -167,13 +167,13 @@ describe('Game',function(){
 		it('should says game end if anyone of the player dies',function(){
 			var player1 = {playerId:1,name:'guruji',usedPositions:['A1','A2','A3','D1','D2','D3'],
 			readyState:true,isAlive:true,fleet:{
-				submarine:{positions:['A1','A2','A3'],vanishedLives:0,},
-				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,}
+				submarine:{positions:['A1','A2','A3'],vanishedLives:0,isSunk:function(){return false;}},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,isSunk:function(){return false;}}
 			}};
 			var player2= {playerId:2,name:'guptaji',usedPositions:['A1','A2','A3','D1','D2','D3'],
 			readyState:true,isAlive:false,fleet:{
-				submarine:{positions:['A1','A2','A3'],vanishedLives:0,},
-				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,}
+				submarine:{positions:['A1','A2','A3'],vanishedLives:0,isSunk:function(){return false;}},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:0,isSunk:function(){return false;}}
 			}};
 			var game = new Game(player1);
 			game.addPlayer(player2);
@@ -188,13 +188,13 @@ describe('Game',function(){
 		it('should give latest status of the fleet',function(){
 			var player1 = {playerId:1,name:'guruji',usedPositions:['A1','A2','A3','D1','D2','D3'],
 			readyState:true,isAlive:true,fleet:{
-				submarine:{positions:['A1','A2','A3'],vanishedLives:3,isSunk:true},
-				cruiser:{positions:['D1','D2','D3'],vanishedLives:2,isSunk:false}
+				submarine:{positions:['A1','A2','A3'],vanishedLives:3,isSunk:function(){return true;}},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:2,isSunk:function(){return false;}}
 			}};
 			var player2= {playerId:2,name:'guptaji',usedPositions:['A1','A2','A3','D1','D2','D3'],
 			readyState:true,isAlive:true,fleet:{
-				submarine:{positions:['A1','A2','A3'],vanishedLives:3,isSunk:true},
-				cruiser:{positions:['D1','D2','D3'],vanishedLives:1,isSunk:false}
+				submarine:{positions:['A1','A2','A3'],vanishedLives:3,isSunk:function(){return true;}},
+				cruiser:{positions:['D1','D2','D3'],vanishedLives:1,isSunk:function(){return false;}}
 			}};
 			var game = new Game(player1);
 			game.addPlayer(player2);
