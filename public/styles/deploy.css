@@ -5,12 +5,13 @@
 .harbor{
     width: 20%;
 	float: left;
-	margin: 4% 0 0 5%;
+	margin: 5% 0 0 -3%;
 	font-size: 24px;
 }
 .ocean_grid{
 	width: 50%;
 	margin: 0 0 0 10%;
+    padding-left: 190px;
 	float: left;
 }
 .harbor>select{

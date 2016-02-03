@@ -18,19 +18,19 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="game_name">BATTLESHIP GAME</div>
             <div id="playerName"></div>
-            <div class="quitGame" ><form method="POST" action="quitGame"> <a href="#" onclick="this.parentNode.submit()">QUIT</a> </form></div>
+            <div class="game_name">BATTLESHIP GAME</div>
+            <div class="quitGame">
+                <form method="POST" action="quitGame"> <a href="#" onclick="this.parentNode.submit()">QUIT</a> </form>
+            </div>
         </div>
         <div class="mainContent">
-            <div id="info_board">
-                <div class="message"></div>
-                <br>
-            </div>
+            <div class="message"></div>
+            <br>
             <div class="game_screen">
-                <div id="ocean_grid">
-                    <h2>OCEAN </h2>
-                    <table id="oceanGrid">
+                <div class="oceanGrid">
+                    <p>OCEAN </p>
+                    <table class="oceanGridTable">
                         <tbody>
                             <tr>
                                 <td class="th"></td>
@@ -177,10 +177,11 @@
                             </tr>
                         </tbody>
                     </table>
+                    
                 </div>
-                <div id="target_grid">
+                <div class="targetGrid">
                     <h2>TARGET </h2>
-                    <table id="targetGrid">
+                    <table class="targetGridTable">
                         <tbody>
                             <tr>
                                 <td class="th"></td>
@@ -328,88 +329,46 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="ship_info">
-                    <table>
-                        <tr>
-                            <th>Ship Name</th>
-                            <th>Hit</th>
-                            <th>Status</th>
-                        </tr>
-                        <tr class="battleship alive">
-                            <td>Battleship</td>
-                            <td></td>
-                            <td>Alive</td>
-                        </tr>
-                        <tr class="cruiser alive">
-                            <td>Cruiser</td>
-                            <td></td>
-                            <td>Alive</td>
-                        </tr>
-                        <tr class="carrier alive">
-                            <td>Carrier</td>
-                            <td></td>
-                            <td>Alive</td>
-                        </tr>
-                        <tr class="destroyer alive">
-                            <td>Destroyer</td>
-                            <td></td>
-                            <td>Alive</td>
-                        </tr>
-                        <tr class="submarine alive">
-                            <td>Submarine</td>
-                            <td></td>
-                            <td>Alive</td>
-                        </tr>
-                    </table>
-                    </br>
-                    <table>
-                        <tr>
-                            <th>Color</th>
-                            <th>Indicates</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <svg width="40" height="40">
-                                    <rect x="10" y="10" width="20" height="20" fill='lightgreen' />
-                            </td>
-                            <td>Ships</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <svg width="40" height="40">
-                                    <rect x="10" y="10" width="20" height="20" fill='#EE9090' />
-                            </td>
-                            <td>Hit</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <svg width="40" height="40">
-                                    <rect x="10" y="10" width="20" height="20" fill='#9090EE' />
-                            </td>
-                            <td>Miss</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <svg width="40" height="40">
-                                    <rect x="10" y="10" width="20" height="20" fill='rgba(144, 238, 144, 0.38)' />
-                            </td>
-                            <td>Alive</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <svg width="40" height="40">
-                                    <rect x="10" y="10" width="20" height="20" fill='rgba(238, 144, 144, 0.37)' />
-                            </td>
-                            <td>Sunk</td>
-                        </tr>
-                    </table>
-                </div>
             </div>
+            <div class="ship_info">
+                        <table>
+                            <tr>
+                                <th>Ship Name</th>
+                                <th>Hit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr class="battleship alive">
+                                <td>Battleship</td>
+                                <td></td>
+                                <td>Alive</td>
+                            </tr>
+                            <tr class="cruiser alive">
+                                <td>Cruiser</td>
+                                <td></td>
+                                <td>Alive</td>
+                            </tr>
+                            <tr class="carrier alive">
+                                <td>Carrier</td>
+                                <td></td>
+                                <td>Alive</td>
+                            </tr>
+                            <tr class="destroyer alive">
+                                <td>Destroyer</td>
+                                <td></td>
+                                <td>Alive</td>
+                            </tr>
+                            <tr class="submarine alive">
+                                <td>Submarine</td>
+                                <td></td>
+                                <td>Alive</td>
+                            </tr>
+                        </table>
+                    </div>
         </div>
         <div class="footer">
-            <div class="contactUs">Contact Us</div>
-            <div class="issue"> Issue</div>
-            <div class="help">Help</div>
+           <div class="contactUs"><a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=battleshipteam@gmail.com&body=my-text" target="blank">Contact Us</a></div>
+            <div class="issue"><a href="https://github.com/negiDharmendra/battle_ship_game/issues/" target="blank">Issue</a></div>
+            <div class="help"><a href="help.html" target="blank">Help</a></div>
         </div>
     </div>
 </body>
