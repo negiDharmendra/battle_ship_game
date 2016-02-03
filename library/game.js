@@ -92,6 +92,7 @@ Game.prototype = {
 	getUpdates:function(playerId){
 		var updates = {positions:[],ships:[],gotHit:[],turn:'',gameEnd:null};
 		var player = this.getPlayer(playerId);
+		var shipInfo = this.serveShipInfo(playerId);
 		var opponentPlayer = this.getOpponentplayer(playerId) || {isAlive:true};
 		if(player){
 			for(var ship in player.fleet){
@@ -111,7 +112,7 @@ Game.prototype = {
     	var player = this.getPlayer(playerId);
         var fleetStatus = {};
         for (var ship in player.fleet) {
-            var shipStatus = player.fleet[ship].isSunk;
+            var shipStatus = player.fleet[ship].isSunk();
             var hits = player.fleet[ship].vanishedLives;
             fleetStatus[ship] = {
                 hits: hits,

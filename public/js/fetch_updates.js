@@ -3,6 +3,7 @@ function get_updates() {
 
     function success(data) {
         var updates = JSON.parse(data);
+        // console.log(updates,"===========");
         var gameEnd = updates.gameEnd;
         displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen');
         if (gameEnd === true) display_gameover('You won the game'), stop_updates();
@@ -49,7 +50,7 @@ function display_gameover(message) {
     var htmlStructure = template({
         gameStatus: message
     });
-    $('.game_screen').html(htmlStructure);
+    $('.mainContent').html(htmlStructure);
 }
 
 function displayShips(gridId, gotHit, usedPosition, color) {
