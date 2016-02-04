@@ -72,4 +72,5 @@ a{
 .mainContent{
 	width: 100%;
 	height: 767px;
+	overflow: scroll;
 }

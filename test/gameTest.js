@@ -201,7 +201,7 @@ describe('Game',function(){
 			game.turn = 1;
 			var shipInfo = game.serveShipInfo(1);
 			chai.expect(shipInfo).to.have.all.keys('cruiser','submarine');
-			chai.expect(shipInfo.cruiser).to.have.all.keys('hits','status');
+			chai.expect(shipInfo.cruiser).to.have.all.keys('hits','status','lives');
 			chai.expect(shipInfo.cruiser.hits).to.equal(2);
 			chai.expect(shipInfo.submarine.hits).to.equal(3);
 			chai.expect(shipInfo.cruiser.status).to.equal(false);

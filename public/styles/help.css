@@ -30,6 +30,7 @@ ol>li{
 
 p{
 	text-indent: 40px;
+	line-height: 180%;
 }
 
 table{
@@ -41,6 +42,7 @@ table tr:nth-child(1){
 
 .mainContent{
 	width: 100%;
-	height: 820px;
+	height: 768px;
+	overflow: scroll;
 }
 

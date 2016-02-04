@@ -3,7 +3,6 @@ function get_updates() {
 
     function success(data) {
         var updates = JSON.parse(data);
-        // console.log(updates,"===========");
         var gameEnd = updates.gameEnd;
         displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen');
         if (gameEnd === true) display_gameover('You won the game'), stop_updates();
@@ -17,17 +16,16 @@ function displayTurnMessage(turn) {
         display_Message('Your opponent is not ready');
     else if (turn == getCookie()) {
         display_Message('Your Turn');
-        $('.targetGridTable>tbody>tr>td.grid').css({
-            "cursor": "default"
-        });
         $('.targetGridTable>tbody>tr>td.grid').addClass('hover');
+        $('.targetGridTable>tbody>tr>td.grid').removeClass('notAllowedCursor');
+        $('.targetGridTable>tbody>tr>td.grid').addClass('defaultCursor');
+        $('.message').removeClass('opponent_turn');
     } else {
         display_Message('Opponent Turn');
-        $('.targetGridTable>tbody>tr>td.grid').css({
-            "cursor": "not-allowed"
-        });
+        $('.targetGridTable>tbody>tr>td.grid').removeClass('defaultCursor');
+        $('.targetGridTable>tbody>tr>td.grid').addClass('notAllowedCursor');
         $('.targetGridTable>tbody>tr>td.grid').removeClass('hover');
-
+        $('.message').addClass('opponent_turn');
     }
 }
 
@@ -57,7 +55,7 @@ function displayShips(gridId, gotHit, usedPosition, color) {
     for (var i = 0; i < usedPosition.length; i++)
         $(gridId + '>tbody>tr>td#' + usedPosition[i]).css('background', color);
     for (var i = 0; i < gotHit.length; i++)
-        $(gridId + '>tbody>tr>td#' + gotHit[i]).css('background', '#ee9090');
+        $(gridId + '>tbody>tr>td#' + gotHit[i]).css('background','#ee9090');
 };
 
 function get_ship_info() {
@@ -65,7 +63,7 @@ function get_ship_info() {
         var ships = JSON.parse(data);
         for (var ship in ships) {
             var ship_info = ships[ship];
-            $('.ship_info .' + ship + ' td:nth-child(2)').html(ship_info.hits)
+            $('.ship_info .' + ship + ' td:nth-child(2)').html(ship_info.hits+'/'+ship_info.lives)
             if (ship_info.status) {
                 $('.ship_info .' + ship).removeClass('alive');
                 $('.ship_info .' + ship).addClass('sunk');

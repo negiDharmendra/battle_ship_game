@@ -1,19 +1,21 @@
 .newGame {
-	height: 300px;
-	width: 60%;
-	text-align: center;	
-	margin:  auto;
-	margin-top:  10%;
-	background:#F5F5F5;
-	border-radius: 30px;
-}
-#joinGame{
-	height: 230px;
-	overflow:scroll;
+    height: 300px;
+    width: 60%;
+    text-align: center;
+    margin: auto;
+    margin-top: 10%;
+    background: #F5F5F5;
+    border-radius: 30px;
 }
 
-#newGame button ,.joinGame button{
-	height: 35px;
+#joinGame {
+    height: 230px;
+    overflow: scroll;
+}
+
+#newGame button,
+.joinGame button {
+    height: 35px;
     width: 180px;
     border-radius: 10px;
     font-size: 18px;
@@ -21,26 +23,36 @@
     margin-top: 2%;
     background-color: silver;
 }
-.joinGame button{
-	height: 30px;
-	width: 100px;
-}
-.mainContent{
-	width: 100%;
-	height: 600px;
+
+.joinGame button {
+    height: 30px;
+    width: 500px;
 }
 
-#newGame button:hover, .joinGame button:hover{
-	background-color: #ECECEC;
+.mainContent {
+    width: 100%;
+    height: 768px;
+    overflow: scroll;
 }
-.gameIdAndHostName,.inputSubmit{
-	display: inline-block;
-	text-align: left;
-	margin-top: 1%;
+
+#newGame button:hover,
+.joinGame button:hover {
+    background-color: #ECECEC;
 }
-.gameIdAndHostName{
-	width: 45%;
+
+
+.gameIdAndHostName {
+    width: 45%;
 }
-.inputSubmit{
-	width: 12%;
+
+
+.joinButton ,.joinButton:hover{
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    font:inherit;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: lighter;
+    outline: none;
 }
