@@ -121,22 +121,24 @@ PriorityGrid.prototype.analyzePrevious = function(){
 	});
 };
 
-PriorityGrid.prototype.getFleet= function(){
-	var  i = 0;
-	var ships ={};
-	var shipSize = {
-            battleship: 4,
-            cruiser: 3,
-            carrier: 5,
-            destroyer: 2,
-            submarine: 3
-    };
-    var start = [this.select('A5'),this.select('C3'),this.select('B4'),this.select('G3'),this.select('H6')];
-    for(var ship  in shipSize){
-    	var values = this.generateHorizantalSequence(start[i++],shipSize[ship]);
-    	ships[ship]=values.map(function(f){return f.key;});
-    }
-    return ships;
+PriorityGrid.prototype.fleetPosition= function(){
+	var allBestPositons =  this.prorities;
+	var finalPositions =[];
+	var usedPositions = [];
+	var alignment ;
+	var shipSize = { battleship: 4,cruiser: 3,carrier: 5,destroyer: 2,submarine: 3 };
+	for (ship in shipSize) {
+		var arr = [];
+		arr.push(ship);
+		var pos = ld.sample(allBestPositons);
+			alignment = 'vertical';
+			usedPositions = usedPositions.concat(this.generateVerticalSequence(pos,shipSize[ship]));	
+		arr.push(pos.key);
+		arr.push(alignment);
+		finalPositions.push(arr);
+		allBestPositons=ld.difference(allBestPositons,usedPositions);
+	}
+	return finalPositions;
 };
 
 
