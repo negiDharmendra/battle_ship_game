@@ -75,6 +75,7 @@ var getUpdates = function(caller){
 }
 
 emitter.on('joinGame', function(caller) {
+    console.log(caller.cookie);
     var options = {
         hostname: HOST,
         port: PORT,
@@ -100,8 +101,10 @@ emitter.on('joinGame', function(caller) {
 
 
 emitter.on('deploy', function(caller) {
-    var ships = caller.grid.getFleet();
+    var shipPositions = caller.grid.fleetPosition();
+    var failed = 0;
     var counter = 0;
+    var pased = 0;
     var options = {
         hostname: HOST,
         port: PORT,
@@ -111,19 +114,26 @@ emitter.on('deploy', function(caller) {
             'Cookie': caller.cookie
         }
     };
-    for (var ship in ships) {
+    for (var i =0 ; i< 5 ;i++) {
         var req = caller.http.request(options, function(res) {
         var sucess = function() {
-            counter++;
             var data = res.body;
-            if (data != true)
-                console.log('Can Not Deploy', data);
-            if (counter == 5)
-                emitter.emit('sayReady', caller, res.headers);
+            counter++;
+            if(data===true || data ==='Can not afford more Ships')
+              pased++;  
+            else if (data !== true)
+                console.log('Failed',data,failed++);
+            if (counter == 5){
+                if(failed)
+                    emitter.emit('deploy', caller);
+                else
+                    emitter.emit('sayReady', caller);
+            }
+            
         }
         bodyParser(res, sucess);
         });
-        var postion = 'name=' + ship + '&positions=' + ships[ship].join(' ');
+        var postion = 'name=' + shipPositions[i][0] + '&positions='+ shipPositions[i][1]  +'&alignment='+shipPositions[i][2];
         console.log(postion);
         req.write(postion);
         req.end();

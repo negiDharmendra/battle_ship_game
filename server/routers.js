@@ -3,6 +3,7 @@ var body_parser = require('./body_parser.js');
 var log = require('./log.js');
 var Player = require('../library/player.js');
 var cookie_parser = require('cookie-parser');
+var BotPlayer = require('../library/botPlayer.js');
 
 var app = express();
 app.use(body_parser);
@@ -191,6 +192,20 @@ var newGame = function(req, res) {
     }
 };
 
+var playWithBot = function(req, res) {
+    try {
+        var player = new Player(req.cookies.userName);
+        var game = app.games.createGame(player);
+        res.cookie('userName', player.playerId);
+        res.cookie('gameId', game.gameId);
+        var bot = new BotPlayer(game.gameId);
+        bot.start();
+        res.redirect('/html/deploy.html');
+    } catch (err) {
+        log.log_message('appendFile', 'errors.log', 'playWithBot ➽' + err.message);
+    }
+};
+
 app.get('/', redirectPlayerToState);
 
 app.post('/html/index.html', function(req, res) {
@@ -199,6 +214,8 @@ app.post('/html/index.html', function(req, res) {
 });
 
 app.post('/html/newGame', newGame);
+
+app.post('/html/playWithBot', playWithBot);
 
 app.get('/getAllGames', getAllGames);
 
