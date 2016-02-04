@@ -1,5 +1,4 @@
 var http = require('http');
-var request = require('request');
 var Events = require("events").EventEmitter;
 
 var PriorityGrid = require('./priorityGridLib.js');

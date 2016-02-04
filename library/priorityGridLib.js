@@ -7,6 +7,7 @@ var PriorityGrid = function(){
 	this.prorities = prorities;
 	this.prev = null;
 	this.hits =[];
+	this.miss = [];
 };
 
 PriorityGrid.prototype.getMaxPriority = function() {
@@ -92,6 +93,13 @@ PriorityGrid.prototype.setResult = function(position,result){
 			if(pos.priority!=0) self.incrementPriority(pos);
 		});
 	};
+	if(result=='miss'){
+		this.miss.push(position);
+		var _adjacents = this.getAdjacent(position);
+			_adjacents.forEach(function(pos){
+				if(pos.priority!=0 && pos.priority!=1) self.decrementPriority(pos);
+			})
+	}
 	this.analyzePrevious();
 	this.prev = {position:position,result:result};
 };
@@ -125,16 +133,25 @@ PriorityGrid.prototype.fleetPosition= function(){
 	var allBestPositons =  this.prorities;
 	var finalPositions =[];
 	var usedPositions = [];
-	var alignment ;
+	var alignment;
 	var shipSize = { battleship: 4,cruiser: 3,carrier: 5,destroyer: 2,submarine: 3 };
 	for (ship in shipSize) {
+		var counter = Math.random()*10;
 		var arr = [];
 		arr.push(ship);
 		var pos = ld.sample(allBestPositons);
+		if(counter<5){
 			alignment = 'vertical';
-			usedPositions = usedPositions.concat(this.generateVerticalSequence(pos,shipSize[ship]));	
-		arr.push(pos.key);
-		arr.push(alignment);
+			usedPositions = usedPositions.concat(this.generateVerticalSequence(pos,shipSize[ship]));
+			arr.push(pos.key);
+			arr.push(alignment);			
+		}
+		if(counter>5){
+			alignment = 'horizontal';
+			usedPositions = usedPositions.concat(this.generateHorizantalSequence(pos,shipSize[ship]));				
+			arr.push(pos.key);
+			arr.push(alignment);
+		}
 		finalPositions.push(arr);
 		allBestPositons=ld.difference(allBestPositons,usedPositions);
 	}
