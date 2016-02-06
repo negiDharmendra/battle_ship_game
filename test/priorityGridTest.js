@@ -158,23 +158,33 @@ describe("generateSequence", function() {
 	});
 	it("should generate a sequence of provided position Verticaly", function() {
 		var position = grid.select('D6');
-		var expected = [grid.select('D6'),grid.select('D7'),grid.select('D8')];
+		var expected = [grid.select('D6'),grid.select('E6'),grid.select('F6')];		
 		assert.deepEqual(grid.generateVerticalSequence(position,3),expected);
 	});
 	it("should generate a sequence of provided position Horizantly", function() {
 		var position = grid.select('D6');
-		var expected = [grid.select('D6'),grid.select('E6'),grid.select('F6')];
+		var expected = [grid.select('D6'),grid.select('D7'),grid.select('D8')];
 		assert.deepEqual(grid.generateHorizantalSequence(position,3),expected);
 	});
 	it("should generate a sequence of provided position Verticaly if available", function() {
-		var position = grid.select('D9');
-		var expected = [grid.select('D9'),grid.select('D10')];
-		assert.deepEqual(grid.generateVerticalSequence(position,3),expected);
+		var position = grid.select('H9');
+		var expected = [grid.select('H9'),grid.select('I9'),grid.select('J9')];
+		assert.deepEqual(grid.generateVerticalSequence(position,4),expected);
 	});
 	it("should generate a sequence of provided position Horizantly if available", function() {
-		var position = grid.select('J6');
-		var expected = [grid.select('J6')];
+		var position = grid.select('A10');
+		var expected = [grid.select('A10')];
 		assert.deepEqual(grid.generateHorizantalSequence(position,3),expected);
+	});
+});
+
+describe("fleet Position", function() {
+	var grid;
+	beforeEach(function(){
+		grid = new PriorityGrid();
+	});
+	it("should get the Positons for deployig", function() {
+		//console.log(grid.fleetPosition());
 	});
 });
 

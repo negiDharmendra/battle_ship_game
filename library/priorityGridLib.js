@@ -47,7 +47,7 @@ PriorityGrid.prototype.isVerticalSequence = function(position1,position2){
 };
 
 
-PriorityGrid.prototype.generateVerticalSequence = function(position,size){
+PriorityGrid.prototype.generateHorizantalSequence = function(position,size){
 	size = size || 5;
 	var sequence =[];
 	var alphnumeric = position.key.slice(0,1);
@@ -57,7 +57,7 @@ PriorityGrid.prototype.generateVerticalSequence = function(position,size){
 	return ld.compact(sequence);
 };
 
-PriorityGrid.prototype.generateHorizantalSequence = function(position,size){
+PriorityGrid.prototype.generateVerticalSequence = function(position,size){
 	size = size || 5;
 	var sequence =[];
 	var charCode = String.fromCharCode;
@@ -116,9 +116,9 @@ PriorityGrid.prototype.analyzePrevious = function(){
 	this.hits.forEach(function(sample){
 		self.hits.forEach(function(sample2){
 			if(self.isHorizantalSequence(sample,sample2))
-				primeSuspect=primeSuspect.concat(self.generateHorizantalSequence(sample))
+				primeSuspect=primeSuspect.concat(self.generateVerticalSequence(sample))
 			if(self.isVerticalSequence(sample,sample2))
-				primeSuspect=primeSuspect.concat(self.generateVerticalSequence(sample));
+				primeSuspect=primeSuspect.concat(self.generateHorizantalSequence(sample));
 		});
 	});
 	primeSuspect=ld.unique(primeSuspect);
@@ -129,32 +129,45 @@ PriorityGrid.prototype.analyzePrevious = function(){
 	});
 };
 
+
 PriorityGrid.prototype.fleetPosition= function(){
-	var allBestPositons =  this.prorities;
+	var allBestPositons = this.prorities;
 	var finalPositions =[];
 	var usedPositions = [];
 	var alignment;
 	var shipSize = { battleship: 4,cruiser: 3,carrier: 5,destroyer: 2,submarine: 3 };
-	for (ship in shipSize) {
-		var counter = Math.random()*10;
-		var arr = [];
-		arr.push(ship);
-		var pos = ld.sample(allBestPositons);
-		if(counter<5){
-			alignment = 'vertical';
-			usedPositions = usedPositions.concat(this.generateVerticalSequence(pos,shipSize[ship]));
-			arr.push(pos.key);
-			arr.push(alignment);			
+	
+		for (ship in shipSize) {
+			var counter = (Math.random()*2);
+			var arr = [];
+			arr.push(ship);
+			if(counter<1){
+				alignment = 'horizontal';
+				var sequence =[];
+				while(sequence.length!=shipSize[ship]){
+					var pos = ld.sample(allBestPositons);
+					sequence = this.generateHorizantalSequence(pos,shipSize[ship]);
+				}
+					usedPositions = usedPositions.concat(sequence);
+					arr.push(pos.key);
+					arr.push(alignment);
+					finalPositions.push(arr);
+			}
+			else{
+				alignment = 'vertical';
+				var sequence =[];
+				while(sequence.length!=shipSize[ship]){
+					var pos = ld.sample(allBestPositons);
+					sequence = this.generateVerticalSequence(pos,shipSize[ship]);
+				}
+					usedPositions = usedPositions.concat(sequence);		
+					arr.push(pos.key);
+					arr.push(alignment);
+					finalPositions.push(arr);
+			}
+			allBestPositons=ld.difference(allBestPositons,usedPositions);
 		}
-		if(counter>5){
-			alignment = 'horizontal';
-			usedPositions = usedPositions.concat(this.generateHorizantalSequence(pos,shipSize[ship]));				
-			arr.push(pos.key);
-			arr.push(alignment);
-		}
-		finalPositions.push(arr);
-		allBestPositons=ld.difference(allBestPositons,usedPositions);
-	}
+		//console.log(usedPositions);
 	return finalPositions;
 };
 
