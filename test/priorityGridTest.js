@@ -7,8 +7,8 @@ var assert = chai.assert;
 describe("Initial Priorities", function() {
 	it("should have 100 positions all have priorities 1", function() {
 		var grid = new PriorityGrid();
-		grid.prorities.should.have.length.of(100);
-		grid.prorities.forEach(function(key){
+		grid.priorities.should.have.length.of(100);
+		grid.priorities.forEach(function(key){
 			assert.equal(key.priority,1);
 		});
 	});
@@ -24,16 +24,16 @@ describe("best Deal", function() {
 		assert.equal(position.priority,1);
 	});
 	it("should give highest priority position", function() {
-		grid.prorities[0].priority =3;
+		grid.select('A1').priority =3;
 		var position = grid.getMaxPriority();
 		assert.equal(position.key,'A1');
 		assert.equal(position.priority,3);
 	});
 	it("should give any random position among highest priority positions", function() {
-		grid.prorities[67].priority =3;
-		grid.prorities[68].priority =3;
-		grid.prorities[69].priority =3;
-		grid.prorities[70].priority =2;
+		grid.select('A1').priority =3;
+		grid.select('A7').priority =3;
+		grid.select('B8').priority =3;
+		grid.select('B9').priority =2;
 		var position = grid.getMaxPriority();
 		assert.equal(position.priority,3);
 	});
@@ -84,7 +84,7 @@ describe("get Positon ", function() {
 		grid = new PriorityGrid();
 	});
 	it("should give the highest Position and set its priority to 0", function() {
-		grid.prorities[0].priority = 3;
+		grid.select('A1').priority = 3;
 		assert.deepEqual({key:'A1',priority:0},grid.getPosition());
 	});
 });
@@ -184,7 +184,7 @@ describe("fleet Position", function() {
 		grid = new PriorityGrid();
 	});
 	it("should get the Positons for deployig", function() {
-		//console.log(grid.fleetPosition());
+		assert.equal(grid.fleetPosition().length,5);
 	});
 });
 

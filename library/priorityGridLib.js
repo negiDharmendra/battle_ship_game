@@ -1,23 +1,26 @@
 var ld = require('lodash');
+const VERTICAL = 'vertical';
+const HORIZONTAL = 'horizontal';
+
 var PriorityGrid = function(){
-	var prorities = [];
+	var priorities = [];
 	for (var i = 65; i < 75; i++)
 		for (var j = 1; j < 11; j++) 
-			prorities.push({key:String.fromCharCode(i)+j,priority:1});
-	this.prorities = prorities;
+			priorities.push({key:String.fromCharCode(i)+j,priority:1});
+	this.priorities = priorities;
 	this.prev = null;
 	this.hits =[];
 	this.miss = [];
 };
 
 PriorityGrid.prototype.getMaxPriority = function() {
-	var max = this.prorities.reduce(function(a,b){ return a.priority>=b.priority?a:b});
-	var allBestPositons = this.prorities.filter(function(x){return (x.priority>=max.priority);});
+	var max = this.priorities.reduce(function(a,b){ return a.priority>=b.priority?a:b});
+	var allBestPositons = this.priorities.filter(function(x){return (x.priority>=max.priority);});
 	return ld.sample(allBestPositons);
 };
 
 PriorityGrid.prototype.select = function(p){
-	return ld.find(this.prorities,function(position){ return position.key == p});
+	return ld.find(this.priorities,function(position){ return position.key == p});
 };
 
 PriorityGrid.prototype.getAdjacent = function(position){
@@ -131,10 +134,9 @@ PriorityGrid.prototype.analyzePrevious = function(){
 
 
 PriorityGrid.prototype.fleetPosition= function(){
-	var allBestPositons = this.prorities;
+	var allBestPositons = this.priorities;
 	var finalPositions =[];
 	var usedPositions = [];
-	var alignment;
 	var shipSize = { battleship: 4,cruiser: 3,carrier: 5,destroyer: 2,submarine: 3 };
 	
 		for (ship in shipSize) {
@@ -142,32 +144,30 @@ PriorityGrid.prototype.fleetPosition= function(){
 			var arr = [];
 			arr.push(ship);
 			if(counter<1){
-				alignment = 'horizontal';
 				var sequence =[];
 				while(sequence.length!=shipSize[ship]){
 					var pos = ld.sample(allBestPositons);
 					sequence = this.generateHorizantalSequence(pos,shipSize[ship]);
+					sequence = ld.intersection(allBestPositons,sequence);
 				}
 					usedPositions = usedPositions.concat(sequence);
 					arr.push(pos.key);
-					arr.push(alignment);
-					finalPositions.push(arr);
+					arr.push(HORIZONTAL);
 			}
 			else{
-				alignment = 'vertical';
 				var sequence =[];
 				while(sequence.length!=shipSize[ship]){
 					var pos = ld.sample(allBestPositons);
 					sequence = this.generateVerticalSequence(pos,shipSize[ship]);
+					sequence =ld.intersection(allBestPositons,sequence);
 				}
 					usedPositions = usedPositions.concat(sequence);		
 					arr.push(pos.key);
-					arr.push(alignment);
-					finalPositions.push(arr);
+					arr.push(VERTICAL);
 			}
-			allBestPositons=ld.difference(allBestPositons,usedPositions);
-		}
-		//console.log(usedPositions);
+			finalPositions.push(arr);
+			allBestPositons = ld.difference(allBestPositons,usedPositions);
+		}	
 	return finalPositions;
 };
 
