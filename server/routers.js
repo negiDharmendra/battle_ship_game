@@ -7,8 +7,27 @@ var cookie_parser = require('cookie-parser');
 var app = express();
 app.use(body_parser);
 app.use(cookie_parser());
-app.use(express.static('./public'));
 
+var redirectPlayerToState = function(req, res) {
+    try {
+        if (req.cookies.gameId && req.cookies.userName && app.games.ensureValidGame(req.cookies.gameId)) {
+            req.game = app.games.getGame(req.cookies.gameId);
+            req.user = req.game.getPlayer(req.cookies.userName);
+            if (!req.user.readyState)
+                res.redirect('/deploy.html');
+            else
+                res.redirect('/battleship.html');
+        } else
+            res.redirect('/index.html');
+    } catch (err) {
+        log.log_message('appendFile', 'errors.log', 'redirectPlayerToState ➽' + err.message);
+        res.redirect('/index.html');
+    }
+};
+
+app.get('/', redirectPlayerToState);
+app.use(express.static('./public'));
+app.use(express.static('./public/html/'));
 
 var loadUser = function(req, res, next) {
     try {
@@ -17,14 +36,12 @@ var loadUser = function(req, res, next) {
             req.user = req.game.getPlayer(req.cookies.userName);
             next();
         } else
-            res.redirect('/html/index.html');
+            res.redirect('/index.html');
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'loadUser ➽' + err.message);
-        res.redirect('/html/index.html');
+        res.redirect('/index.html');
     }
 };
-
-
 
 var deployShips = function(req, res) {
     var game = req.game;
@@ -46,10 +63,10 @@ var readyAnnouncement = function(req, res) {
     var player = req.user;
     try {
         player.ready(game);
-        res.redirect('/html/battleship.html');
+        res.redirect('/battleship.html');
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'readyAnnouncement ' + req.user.playerId + '➽' + err.message);
-        res.redirect('/html/deploy.html');
+        res.redirect('/deploy.html');
     }
 };
 
@@ -86,7 +103,7 @@ var respondToQuitGame = function(req, res) {
         res.clearCookie('userName');
         res.clearCookie('gameId');
         game.deletePlayer(playerId);
-        res.redirect('/html/index.html');
+        res.redirect('/index.html');
         log.log_message('appendFile', 'players.log', playerId + ' has quit the game');
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'respondToQuitGame ' + playerId + '➽' + err.message);
@@ -102,7 +119,7 @@ var respondToRestartGame = function(req, res) {
         var player = new Player(playerName);
         app.games.joinGame(game, player);
         res.cookie('userName', player.playerId);
-        res.redirect('/html/deploy.html');
+        res.redirect('/deploy.html');
         log.log_message('appendFile', 'players.log', playerId + ' has restarted the game');
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'respondToRestartGame ' + playerId + '➽' + err.message);
@@ -128,22 +145,7 @@ var getUpdates = function(req, res) {
     res.send(JSON.stringify(game.getUpdates(req.user.playerId)));
 };
 
-var redirectPlayerToState = function(req, res) {
-    try {
-        if (req.cookies.gameId && req.cookies.userName && app.games.ensureValidGame(req.cookies.gameId)) {
-            req.game = app.games.getGame(req.cookies.gameId);
-            req.user = req.game.getPlayer(req.cookies.userName);
-            if (!req.user.readyState)
-                res.redirect('/html/deploy.html');
-            else
-                res.redirect('/html/battleship.html');
-        } else
-            res.redirect('/html/index.html');
-    } catch (err) {
-        log.log_message('appendFile', 'errors.log', 'redirectPlayerToState ➽' + err.message);
-        res.redirect('/html/index.html');
-    }
-};
+
 
 var joinGame = function(req, res) {
     try {
@@ -153,7 +155,7 @@ var joinGame = function(req, res) {
         app.games.joinGame(game, player);
         res.cookie('gameId', game.gameId);
         res.cookie('userName', player.playerId);
-        res.redirect('/html/deploy.html');
+        res.redirect('/deploy.html');
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'joinGame ➽' + err.message);
     }
@@ -185,42 +187,40 @@ var newGame = function(req, res) {
         var game = app.games.createGame(player);
         res.cookie('userName', player.playerId);
         res.cookie('gameId', game.gameId);
-        res.redirect('/html/deploy.html');
+        res.redirect('/deploy.html');
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'newGame ➽' + err.message);
     }
 };
 
-app.get('/', redirectPlayerToState);
-
-app.post('/html/index.html', function(req, res) {
+app.post('/index.html', function(req, res) {
     res.cookie('userName', req.body.name);
-    res.redirect('/html/allGames.html');
+    res.redirect('/allGames.html');
 });
 
-app.post('/html/newGame', newGame);
+app.post('/newGame', newGame);
 
 app.get('/getAllGames', getAllGames);
 
-app.post('/html/joinGame', joinGame);
+app.post('/joinGame', joinGame);
 
 app.use(loadUser);
 
-app.post('/html/deployShip', deployShips);
+app.post('/deployShip', deployShips);
 
-app.post('/html/deploy.html', readyAnnouncement);
+app.post('/deploy.html', readyAnnouncement);
 
-app.get('/html/get_updates', getUpdates);
+app.get('/get_updates', getUpdates);
 
-app.post('/html/restartGame', respondToRestartGame);
+app.post('/restartGame', respondToRestartGame);
 
-app.get('/html/shipInfo', serveShipInfo);
+app.get('/shipInfo', serveShipInfo);
 
-app.post('/html/shoot', validateShoot);
+app.post('/shoot', validateShoot);
 
-app.post('/html/quitGame', respondToQuitGame);
+app.post('/quitGame', respondToQuitGame);
 
-app.get('/html/myShootPositions', getMyshootPositions);
+app.get('/myShootPositions', getMyshootPositions);
 
 app.createController = function(games) {
     app.games = games;

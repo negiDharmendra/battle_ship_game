@@ -11,13 +11,13 @@ describe("get",function(){
 			supertest(routers)
 				 .get("/")
 				 .expect(302)
-				 .expect("Location","/html/index.html",done);
+				 .expect("Location","/index.html",done);
 		});
 	});
 	describe("Get static files",function(){
 		it("for /index.html should serve the file index.html from public folder",function(done){
 			supertest(routers)
-				 .get("/html/index.html")
+				 .get("/index.html")
 				 .expect("Content-Type", /text\/html/)
 				 .expect(200)
 				 .expect(/BATTLESHIP GAME/,done);
@@ -29,10 +29,10 @@ describe("redirection to allgame.html",function(){
 	describe("Player",function(){
 		it("should logged in the user and redirect to the allgame.html",function(done){
 			supertest(routers)
-				.post("/html/index.html")
+				.post("/index.html")
 				.send("name=Dharmendra")
 				.expect(302)
-				.expect("Location","/html/allGames.html",done);
+				.expect("Location","/allGames.html",done);
 		});
 	});
 })		
@@ -67,22 +67,22 @@ describe("new games",function(){
 	}
 	routers =routers.createController(games);
 		supertest(routers)
-		.post('/html/newGame')
+		.post('/newGame')
 		.set('Cookie','userName=vikas')
-		.expect('Location','/html/deploy.html')
+		.expect('Location','/deploy.html')
 		.expect(302,done);
 	});
 });
 describe('player ',function(){
 	it('should join game after creating new game',function(done){
 		supertest(routers)
-		.post('/html/joinGame')
+		.post('/joinGame')
 		.set('Cookie','userName=vikas')
-		.expect('Location','/html/deploy.html')
+		.expect('Location','/deploy.html')
 		.expect(302,done)
 	})
 })
-describe("/html/deployShip",function(){
+describe("/deployShip",function(){
 	it("should allow to deploy battleship",function(done){
 		var player ={
 			deployShip:sinon.stub().returns(true),
@@ -97,14 +97,14 @@ describe("/html/deployShip",function(){
 		}
 
 		supertest(routers)
-			.post("/html/deployShip")
+			.post("/deployShip")
 			.set("Cookie","userName=Dharmendra_3;gameId=100")
 			.send("name=battleship&positions=A1+A2+A3+A4")
 			.expect(200)
 			.expect("true",done);
 	});
 });
-describe("/html/deploy.html",function(){
+describe("/deploy.html",function(){
 	it("should redirect player to battleship.html",function(done){
 		var player ={
 			ready:sinon.spy(),
@@ -118,11 +118,11 @@ describe("/html/deploy.html",function(){
 		};
 
 		supertest(routers)
-			.post("/html/deploy.html")
+			.post("/deploy.html")
 			.set("Cookie","userName=Dharmendra_3;gameId=100")
 			.expect(302)
 			.expect("Content-Type", /text\/plain/)
-			.expect("Location","/html/battleship.html",done);
+			.expect("Location","/battleship.html",done);
 	});
 });
 describe("updates",function(){
@@ -139,7 +139,7 @@ describe("updates",function(){
 			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
-		.get('/html/get_updates')
+		.get('/get_updates')
 		.set("Cookie","userName=Dharmendra_3;gameId=100")
 		.expect(200,done)
 	});
@@ -165,7 +165,7 @@ describe("Player shoot",function(){
 			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
-		.post("/html/shoot")
+		.post("/shoot")
 		.set("Cookie","userName=Vikas_4")
 		.send("position=A1")
 		.expect('{"reply":"miss"}')
@@ -192,7 +192,7 @@ describe("Player can not shoot ",function(){
 			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
-		.post("/html/shoot")
+		.post("/shoot")
 		.set("Cookie","userName=Vikas_4")
 		.send("position=A1")
 		.expect('{"error":"Opponent turn"}')
@@ -221,7 +221,7 @@ describe("Player can not shoot ",function(){
 		}
 
 		supertest(routers)
-		.post("/html/shoot")
+		.post("/shoot")
 		.set("Cookie","userName=Vikas_4")
 		.send("position=A12")
 		.expect('{"error":"Invalid position"}')
@@ -249,7 +249,7 @@ describe("Player shoot",function(){
 			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
-		.post("/html/shoot")
+		.post("/shoot")
 		.set("Cookie","userName=Vikas_4")
 		.send("position=A1")
 		.expect('{"reply":"hit"}')
@@ -268,7 +268,7 @@ describe('serveShipInfo',function(){
 			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
-			.get('/html/shipInfo')
+			.get('/shipInfo')
 			.set("Cookie","userName=Dharmendra_3")
 			.expect(/"hits":3/)
 			.expect(/{"battleship":{"hits":3,"status":false}}/)
@@ -288,7 +288,7 @@ describe('shoot positions',function(){
 			ensureValidGame:sinon.stub().returns(true)
 		}
 		supertest(routers)
-		.get('/html/myShootPositions')
+		.get('/myShootPositions')
 		.set("Cookie","userName=Dharmendra_3")
 		.expect(/A1/)
 		.expect(200,done)
@@ -306,9 +306,9 @@ describe('reponse to quit game',function(){
 			getGame:sinon.stub().withArgs(100).returns(game),
 		}
 		supertest(routers)
-		.post('/html/quitGame')
+		.post('/quitGame')
 		.set("Cookie","userName=Dharmendra_3")
-		.expect('Location','/html/index.html')
+		.expect('Location','/index.html')
 		.expect(302,done)
 	})
 })
@@ -328,9 +328,9 @@ describe('reponse to restart game',function(){
 		};
 
 		supertest(routers)
-		.post('/html/restartGame')
+		.post('/restartGame')
 		.set("Cookie","userName=Dharmendra_3")
-		.expect('Location','/html/deploy.html')
+		.expect('Location','/deploy.html')
 		.expect(302,done)
 	})
 })
