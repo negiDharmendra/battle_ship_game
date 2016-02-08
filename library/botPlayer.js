@@ -33,7 +33,7 @@ BotPlayer.prototype.start = function() {
     var options = {
         hostname: HOST,
         port: PORT,
-        path: '/html/index.html',
+        path: '/index.html',
         method: 'POST'
     };
     var req = this.http.request(options, function(res) {
@@ -51,7 +51,7 @@ var getUpdates = function(caller){
 	var options = {
         hostname: HOST,
         port: PORT,
-        path: '/html/get_updates',
+        path: '/get_updates',
         headers: {
             'Cookie': caller.cookie
         }
@@ -78,7 +78,7 @@ emitter.on('joinGame', function(caller) {
     var options = {
         hostname: HOST,
         port: PORT,
-        path: '/html/joinGame',
+        path: '/joinGame',
         method: 'POST',
         headers: {
             'Cookie': caller.name
@@ -107,7 +107,7 @@ emitter.on('deploy', function(caller) {
     var options = {
         hostname: HOST,
         port: PORT,
-        path: '/html/deployShip',
+        path: '/deployShip',
         method: 'POST',
         headers: {
             'Cookie': caller.cookie
@@ -143,7 +143,7 @@ emitter.on('sayReady', function(caller) {
     var options = {
         hostname: HOST,
         port: PORT,
-        path: '/html/deploy.html',
+        path: '/deploy.html',
         method: 'POST',
         headers: {
             'Cookie': caller.cookie
@@ -164,7 +164,7 @@ emitter.on('shoot',function(caller){
 	var options = {
         hostname: HOST,
         port: PORT,
-        path: '/html/shoot',
+        path: '/shoot',
         method: 'POST',
         headers: {
             'Cookie': caller.cookie
@@ -185,7 +185,7 @@ emitter.on('quitGame', function(caller) {
     var options = {
         hostname: HOST,
         port: PORT,
-        path: '/html/quitGame',
+        path: '/quitGame',
         method: 'POST',
         headers: {
             'Cookie': caller.cookie
@@ -198,4 +198,8 @@ emitter.on('quitGame', function(caller) {
     req.write(caller.cookie);
     req.end();
 });
+
+process.on('uncaughtException',function(err){
+    console.log(err);
+})
 module.exports = BotPlayer;

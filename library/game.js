@@ -114,9 +114,11 @@ Game.prototype = {
         for (var ship in player.fleet) {
             var shipStatus = player.fleet[ship].isSunk();
             var hits = player.fleet[ship].vanishedLives;
+            var lives = player.fleet[ship].lives;
             fleetStatus[ship] = {
                 hits: hits,
-                status: shipStatus
+                status: shipStatus,
+                lives:lives
             };
         };
         return fleetStatus;
