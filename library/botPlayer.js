@@ -161,6 +161,7 @@ emitter.on('sayReady', function(caller) {
 
 emitter.on('shoot',function(caller){
 	var current = caller.grid.getPosition();
+    console.log("current----->",current)
 	var options = {
         hostname: HOST,
         port: PORT,

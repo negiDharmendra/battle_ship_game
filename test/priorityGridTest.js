@@ -94,10 +94,22 @@ describe("set Result", function() {
 	beforeEach(function(){
 		grid = new PriorityGrid();
 	});
-	it("should set the previous result of the object", function() {
+	it("should set the previous result for hit", function() {
+		var position = {key:'J5',priority:2};
+		grid.setResult(position,'hit');
+		assert.deepEqual(grid.prev,{position:position,result:'hit'});
+	});
+	it("should not set the previous result for miss", function() {
 		var position = {key:'J5',priority:2};
 		grid.setResult(position,'miss');
-		assert.deepEqual(grid.prev,{position:position,result:'miss'});
+		assert.deepEqual(grid.prev,{position:null,result:null});
+	});
+	it("should not change the previous result for miss", function() {
+		var position = {key:'J5',priority:2};
+		grid.setResult(position,'hit');
+		var position2 = {key:'J6',priority:2};
+		grid.setResult(position2,'miss');
+		assert.deepEqual(grid.prev,{position:position,result:'hit'});
 	});
 	it("should increase the priority of the adjacent cells", function() {
 		var position = {key:'J5',priority:2};
