@@ -4,7 +4,8 @@ function get_updates() {
     function success(data) {
         var updates = JSON.parse(data);
         var gameEnd = updates.gameEnd;
-        displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen');
+        console.log(updates.gotMiss)
+        displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen',updates.gotMiss);
         if (gameEnd === true) display_gameover('You won the game'), stop_updates();
         else if (gameEnd === false) display_gameover('You lost the game'), stop_updates();
         else displayTurnMessage(updates.turn);
@@ -51,11 +52,14 @@ function display_gameover(message) {
     $('.mainContent').html(htmlStructure);
 }
 
-function displayShips(gridId, gotHit, usedPosition, color) {
+function displayShips(gridId, gotHit, usedPosition, color,gotMiss) {
     for (var i = 0; i < usedPosition.length; i++)
         $(gridId + '>tbody>tr>td#' + usedPosition[i]).css('background', color);
     for (var i = 0; i < gotHit.length; i++)
         $(gridId + '>tbody>tr>td#' + gotHit[i]).css('background','#ee9090');
+    if(gotMiss)
+        for (var i = 0; i < gotMiss.length; i++)
+            $(gridId + '>tbody>tr>td#' + gotMiss[i]).css('background','#9090EE');
 };
 
 function get_ship_info() {
