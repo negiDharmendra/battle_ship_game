@@ -3,8 +3,8 @@ var Events = require("events").EventEmitter;
 
 var PriorityGrid = require('./priorityGridLib.js');
 
-const HOST = 'localhost';
-const PORT = 5000;
+const HOST = process.env.BOT_HOST ||'localhost';
+const PORT = process.env.BOT_PORT || 5000;
 
 var emitter = new Events();
 
