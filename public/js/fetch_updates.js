@@ -70,9 +70,10 @@ function displayShips(gridId, gotHit, usedPosition, color,gotMiss) {
     }
     if(gotMiss)
         for (var i = 0; i < gotMiss.length; i++){
-            $(gridId+'>tbody>tr>td#' + gotHit[i]).removeAttr('onclick');
-            $(gridId+'>tbody>tr>td#' + gotHit[i]).removeClass('defaultCursor');
-            $(gridId+'>tbody>tr>td#' + gotHit[i]).addClass('notAllowedCursor');
+            $(gridId +'>tbody>tr>td#' + gotMiss[i]).css('background','#9090EE');
+            $(gridId+'>tbody>tr>td#' + gotMiss[i]).removeAttr('onclick');
+            $(gridId+'>tbody>tr>td#' + gotMiss[i]).removeClass('defaultCursor');
+            $(gridId+'>tbody>tr>td#' + gotMiss[i]).addClass('notAllowedCursor');
         }
 };
 
