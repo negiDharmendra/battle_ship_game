@@ -6,12 +6,15 @@ var Games = function (Game) {
 		player.playerId = player.name+'_'+this.getPlayerId();
 		var game = new Game(player);
 		game.gameId = this.getGameId();
+		game.liveStatusOfGame = true;
 		this.allGames[game.gameId]=game;
 		return game;
 	};
 	this.joinGame = function(game,player){
+		game.liveStatusOfGame = true;
 		player.playerId = player.name+'_'+this.getPlayerId();
-		return game.addPlayer(player);
+		game.addPlayer(player);
+		return game;
 	};
 };
 
@@ -35,7 +38,7 @@ Games.prototype = {
 		var initializedGames = {};
 		for(var game in games){
 			game = this.getGame(game);
-			if(game.status()=='Initialized'){
+			if(game.status()=='Initialized'&&game.liveStatusOfGame==true){
 				initializedGames[game.gameId]=game;
 			}
 		}

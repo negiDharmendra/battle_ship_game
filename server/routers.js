@@ -76,6 +76,7 @@ var validateShoot = function(req, res) {
     var status = {};
     try {
         var opponentPlayer = game.getOpponentplayer(req.user.playerId);
+        status.opponentPlayerId = opponentPlayer.playerId;
         status.reply = player.shoot(opponentPlayer, req.body.position, game);
     } catch (err) {
         status.error = err.message;
@@ -102,6 +103,7 @@ var respondToQuitGame = function(req, res) {
     try {
         res.clearCookie('userName');
         res.clearCookie('gameId');
+        
         game.deletePlayer(playerId);
         res.redirect('/index.html');
         log.log_message('appendFile', 'players.log', playerId + ' has quit the game');
@@ -117,6 +119,7 @@ var respondToRestartGame = function(req, res) {
     try {
         game.deletePlayer(playerId);
         var player = new Player(playerName);
+        game.turn = null;
         app.games.joinGame(game, player);
         res.cookie('userName', player.playerId);
         res.redirect('/deploy.html');

@@ -11,16 +11,18 @@ describe('Games',function () {
 	});
 	it('can create a new game',function(){
 		var player = {};
-		games.createGame(player);
+		var game = games.createGame(player);
 		var noOfGames = Object.keys(games.allGames).length;
 		chai.expect(noOfGames).to.be.equal(1);
+		chai.expect(game.liveStatusOfGame).to.be.true;
 		chai.expect(Game.calledOnce).to.be.true;
 	});
 	it('can join a game',function(){
 		var game = {addPlayer:sinon.spy()};
 		var player = {};
-		games.joinGame(game,player);
+		var joinedGame = games.joinGame(game,player);
 		chai.expect(game.addPlayer.calledWith(player));
+		chai.expect(joinedGame.liveStatusOfGame).to.be.true;
 	});
 	it('can find a game',function(){
 		var player = {};

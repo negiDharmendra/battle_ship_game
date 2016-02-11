@@ -4,11 +4,17 @@ function get_updates() {
     function success(data) {
         var updates = JSON.parse(data);
         var gameEnd = updates.gameEnd;
-        console.log(updates.gotMiss)
-        displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen',updates.gotMiss);
-        if (gameEnd === true) display_gameover('You won the game'), stop_updates();
-        else if (gameEnd === false) display_gameover('You lost the game'), stop_updates();
-        else displayTurnMessage(updates.turn);
+        if(updates.liveStatusOfGame){
+            displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen',updates.gotMiss);
+            if (gameEnd === true) display_gameover('You won the game'), stop_updates();
+            else if (gameEnd === false) display_gameover('You lost the game'), stop_updates();
+            else displayTurnMessage(updates.turn);
+        }else{
+            display_Message('Your opponent has left the game..');
+            $('.grid').removeAttr('onclick');
+            var sampleHtml = '<form method="POST" action="restartGame"><button>Restart</button>';
+            $('.message').append(sampleHtml)
+        }
     };
 };
 
@@ -97,7 +103,8 @@ function reply_to_shoot(evnt) {
         position: evnt.id
     }, function(data) {
         var status = JSON.parse(data);
-        play_hit_or_miss_sound(status.reply);
+        if(status.opponentPlayerId)
+                play_hit_or_miss_sound(status.reply);
         if (status.reply) {
             $('.targetGridTable>tbody>tr>td#' + evnt.id).removeAttr('onclick');
             $('.targetGridTable>tbody>tr>td#' + evnt.id).addClass(status.reply);

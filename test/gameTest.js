@@ -158,8 +158,7 @@ describe('Game',function(){
 			game.addPlayer(player2);
 			game.turn = 1;
 			var updates = game.getUpdates(1);
-
-			chai.expect(updates).to.have.all.keys('positions','ships','gotHit','gotMiss','turn','gameEnd');
+			chai.expect(updates).to.have.all.keys('positions','ships','gotHit','liveStatusOfGame','gotMiss','turn','gameEnd');
 			chai.expect(updates.positions).to.deep.equal(['A1','A2','A3','D1','D2','D3']);
 			chai.expect(updates.gotHit).to.deep.equal([]);
 			chai.expect(updates.turn).to.equal(1);
@@ -208,4 +207,18 @@ describe('Game',function(){
 			chai.expect(shipInfo.submarine.status).to.equal(true);
 		});
 	});
+	describe('delete player',function(){
+		it('should delete player when player left the game',function(){
+			var player1 = {playerId:1,name:'guruji'};
+			var player2 = {playerId:2,name:'guptaji'};
+			var game = new Game(player1);
+			game.addPlayer(player2);
+			game.readyPlayers = [player1.playerId,player2.playerId];
+			var deletedPlayer = game.deletePlayer(player1.playerId);
+			chai.expect(deletedPlayer).to.be.true;
+			chai.expect(game.readyPlayers).to.have.length(1);
+			chai.expect(game.liveStatusOfGame).to.be.false;
+
+		})
+	})
 });

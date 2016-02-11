@@ -4,6 +4,7 @@ var Game = function (player) {
 	this.players[player.playerId] = player;
 	this.turn = null;
 	this.readyPlayers =[];
+	this.liveStatusOfGame = null;
 };
 
 Game.prototype = {
@@ -100,6 +101,7 @@ Game.prototype = {
 				if(player.fleet[ship].positions.length>0)
 					updates.ships.push(ship);
 			}
+			updates.liveStatusOfGame = this.liveStatusOfGame;
 			updates.positions = ld.compact(updates.positions);
 		 	updates.gotHit = ld.difference(updates.positions,player.usedPositions);
 		 	updates.turn = this.turn;
@@ -129,6 +131,7 @@ Game.prototype = {
 		var playerId = ld.remove(this.readyPlayers,function(key){
 				return id == key;
 			});
+		this.liveStatusOfGame = false;
 		return delete this.players[id];
 	}
 };
