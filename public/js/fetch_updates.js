@@ -10,10 +10,11 @@ function get_updates() {
             else if (gameEnd === false) display_gameover('You lost the game'), stop_updates();
             else displayTurnMessage(updates.turn);
         }else{
-            display_Message('Your opponent has left the game..');
+            display_Message();
             $('.grid').removeAttr('onclick');
-            var sampleHtml = '<form method="POST" action="restartGame"><button>Restart</button>';
-            $('.message').append(sampleHtml)
+            var sampleHtml = '<div class="leftMessage">Your opponent has left the game..<form method="POST" action="restartGame"><button>Start Again</button></form></div>';
+            $('.message').remove();
+            $('.targetGrid').html(sampleHtml);
         }
     };
 };
