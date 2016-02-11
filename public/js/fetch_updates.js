@@ -62,11 +62,18 @@ function display_gameover(message) {
 function displayShips(gridId, gotHit, usedPosition, color,gotMiss) {
     for (var i = 0; i < usedPosition.length; i++)
         $(gridId + '>tbody>tr>td#' + usedPosition[i]).css('background', color);
-    for (var i = 0; i < gotHit.length; i++)
+    for (var i = 0; i < gotHit.length; i++){
         $(gridId + '>tbody>tr>td#' + gotHit[i]).css('background','#ee9090');
+        $(gridId+'>tbody>tr>td#' + gotHit[i]).removeAttr('onclick');
+        $(gridId+'>tbody>tr>td#' + gotHit[i]).removeClass('defaultCursor');
+        $(gridId+'>tbody>tr>td#' + gotHit[i]).addClass('notAllowedCursor');
+    }
     if(gotMiss)
-        for (var i = 0; i < gotMiss.length; i++)
-            $(gridId + '>tbody>tr>td#' + gotMiss[i]).css('background','#9090EE');
+        for (var i = 0; i < gotMiss.length; i++){
+            $(gridId+'>tbody>tr>td#' + gotHit[i]).removeAttr('onclick');
+            $(gridId+'>tbody>tr>td#' + gotHit[i]).removeClass('defaultCursor');
+            $(gridId+'>tbody>tr>td#' + gotHit[i]).addClass('notAllowedCursor');
+        }
 };
 
 function get_ship_info() {
@@ -88,7 +95,7 @@ $(window).load(function() {
     get_updates();
     $.get('myShootPositions', function(data) {
         data = JSON.parse(data);
-        displayShips('.targetGridTable', data.hit, data.miss, '#9090EE');
+        displayShips('.targetGridTable', data.hit, [], '#9090EE',data.miss);
     });
 });
 
