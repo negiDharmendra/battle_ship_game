@@ -1,0 +1,7 @@
+ <svg width="30" height="30"  xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <g id="seed" transform="translate(10,10)" stroke-width="2" stroke="black" fill="none">
+                
+                <line x1="0" y1="0" x2="20" y2="20" style="stroke:rgb(255,255,255);stroke-width:4" />
+                <animateTransform attributeType="xml" attributeName="transform" type="rotate" values="0 10 10; 360 10 10" dur=".8s" additive="sum" repeatCount="indefinite" />
+            </g>
+        </svg>

@@ -5,14 +5,24 @@
 }
 
 .message {
-    width: 100%;
-    height: 30px;
-    margin-top: 10px;
+    max-width: 35%;
+    padding:1% 1% 1% 1%; 
+    margin: auto;
     font-weight: 200;
-    font-size: 28px;
-    color: green;
+    font-size: 24px;
+    color: white;
+    background-color: #555555;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
+.message div{
+    display: inline-block;
+    margin: 0 0 0 2%;
+}
+.message button{
+    width: 100px;
+    height: 22px;
+    margin: 1% auto;
+}
 .game_screen {
     width: 100%;
     margin: auto;
@@ -34,7 +44,6 @@
     float: left;
     margin: 1% 0 0 0;
     display: inline-block;
-
 }
 .oceanGrid p {
     font-size: 24px;
@@ -168,7 +177,7 @@ h2 {
 }
 
 
-.leftMessage{
+/*.leftMessage{
     width: 100%;
     height: 60px;
     margin: 20% auto;
@@ -190,4 +199,4 @@ h2 {
 }
  .leftMessage button:hover{
     color: black;
- }
+ }*/
