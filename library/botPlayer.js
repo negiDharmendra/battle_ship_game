@@ -62,9 +62,11 @@ var getUpdates = function(caller){
     		var updates = res.body;
     		if(updates.turn == caller.name)
                 emitter.emit('shoot',caller);
-            if(updates.gameEnd!==null){
+            if(updates.gameEnd!==null || !updates.liveStatusOfGame){
                 clearInterval(caller.interval);
-            	emitter.emit('quitGame',caller);
+                setTimeout(function(){ 
+                    emitter.emit('quitGame',caller);
+                },4000);
                 return ;
             }
     	};
@@ -118,10 +120,10 @@ emitter.on('deploy', function(caller) {
         var sucess = function() {
             var data = res.body;
             counter++;
-            if(data===true || data ==='Can not afford more Ships')
+            if(data===true)
               pased++;  
             else if (data !== true)
-                console.log('Failed',data,failed++);
+              failed++;
             if (counter == 5){
                 if(failed)
                     emitter.emit('deploy', caller);
@@ -132,7 +134,9 @@ emitter.on('deploy', function(caller) {
         }
         bodyParser(res, sucess);
         });
-        var postion = 'name=' + shipPositions[i][0] + '&positions='+ shipPositions[i][1]  +'&alignment='+shipPositions[i][2];
+        var postion = 'name=' + shipPositions[i].shipName +
+         '&positions='+ shipPositions[i].position  +
+         '&alignment='+shipPositions[i].alignment;
         console.log(postion);
         req.write(postion);
         req.end();
@@ -161,7 +165,7 @@ emitter.on('sayReady', function(caller) {
 
 emitter.on('shoot',function(caller){
 	var current = caller.grid.getPosition();
-    console.log("current----->",current)
+    console.log("current----->",current.key);
 	var options = {
         hostname: HOST,
         port: PORT,

@@ -184,8 +184,8 @@ PriorityGrid.prototype.fleetPosition = function() {
 
     for (ship in shipSize) {
         var counter = (Math.random() * 2);
-        var arr = [];
-        arr.push(ship);
+        var shipConfig = {};
+        shipConfig.shipName=ship;
         if (counter < 1) {
             var sequence = [];
             while (sequence.length != shipSize[ship]) {
@@ -194,8 +194,8 @@ PriorityGrid.prototype.fleetPosition = function() {
                 sequence = ld.intersection(allBestPositons, sequence);
             }
             usedPositions = usedPositions.concat(sequence);
-            arr.push(pos.key);
-            arr.push(HORIZONTAL);
+            shipConfig.position=pos.key;
+            shipConfig.alignment=HORIZONTAL;
         } else {
             var sequence = [];
             while (sequence.length != shipSize[ship]) {
@@ -204,10 +204,10 @@ PriorityGrid.prototype.fleetPosition = function() {
                 sequence = ld.intersection(allBestPositons, sequence);
             }
             usedPositions = usedPositions.concat(sequence);
-            arr.push(pos.key);
-            arr.push(VERTICAL);
+            shipConfig.position=pos.key;
+            shipConfig.alignment=VERTICAL;
         }
-        finalPositions.push(arr);
+        finalPositions.push(shipConfig);
         allBestPositons = ld.difference(allBestPositons, usedPositions);
     }
     return finalPositions;
