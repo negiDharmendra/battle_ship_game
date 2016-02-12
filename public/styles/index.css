@@ -1,10 +1,9 @@
 #input {
-    width: 400px;
+    width: 600px;
     height: 200px;
     text-align: center;
     margin:auto;
     margin-top: 15%;
-    background: rgba(192, 192, 192, .38);
     border-radius: 30px;
 }
 

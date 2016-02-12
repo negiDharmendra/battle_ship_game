@@ -4,8 +4,36 @@ var log = require('./log.js');
 var Player = require('../library/player.js');
 var cookie_parser = require('cookie-parser');
 var BotPlayer = require('../library/botPlayer.js');
+var passport = require('passport');
+var FacebookStrategy = require('passport-facebook').Strategy;
 
 var app = express();
+    passport.use(new FacebookStrategy({
+    clientID :process.env.CLIENTID,
+    clientSecret : process.env.CLIENTSECRET,
+    callbackURL : process.env.CALLBACKURL
+    },
+    function(accessToken,refreshToken,profile,done){
+           return done(null,{id:profile.id,userName:profile.displayName})
+    }));
+
+
+passport.serializeUser(function(user,done){
+    done(null,user)
+})
+passport.deserializeUser(function(user,done){
+    done(null,user)
+})
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.get('/facebookauth',passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',passport.authenticate('facebook',{failureRedirect:'/'}),function(req,res){
+    res.cookie('userName', req.user.userName);
+    res.redirect('/allgames.html');
+});
+
 app.use(body_parser);
 app.use(cookie_parser());
 
@@ -210,14 +238,6 @@ var playWithBot = function(req, res) {
     }
 };
 
-app.get('/', redirectPlayerToState);
-
-
-app.post('/index.html', function(req, res) {
-    // res.cookie('userName', req.body.name);
-    // res.redirect('/allGames.html');
-    res.redirect('www.stackoverflow.com');
-});
 
 app.post('/newGame', newGame);
 
