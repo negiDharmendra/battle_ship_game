@@ -25,17 +25,7 @@ describe("get",function(){
 	});
 });
 
-describe("redirection to allgame.html",function(){
-	describe("Player",function(){
-		it("should logged in the user and redirect to the allgame.html",function(done){
-			supertest(routers)
-				.post("/index.html")
-				.send("name=Dharmendra")
-				.expect(302)
-				.expect("Location","/allGames.html",done);
-		});
-	});
-})		
+	
 describe("all games",function(){
 	it('should get all game on allGame.html',function(done){
 	var player1 = {name:'vikas'};
