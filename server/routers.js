@@ -214,8 +214,9 @@ app.get('/', redirectPlayerToState);
 
 
 app.post('/index.html', function(req, res) {
-    res.cookie('userName', req.body.name);
-    res.redirect('/allGames.html');
+    // res.cookie('userName', req.body.name);
+    // res.redirect('/allGames.html');
+    res.redirect('www.stackoverflow.com');
 });
 
 app.post('/newGame', newGame);
