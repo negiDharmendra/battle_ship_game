@@ -31,7 +31,7 @@ app.get('/facebookauth',passport.authenticate('facebook'));
 
 app.get('/auth/facebook/callback',passport.authenticate('facebook',{failureRedirect:'/'}),function(req,res){
     res.cookie('userName', req.user.userName);
-    res.redirect('/allgames.html');
+    res.redirect('/allGames.html');
 });
 
 app.use(body_parser);
