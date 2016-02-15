@@ -5,11 +5,11 @@ function get_updates() {
         var updates = JSON.parse(data);
         var gameEnd = updates.gameEnd;
         if (updates.liveStatusOfGame && updates.players == 1) {
-            $('.message').show();
+            // $('.message').show();
             display_Message('<div>Waiting for opponent</div><div><img src="./image/loading.svg" height="30" width="30"></div>');
         }
         if (updates.liveStatusOfGame && updates.players == 2) {
-            $('.message').hide();
+            // $('.message').hide();
             displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen', updates.gotMiss);
             if (gameEnd === true) display_gameover('You won the game'), stop_updates();
             else if (gameEnd === false) display_gameover('You lost the game'), stop_updates();
@@ -18,7 +18,7 @@ function get_updates() {
             $('.grid').removeAttr('onclick');
             var sampleHtml = '<div class="leftMessage">Your opponent has left the game..<form method="POST" action="restartGame"><button>Start Again</button></form></div>';
             $('.message').html(sampleHtml);
-            $('.message').show();
+            // $('.message').show();
         }
     };
 };
@@ -27,11 +27,13 @@ function displayTurnMessage(turn) {
     if (!turn)
         display_Message('<div>Your opponent is not ready</div><div><img src="./image/loading.svg" height="30" width="30"></div>');
     else if (turn == getCookie()) {
+        display_Message('Your Turn')
         $(".targetGridTable").fadeTo(2, 1, function() {});
         $('.targetGridTable>tbody>tr>td.grid').addClass('hover');
         $('.targetGridTable>tbody>tr>td.grid').removeClass('notAllowedCursor');
         $('.targetGridTable>tbody>tr>td.grid').addClass('defaultCursor');
     } else {
+        display_Message('Opponent\'s Turn')
         $(".targetGridTable").fadeTo(2, 0.3, function() {});
         $('.targetGridTable>tbody>tr>td.grid').removeClass('defaultCursor');
         $('.targetGridTable>tbody>tr>td.grid').addClass('notAllowedCursor');
@@ -95,7 +97,7 @@ function get_ship_info() {
 };
 
 $(window).load(function() {
-    $('.message').hide();
+    // $('.message').hide();
     get_updates();
     $.get('myShootPositions', function(data) {
         data = JSON.parse(data);
@@ -132,7 +134,7 @@ function stop_updates() {
 };
 
 function display_Message(message) {
-    $('.message').show();
+    // $('.message').show();
     $('.message').html(message);
 };
 
