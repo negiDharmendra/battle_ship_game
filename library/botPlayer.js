@@ -23,28 +23,35 @@ var bodyParser = function(res, next) {
 var BotPlayer = function(gameId) {
     var grid = new PriorityGrid();
     this.http = http;
-    this.name = 'name=BotPlayer';
+    this.name = 'userName=BotPlayer';
     this.cookie = 'Id=' + gameId;
     this.grid = grid;
 };
 
 BotPlayer.prototype.start = function() {
-    var self = this;
-    var options = {
+    var caller = this;
+    console.log('Starting')
+     var options = {
         hostname: HOST,
         port: PORT,
-        path: '/index.html',
-        method: 'POST'
+        path: '/joinGame',
+        method: 'POST',
+        headers: {
+            'Cookie': caller.name
+        }
     };
-    var req = this.http.request(options, function(res) {
+    var req = caller.http.request(options, function(res) {
         if (res.statusCode == 302) {
-            console.log('Registered');
-            self.name = res.headers['set-cookie'].toString();
-            emitter.emit('joinGame', self);
+            console.log('Joined Game');
+            caller.cookie = res.headers['set-cookie'].toString().replace('Path=/,', '');
+            caller.cookie = caller.cookie.replace('Path=/', '');
+            emitter.emit('deploy', caller);
+            return;
         }
     });
-    req.write(self.name);
+    req.write(caller.cookie);
     req.end();
+    
 };
 
 var getUpdates = function(caller){
@@ -74,32 +81,6 @@ var getUpdates = function(caller){
     });
     req.end();
 }
-
-emitter.on('joinGame', function(caller) {
-    console.log(caller.cookie);
-    var options = {
-        hostname: HOST,
-        port: PORT,
-        path: '/joinGame',
-        method: 'POST',
-        headers: {
-            'Cookie': caller.name
-        }
-    };
-    var req = caller.http.request(options, function(res) {
-        if (res.statusCode == 302) {
-            console.log('Joined Game');
-            caller.cookie = res.headers['set-cookie'].toString().replace('Path=/,', '');
-            caller.cookie = caller.cookie.replace('Path=/', '');
-            emitter.emit('deploy', caller);
-            return;
-        }
-    });
-    req.write(caller.cookie);
-    req.end();
-});
-
-
 
 emitter.on('deploy', function(caller) {
     var shipPositions = caller.grid.fleetPosition();
