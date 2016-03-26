@@ -1,5 +1,6 @@
 var http = require('http');
 var Events = require("events").EventEmitter;
+var log = require('../server/log.js');
 
 var PriorityGrid = require('./priorityGridLib.js');
 
@@ -30,7 +31,7 @@ var BotPlayer = function(gameId) {
 
 BotPlayer.prototype.start = function() {
     var caller = this;
-    console.log('Starting')
+    log.log_message('writeFile','botPlayer.log','Initilized ➽ time Stamp '+new Date().toLocaleTimeString());
      var options = {
         hostname: HOST,
         port: PORT,
@@ -43,6 +44,7 @@ BotPlayer.prototype.start = function() {
     var req = caller.http.request(options, function(res) {
         if (res.statusCode == 302) {
             console.log('Joined Game');
+            log.log_message('appendFile', 'botPlayer.log', ' ➽ Joined the Game ');
             caller.cookie = res.headers['set-cookie'].toString().replace('Path=/,', '');
             caller.cookie = caller.cookie.replace('Path=/', '');
             emitter.emit('deploy', caller);
@@ -66,7 +68,8 @@ var getUpdates = function(caller){
     caller.name = caller.cookie.split(';')[1].split('=')[1];
     var req = http.request(options,function(res){
     	var sucess = function(){
-    		var updates = res.body;
+    		var updates = res.body;            
+            log.log_message('appendFile', 'botPlayer.log', ' ➽ Getting Updates turn:'+updates.turn);            
     		if(updates.turn == caller.name)
                 emitter.emit('shoot',caller);
             if(updates.gameEnd!==null || !updates.liveStatusOfGame){
@@ -101,25 +104,17 @@ emitter.on('deploy', function(caller) {
         var sucess = function() {
             var data = res.body;
             counter++;
-            if(data===true)
-              pased++;  
-            else if (data !== true)
-              failed++;
-            if (counter == 5){
-                if(failed)
-                    emitter.emit('deploy', caller);
-                else
-                    emitter.emit('sayReady', caller);
-            }
-            
-        }
+            if (counter == 5)
+              emitter.emit('sayReady', caller);
+            };
         bodyParser(res, sucess);
         });
-        var postion = 'name=' + shipPositions[i].shipName +
+        
+        var position = 'name=' + shipPositions[i].shipName +
          '&positions='+ shipPositions[i].position  +
          '&alignment='+shipPositions[i].alignment;
-        console.log(postion);
-        req.write(postion);
+        req.write(position);
+        log.log_message('appendFile', 'botPlayer.log', 'Deploying Ships ➽'+position);         
         req.end();
     }
 });
@@ -136,7 +131,7 @@ emitter.on('sayReady', function(caller) {
     };
     var req = caller.http.request(options, function(res) {
         if (res.statusCode == 302) {
-            console.log('Announced Ready');
+            log.log_message('appendFile', 'botPlayer.log', 'Announced Ready');    
             caller.interval = setInterval(getUpdates.bind(null,caller),2000);
         }
     });
@@ -146,7 +141,7 @@ emitter.on('sayReady', function(caller) {
 
 emitter.on('shoot',function(caller){
 	var current = caller.grid.getPosition();
-    console.log("current----->",current.key);
+    log.log_message('appendFile', 'botPlayer.log', 'Shooting on current '+current.key); 
 	var options = {
         hostname: HOST,
         port: PORT,
@@ -179,7 +174,7 @@ emitter.on('quitGame', function(caller) {
     };
     var req = caller.http.request(options, function(res) {
         if(res.statusCode==302)
-            console.log('Auto Bot Quit'); 
+    log.log_message('appendFile', 'botPlayer.log', 'Auto Bot Quit ➽ time Stamp '+new Date().toLocaleTimeString()); 
     });
     req.write(caller.cookie);
     req.end();
