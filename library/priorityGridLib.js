@@ -26,7 +26,7 @@ PriorityGrid.prototype.getMaxPriority = function() {
     var allBestPositons = this.priorities.filter(function(x) {
         return (x.priority >= max.priority);
     });
-    
+
     return ld.sample(allBestPositons);
 };
 
@@ -131,33 +131,44 @@ PriorityGrid.prototype.getPosition = function() {
     return position;
 };
 
+function analyzePreviousForHorizontalOrientation(self) {
+    var primeSuspect = [];
+    var charCode = String.fromCharCode;
+    primeSuspect = primeSuspect.concat(self.generateHorizantalSequence(current, 2))
+    var alphnumeric = current.key.slice(0, 1);
+    var numeric = parseInt(current.key.slice(1));
+    var numericPrev = self.prev.position.key.slice(1);
+
+    if (alphnumeric > parseInt(numericPrev))
+        primeSuspect = primeSuspect.concat(self.select(alphnumeric + (numeric - 2)));
+    else
+        primeSuspect = primeSuspect.concat(self.select(alphnumeric + (numeric - 1)));
+    return primeSuspect;
+}
+
+function analyzePreviousForVerticalOrientation(self) {
+    var primeSuspect = [];
+    var charCode = String.fromCharCode;
+    var alphnumeric = current.key.slice(0, 1).charCodeAt();
+    var alphnumericPrev = self.prev.position.key.slice(0, 1).charCodeAt();
+    var numeric = parseInt(current.key.slice(1));
+    primeSuspect = primeSuspect.concat(self.generateVerticalSequence(current, 2))
+    if (alphnumeric > alphnumericPrev)
+        primeSuspect = primeSuspect.concat(self.select(charCode(alphnumeric - 2) + numeric));
+    else
+        primeSuspect = primeSuspect.concat(self.select(charCode(alphnumeric - 1) + numeric));
+    return primeSuspect;
+}
+
 PriorityGrid.prototype.analyzePrevious = function(current, isHorizantal, isVertical) {
     var self = this;
     var primeSuspect = [];
     var charCode = String.fromCharCode;
-   
-    if (isHorizantal) {
-        primeSuspect = primeSuspect.concat(self.generateHorizantalSequence(current, 2))
-        var alphnumeric = current.key.slice(0, 1);
-        var numeric = parseInt(current.key.slice(1));
-        var numericPrev = this.prev.position.key.slice(1);
 
-         if(alphnumeric>parseInt(numericPrev))
-            primeSuspect = primeSuspect.concat(this.select(alphnumeric+(numeric-2)));
-        else
-            primeSuspect = primeSuspect.concat(this.select(alphnumeric+(numeric-1)));
-    } else if (isVertical) {
-        var alphnumeric = current.key.slice(0, 1).charCodeAt();
-    	var alphnumericPrev = this.prev.position.key.slice(0, 1).charCodeAt();
-    	var numeric = parseInt(current.key.slice(1));
-        primeSuspect = primeSuspect.concat(self.generateVerticalSequence(current, 2))
-        if(alphnumeric>alphnumericPrev)
-            primeSuspect = primeSuspect.concat(this.select(charCode(alphnumeric-2)+numeric));
-        else
-            primeSuspect = primeSuspect.concat(this.select(charCode(alphnumeric-1)+numeric));
-
-    }
-
+    if (isHorizantal)
+        primeSuspect = analyzePreviousForHorizontalOrientation(this)
+    else if (isVertical)
+        primeSuspect = analyzePreviousForVerticalOrientation(this);
     primeSuspect = ld.unique(primeSuspect);
     primeSuspect = ld.compact(primeSuspect);
     primeSuspect = primeSuspect.filter(function(k) {

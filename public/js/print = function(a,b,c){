@@ -1,0 +1,9 @@
+ print = function(a,b,c){
+	var len = Math.max(a.length,b.length,c.length);
+	var line = "+";
+	for(var i=0;i<len+2;i++)
+	{line +='-';
+	}
+	line+="+";
+	return line;
+	}
