@@ -131,7 +131,7 @@ PriorityGrid.prototype.getPosition = function() {
     return position;
 };
 
-function analyzePreviousForHorizontalOrientation(self) {
+function analyzePreviousForHorizontalOrientation(self,current) {
     var primeSuspect = [];
     var charCode = String.fromCharCode;
     primeSuspect = primeSuspect.concat(self.generateHorizantalSequence(current, 2))
@@ -146,7 +146,7 @@ function analyzePreviousForHorizontalOrientation(self) {
     return primeSuspect;
 }
 
-function analyzePreviousForVerticalOrientation(self) {
+function analyzePreviousForVerticalOrientation(self,current) {
     var primeSuspect = [];
     var charCode = String.fromCharCode;
     var alphnumeric = current.key.slice(0, 1).charCodeAt();
@@ -166,9 +166,9 @@ PriorityGrid.prototype.analyzePrevious = function(current, isHorizantal, isVerti
     var charCode = String.fromCharCode;
 
     if (isHorizantal)
-        primeSuspect = analyzePreviousForHorizontalOrientation(this)
+        primeSuspect = analyzePreviousForHorizontalOrientation(this,current)
     else if (isVertical)
-        primeSuspect = analyzePreviousForVerticalOrientation(this);
+        primeSuspect = analyzePreviousForVerticalOrientation(this,current);
     primeSuspect = ld.unique(primeSuspect);
     primeSuspect = ld.compact(primeSuspect);
     primeSuspect = primeSuspect.filter(function(k) {
