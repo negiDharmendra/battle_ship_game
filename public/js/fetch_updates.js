@@ -6,8 +6,16 @@ function get_updates() {
         var gameEnd = updates.gameEnd;
         if(updates.liveStatusOfGame){
             displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen',updates.gotMiss);
-            if (gameEnd === true) display_gameover('You won the game'), stop_updates();
-            else if (gameEnd === false) display_gameover('You lost the game'), stop_updates();
+            if (gameEnd === true) {
+                getAccuracy();
+                display_gameover('You won the game'), stop_updates();
+                $('.ship_info').html('');
+            }
+            else if (gameEnd === false) {
+                getAccuracy();
+                display_gameover('You lost the game'), stop_updates();
+                $('.ship_info').html('');
+            }
             else displayTurnMessage(updates.turn);
         }else{
             display_Message();
@@ -37,6 +45,14 @@ function displayTurnMessage(turn) {
     }
 }
 
+function getAccuracy(){
+    $.get('/accuracy',function(data){
+        data = JSON.parse(data);
+        $('.accuracyInfo').html("Your Accuracy: <br>"+data.accuracyOfPlayer+"%<br>"+
+            "Opponent's Accuracy: <br>"+data.accuracyOfOpponentPlayer+"%");
+    })
+}
+
 function stop_play(id) {
     var audio = document.getElementById(id);
     audio.pause();
@@ -49,14 +65,13 @@ function play(id) {
 
 
 function display_gameover(message) {
-    var sampleHtml = '<div class="game_screen"><div class="gameStatus">{{gameStatus}}</br></br></div>' +
-        '<div class="restartOrQuit"><form method="POST" action="restartGame"><button>Restart</button>' +
-        '</form><form method="POST" action="quitGame"><button>Quit</button></form></div></div>';
+    var sampleHtml = '<div class="checkStatus">{{gameStatus}}<form method="GET" action="checkStatus">'+
+            '<button>Check Status</button></form></div>';
     var template = Handlebars.compile(sampleHtml);
     var htmlStructure = template({
         gameStatus: message
-    });
-    $('.mainContent').html(htmlStructure);
+    }); 
+    $('.message').html(htmlStructure);
 }
 
 function displayShips(gridId, gotHit, usedPosition, color,gotMiss) {
@@ -92,7 +107,7 @@ function get_ship_info() {
     });
 };
 
-$(window).load(function() {
+$( window ).load(function() {
     get_updates();
     $.get('myShootPositions', function(data) {
         data = JSON.parse(data);
@@ -123,9 +138,8 @@ function reply_to_shoot(evnt) {
 
 function stop_updates() {
     clearInterval(position_updates);
-    clearInterval(ship_updates)
+    clearInterval(ship_updates);
     $('.targetGridTable>tbody>tr>.grid').removeAttr('onclick');
-    $('.message').html('');
 };
 
 function display_Message(message) {

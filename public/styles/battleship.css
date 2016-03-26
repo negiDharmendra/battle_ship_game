@@ -176,7 +176,7 @@ h2 {
     color:gray;
     display: inline-block;
 }
-.leftMessage  button{
+.leftMessage  button, .checkStatus button{
     background: none;
     border: none;
     font:inherit;
@@ -188,6 +188,15 @@ h2 {
     text-transform: uppercase;
     color:gray;
 }
- .leftMessage button:hover{
+
+.leftMessage button:hover, .checkStatus button:hover{
     color: black;
- }
+}
+
+.accuracyInfo {
+    width: 300px;
+    float: right;
+    margin:-5% 5% 30% 0%;
+    font-weight: bold;
+    font-size: 20px;
+}
