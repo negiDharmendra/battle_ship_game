@@ -4,6 +4,7 @@ function get_updates() {
     function success(data) {
         var updates = JSON.parse(data);
         var gameEnd = updates.gameEnd;
+
         if (updates.liveStatusOfGame && updates.players == 1) {
             // $('.message').show();
             display_Message('<div>Waiting for opponent</div><div><img src="./image/loading.svg" height="30" width="30"></div>');
@@ -11,8 +12,16 @@ function get_updates() {
         if (updates.liveStatusOfGame && updates.players == 2) {
             // $('.message').hide();
             displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen', updates.gotMiss);
-            if (gameEnd === true) display_gameover('You won the game'), stop_updates();
-            else if (gameEnd === false) display_gameover('You lost the game'), stop_updates();
+            if (gameEnd === true) {
+                getAccuracy();
+                $('.ship_info').html('');
+                display_gameover('You won the game'), stop_updates();
+            }
+            else if (gameEnd === false) {
+                getAccuracy();
+                $('.ship_info').html('');
+                display_gameover('You lost the game'), stop_updates();
+            }
             else displayTurnMessage(updates.turn);
         } else if (updates.liveStatusOfGame === false) {
             $('.grid').removeAttr('onclick');
@@ -41,6 +50,14 @@ function displayTurnMessage(turn) {
     }
 }
 
+function getAccuracy(){
+    $.get('/accuracy',function(data){
+        data = JSON.parse(data);
+        $('.accuracyInfo').html("Your Accuracy: <br>"+data.accuracyOfPlayer+"%<br>"+
+            "Opponent's Accuracy: <br>"+data.accuracyOfOpponentPlayer+"%");
+    })
+}
+
 function stop_play(id) {
     var audio = document.getElementById(id);
     audio.pause();
@@ -53,14 +70,12 @@ function play(id) {
 
 
 function display_gameover(message) {
-    var sampleHtml = '<div class="game_screen"><div class="gameStatus">{{gameStatus}}</br></br></div>' +
-        '<div class="restartOrQuit"><form method="POST" action="restartGame"><button>Restart</button>' +
-        '</form><form method="POST" action="quitGame"><button>Quit</button></form></div></div>';
+    var sampleHtml = '<div class="checkStatus">{{gameStatus}}</div>';
     var template = Handlebars.compile(sampleHtml);
     var htmlStructure = template({
         gameStatus: message
-    });
-    $('.mainContent').html(htmlStructure);
+    }); 
+    $('.message').html(htmlStructure);
 }
 
 function displayShips(gridId, gotHit, usedPosition, color, gotMiss) {
@@ -128,9 +143,8 @@ function reply_to_shoot(evnt) {
 
 function stop_updates() {
     clearInterval(position_updates);
-    clearInterval(ship_updates)
+    clearInterval(ship_updates);
     $('.targetGridTable>tbody>tr>.grid').removeAttr('onclick');
-    $('.message').html('');
 };
 
 function display_Message(message) {

@@ -101,6 +101,7 @@ Game.prototype = {
 				if(player.fleet[ship].positions.length>0)
 					updates.ships.push(ship);
 			}
+			updates.myShootPositions = {hit:player.hit,miss:player.miss};
 			updates.liveStatusOfGame = this.liveStatusOfGame;
 			updates.positions = ld.compact(updates.positions);
 		 	updates.gotHit = ld.difference(updates.positions,player.usedPositions);

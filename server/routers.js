@@ -30,7 +30,6 @@ app.use(passport.session())
 app.get('/facebookauth',passport.authenticate('facebook'));
 
 app.get('/auth/facebook/callback',passport.authenticate('facebook',{failureRedirect:'/'}),function(req,res){
-    console.log('User',req.user);
     res.cookie('userName', req.user.userName);
     res.redirect('/allGames.html');
 });
@@ -239,6 +238,29 @@ var playWithBot = function(req, res) {
     }
 };
 
+var getAccuracy = function(req,res){
+    var game =req.game;
+    var player = req.user;
+    var opponentPlayer = game.getOpponentplayer(req.user.playerId);
+    var status = {
+        player: {hit: player.hit.length, miss: player.miss.length},
+        opponentPlayer: {hit: opponentPlayer.hit.length, miss: opponentPlayer.miss.length}
+    };
+    var accuracyOfPlayer = Math.round((status.player.hit/(status.player.hit+status.player.miss))*100);
+    var accuracyOfOpponent = Math.round((status.opponentPlayer.hit/(status.opponentPlayer.hit+status.opponentPlayer.miss))*100);
+    var accuracy = {accuracyOfPlayer:accuracyOfPlayer, accuracyOfOpponentPlayer:accuracyOfOpponent};
+    res.send(JSON.stringify(accuracy));
+}
+
+var getStatus = function(req,res){
+    try{
+        
+
+    } catch (err) {
+        log.log_message('appendFile', 'errors.log', 'gameOver ➽' + err.message);
+    }
+}
+
 
 app.post('/newGame', newGame);
 
@@ -265,6 +287,10 @@ app.post('/shoot', validateShoot);
 app.post('/quitGame', respondToQuitGame);
 
 app.get('/myShootPositions', getMyshootPositions);
+
+app.get('/accuracy', getAccuracy);
+
+app.get('/checkStatus', getStatus);
 
 app.createController = function(games) {
     app.games = games;

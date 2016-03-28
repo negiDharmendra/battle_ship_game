@@ -6,7 +6,7 @@
 
 .message {
     max-width: 500px;
-    max-height: 100px
+    max-height: 100px;
     padding:1% 1% 1% 1%; 
     margin: auto;
     font-weight: 200;
@@ -173,4 +173,12 @@ h2 {
 
 .shipBlock{
     background:lightgreen;
+}
+
+.accuracyInfo {
+    width: 300px;
+    float: right;
+    margin:-15% 5% 0% 0%;
+    font-weight: bold;
+    font-size: 20px;
 }
