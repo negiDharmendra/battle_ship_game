@@ -107,6 +107,7 @@ Game.prototype = {
 		 	updates.gotHit = ld.difference(updates.positions,player.usedPositions);
 		 	updates.turn = this.turn;
 		 	updates.gotMiss = opponentPlayer.miss;
+		 	updates.players = Object.keys(this.players).length;
 		 	if(!player.isAlive||!opponentPlayer.isAlive){
 		 		updates.gameEnd = player.isAlive;
 		 	}

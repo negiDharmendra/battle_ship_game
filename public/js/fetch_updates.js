@@ -4,8 +4,14 @@ function get_updates() {
     function success(data) {
         var updates = JSON.parse(data);
         var gameEnd = updates.gameEnd;
-        if(updates.liveStatusOfGame){
-            displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen',updates.gotMiss);
+
+        if (updates.liveStatusOfGame && updates.players == 1) {
+            // $('.message').show();
+            display_Message('<div>Waiting for opponent</div><div><img src="./image/loading.svg" height="30" width="30"></div>');
+        }
+        if (updates.liveStatusOfGame && updates.players == 2) {
+            // $('.message').hide();
+            displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen', updates.gotMiss);
             if (gameEnd === true) {
                 getAccuracy();
                 display_gameover('You won the game'), stop_updates();
@@ -17,31 +23,30 @@ function get_updates() {
                 $('.ship_info').html('');
             }
             else displayTurnMessage(updates.turn);
-        }else{
-            display_Message();
+        } else if (updates.liveStatusOfGame === false) {
             $('.grid').removeAttr('onclick');
             var sampleHtml = '<div class="leftMessage">Your opponent has left the game..<form method="POST" action="restartGame"><button>Start Again</button></form></div>';
-            $('.message').remove();
-            $('.targetGrid').html(sampleHtml);
+            $('.message').html(sampleHtml);
+            // $('.message').show();
         }
     };
 };
 
 function displayTurnMessage(turn) {
     if (!turn)
-        display_Message('Your opponent is not ready');
+        display_Message('<div>Your opponent is not ready</div><div><img src="./image/loading.svg" height="30" width="30"></div>');
     else if (turn == getCookie()) {
-        display_Message('Your Turn');
+        display_Message('Your Turn')
+        $(".targetGridTable").fadeTo(2, 1, function() {});
         $('.targetGridTable>tbody>tr>td.grid').addClass('hover');
         $('.targetGridTable>tbody>tr>td.grid').removeClass('notAllowedCursor');
         $('.targetGridTable>tbody>tr>td.grid').addClass('defaultCursor');
-        $('.message').removeClass('opponent_turn');
     } else {
-        display_Message('Opponent Turn');
+        display_Message('Opponent\'s Turn')
+        $(".targetGridTable").fadeTo(2, 0.3, function() {});
         $('.targetGridTable>tbody>tr>td.grid').removeClass('defaultCursor');
         $('.targetGridTable>tbody>tr>td.grid').addClass('notAllowedCursor');
         $('.targetGridTable>tbody>tr>td.grid').removeClass('hover');
-        $('.message').addClass('opponent_turn');
     }
 }
 
@@ -74,21 +79,21 @@ function display_gameover(message) {
     $('.message').html(htmlStructure);
 }
 
-function displayShips(gridId, gotHit, usedPosition, color,gotMiss) {
+function displayShips(gridId, gotHit, usedPosition, color, gotMiss) {
     for (var i = 0; i < usedPosition.length; i++)
         $(gridId + '>tbody>tr>td#' + usedPosition[i]).css('background', color);
-    for (var i = 0; i < gotHit.length; i++){
-        $(gridId + '>tbody>tr>td#' + gotHit[i]).css('background','#ee9090');
-        $(gridId+'>tbody>tr>td#' + gotHit[i]).removeAttr('onclick');
-        $(gridId+'>tbody>tr>td#' + gotHit[i]).removeClass('defaultCursor');
-        $(gridId+'>tbody>tr>td#' + gotHit[i]).addClass('notAllowedCursor');
+    for (var i = 0; i < gotHit.length; i++) {
+        $(gridId + '>tbody>tr>td#' + gotHit[i]).css('background', '#ee9090');
+        $(gridId + '>tbody>tr>td#' + gotHit[i]).removeAttr('onclick');
+        $(gridId + '>tbody>tr>td#' + gotHit[i]).removeClass('defaultCursor');
+        $(gridId + '>tbody>tr>td#' + gotHit[i]).addClass('notAllowedCursor');
     }
-    if(gotMiss)
-        for (var i = 0; i < gotMiss.length; i++){
-            $(gridId +'>tbody>tr>td#' + gotMiss[i]).css('background','#9090EE');
-            $(gridId+'>tbody>tr>td#' + gotMiss[i]).removeAttr('onclick');
-            $(gridId+'>tbody>tr>td#' + gotMiss[i]).removeClass('defaultCursor');
-            $(gridId+'>tbody>tr>td#' + gotMiss[i]).addClass('notAllowedCursor');
+    if (gotMiss)
+        for (var i = 0; i < gotMiss.length; i++) {
+            $(gridId + '>tbody>tr>td#' + gotMiss[i]).css('background', '#9090EE');
+            $(gridId + '>tbody>tr>td#' + gotMiss[i]).removeAttr('onclick');
+            $(gridId + '>tbody>tr>td#' + gotMiss[i]).removeClass('defaultCursor');
+            $(gridId + '>tbody>tr>td#' + gotMiss[i]).addClass('notAllowedCursor');
         }
 };
 
@@ -97,7 +102,7 @@ function get_ship_info() {
         var ships = JSON.parse(data);
         for (var ship in ships) {
             var ship_info = ships[ship];
-            $('.ship_info .' + ship + ' td:nth-child(2)').html(ship_info.hits+'/'+ship_info.lives)
+            $('.ship_info .' + ship + ' td:nth-child(2)').html(ship_info.hits + '/' + ship_info.lives)
             if (ship_info.status) {
                 $('.ship_info .' + ship).removeClass('alive');
                 $('.ship_info .' + ship).addClass('sunk');
@@ -107,11 +112,16 @@ function get_ship_info() {
     });
 };
 
+<<<<<<< HEAD
 $( window ).load(function() {
+=======
+$(window).load(function() {
+    // $('.message').hide();
+>>>>>>> 4a206a938dc43270f25390bda8079d4380378bea
     get_updates();
     $.get('myShootPositions', function(data) {
         data = JSON.parse(data);
-        displayShips('.targetGridTable', data.hit, [], '#9090EE',data.miss);
+        displayShips('.targetGridTable', data.hit, [], '#9090EE', data.miss);
     });
 });
 
@@ -127,8 +137,8 @@ function reply_to_shoot(evnt) {
         position: evnt.id
     }, function(data) {
         var status = JSON.parse(data);
-        if(status.opponentPlayerId)
-                play_hit_or_miss_sound(status.reply);
+        if (status.opponentPlayerId)
+            play_hit_or_miss_sound(status.reply);
         if (status.reply) {
             $('.targetGridTable>tbody>tr>td#' + evnt.id).removeAttr('onclick');
             $('.targetGridTable>tbody>tr>td#' + evnt.id).addClass(status.reply);
@@ -143,7 +153,8 @@ function stop_updates() {
 };
 
 function display_Message(message) {
-    $('.message').html('<p>' + message + '</p>');
+    // $('.message').show();
+    $('.message').html(message);
 };
 
 function getCookie() {

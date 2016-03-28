@@ -5,36 +5,44 @@
 }
 
 .message {
-    width: 100%;
-    height: 30px;
-    margin-top: 10px;
+    max-width: 500px;
+    max-height: 100px
+    padding:1% 1% 1% 1%; 
+    margin: auto;
     font-weight: 200;
-    font-size: 28px;
-    color: green;
+    font-size: 24px;
+    color: white;
+    background-color: #555555;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
+.message div{
+    display: inline-block;
+    margin: 0 0 0 2%;
+}
+.message button{
+    width: 100px;
+    height: 22px;
+    margin: 1% auto;
+}
 .game_screen {
-    width: 100%;
+    width: 1000px;
     margin: auto;
 }
 
 .game_screen .oceanGrid {
     display: inline-block;
     float: left;
-    width: 20%;
+    width: 250px;
     height: 650px;
-    margin: 2% 0 0 12%;
     text-align: left;
 }
-.oceanGridTable{
-    margin: 0 0 15% 10%;
+.oceanGrid .oceanGridTable{
+    margin: 20px 0 20px 0;
 }
 .game_screen .targetGrid {
-    width: 40%;
-    float: left;
-    margin: 1% 0 0 0;
+    width: 650px;
+    float: right;
     display: inline-block;
-
 }
 .oceanGrid p {
     font-size: 24px;
@@ -108,7 +116,6 @@ h2 {
     width: 200px;
     height: 250px;
     float: left;
-    margin: 2.4% 0 0 5%;
 }
 
 .ship_info th{
@@ -121,6 +128,7 @@ h2 {
 }
 
 .ship_info td{
+     background-color: #E9E9E9;
     width: 100px;
     height: 45px;
     vertical-align: middle;
@@ -165,32 +173,6 @@ h2 {
 
 .shipBlock{
     background:lightgreen;
-}
-
-
-.leftMessage{
-    width: 100%;
-    height: 60px;
-    margin: 20% auto;
-    font-size: 24px;
-    color:gray;
-    display: inline-block;
-}
-.leftMessage  button, .checkStatus button{
-    background: none;
-    border: none;
-    font:inherit;
-    color: blue;
-    cursor: pointer;
-    font-size: 24px;
-    font-weight: lighter;
-    outline: none;
-    text-transform: uppercase;
-    color:gray;
-}
-
-.leftMessage button:hover, .checkStatus button:hover{
-    color: black;
 }
 
 .accuracyInfo {

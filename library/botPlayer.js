@@ -1,5 +1,6 @@
 var http = require('http');
 var Events = require("events").EventEmitter;
+var log = require('../server/log.js');
 
 var PriorityGrid = require('./priorityGridLib.js');
 
@@ -23,28 +24,36 @@ var bodyParser = function(res, next) {
 var BotPlayer = function(gameId) {
     var grid = new PriorityGrid();
     this.http = http;
-    this.name = 'name=BotPlayer';
+    this.name = 'userName=BotPlayer';
     this.cookie = 'Id=' + gameId;
     this.grid = grid;
 };
 
 BotPlayer.prototype.start = function() {
-    var self = this;
-    var options = {
+    var caller = this;
+    log.log_message('writeFile','botPlayer.log','Initilized ➽ time Stamp '+new Date().toLocaleTimeString());
+     var options = {
         hostname: HOST,
         port: PORT,
-        path: '/index.html',
-        method: 'POST'
+        path: '/joinGame',
+        method: 'POST',
+        headers: {
+            'Cookie': caller.name
+        }
     };
-    var req = this.http.request(options, function(res) {
+    var req = caller.http.request(options, function(res) {
         if (res.statusCode == 302) {
-            console.log('Registered');
-            self.name = res.headers['set-cookie'].toString();
-            emitter.emit('joinGame', self);
+            console.log('Joined Game');
+            log.log_message('appendFile', 'botPlayer.log', ' ➽ Joined the Game ');
+            caller.cookie = res.headers['set-cookie'].toString().replace('Path=/,', '');
+            caller.cookie = caller.cookie.replace('Path=/', '');
+            emitter.emit('deploy', caller);
+            return;
         }
     });
-    req.write(self.name);
+    req.write(caller.cookie);
     req.end();
+    
 };
 
 var getUpdates = function(caller){
@@ -59,12 +68,15 @@ var getUpdates = function(caller){
     caller.name = caller.cookie.split(';')[1].split('=')[1];
     var req = http.request(options,function(res){
     	var sucess = function(){
-    		var updates = res.body;
+    		var updates = res.body;            
+            log.log_message('appendFile', 'botPlayer.log', ' ➽ Getting Updates turn:'+updates.turn);            
     		if(updates.turn == caller.name)
                 emitter.emit('shoot',caller);
-            if(updates.gameEnd!==null){
+            if(updates.gameEnd!==null || !updates.liveStatusOfGame){
                 clearInterval(caller.interval);
-            	emitter.emit('quitGame',caller);
+                setTimeout(function(){ 
+                    emitter.emit('quitGame',caller);
+                },4000);
                 return ;
             }
     	};
@@ -72,32 +84,6 @@ var getUpdates = function(caller){
     });
     req.end();
 }
-
-emitter.on('joinGame', function(caller) {
-    console.log(caller.cookie);
-    var options = {
-        hostname: HOST,
-        port: PORT,
-        path: '/joinGame',
-        method: 'POST',
-        headers: {
-            'Cookie': caller.name
-        }
-    };
-    var req = caller.http.request(options, function(res) {
-        if (res.statusCode == 302) {
-            console.log('Joined Game');
-            caller.cookie = res.headers['set-cookie'].toString().replace('Path=/,', '');
-            caller.cookie = caller.cookie.replace('Path=/', '');
-            emitter.emit('deploy', caller);
-            return;
-        }
-    });
-    req.write(caller.cookie);
-    req.end();
-});
-
-
 
 emitter.on('deploy', function(caller) {
     var shipPositions = caller.grid.fleetPosition();
@@ -118,23 +104,17 @@ emitter.on('deploy', function(caller) {
         var sucess = function() {
             var data = res.body;
             counter++;
-            if(data===true || data ==='Can not afford more Ships')
-              pased++;  
-            else if (data !== true)
-                console.log('Failed',data,failed++);
-            if (counter == 5){
-                if(failed)
-                    emitter.emit('deploy', caller);
-                else
-                    emitter.emit('sayReady', caller);
-            }
-            
-        }
+            if (counter == 5)
+              emitter.emit('sayReady', caller);
+            };
         bodyParser(res, sucess);
         });
-        var postion = 'name=' + shipPositions[i][0] + '&positions='+ shipPositions[i][1]  +'&alignment='+shipPositions[i][2];
-        console.log(postion);
-        req.write(postion);
+        
+        var position = 'name=' + shipPositions[i].shipName +
+         '&positions='+ shipPositions[i].position  +
+         '&alignment='+shipPositions[i].alignment;
+        req.write(position);
+        log.log_message('appendFile', 'botPlayer.log', 'Deploying Ships ➽'+position);         
         req.end();
     }
 });
@@ -151,7 +131,7 @@ emitter.on('sayReady', function(caller) {
     };
     var req = caller.http.request(options, function(res) {
         if (res.statusCode == 302) {
-            console.log('Announced Ready');
+            log.log_message('appendFile', 'botPlayer.log', 'Announced Ready');    
             caller.interval = setInterval(getUpdates.bind(null,caller),2000);
         }
     });
@@ -161,7 +141,7 @@ emitter.on('sayReady', function(caller) {
 
 emitter.on('shoot',function(caller){
 	var current = caller.grid.getPosition();
-    console.log("current----->",current)
+    log.log_message('appendFile', 'botPlayer.log', 'Shooting on current '+current.key); 
 	var options = {
         hostname: HOST,
         port: PORT,
@@ -194,7 +174,7 @@ emitter.on('quitGame', function(caller) {
     };
     var req = caller.http.request(options, function(res) {
         if(res.statusCode==302)
-            console.log('Auto Bot Quit'); 
+    log.log_message('appendFile', 'botPlayer.log', 'Auto Bot Quit ➽ time Stamp '+new Date().toLocaleTimeString()); 
     });
     req.write(caller.cookie);
     req.end();

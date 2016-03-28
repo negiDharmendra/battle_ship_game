@@ -30,8 +30,9 @@ app.use(passport.session())
 app.get('/facebookauth',passport.authenticate('facebook'));
 
 app.get('/auth/facebook/callback',passport.authenticate('facebook',{failureRedirect:'/'}),function(req,res){
+    console.log('User',req.user);
     res.cookie('userName', req.user.userName);
-    res.redirect('/allgames.html');
+    res.redirect('/allGames.html');
 });
 
 app.use(body_parser);
