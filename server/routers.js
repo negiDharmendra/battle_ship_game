@@ -30,7 +30,6 @@ app.use(passport.session())
 app.get('/facebookauth',passport.authenticate('facebook'));
 
 app.get('/auth/facebook/callback',passport.authenticate('facebook',{failureRedirect:'/'}),function(req,res){
-    console.log('User',req.user);
     res.cookie('userName', req.user.userName);
     res.redirect('/allGames.html');
 });
@@ -250,7 +249,7 @@ var getAccuracy = function(req,res){
     var accuracyOfPlayer = Math.round((status.player.hit/(status.player.hit+status.player.miss))*100);
     var accuracyOfOpponent = Math.round((status.opponentPlayer.hit/(status.opponentPlayer.hit+status.opponentPlayer.miss))*100);
     var accuracy = {accuracyOfPlayer:accuracyOfPlayer, accuracyOfOpponentPlayer:accuracyOfOpponent};
-   res.send(JSON.stringify(accuracy));
+    res.send(JSON.stringify(accuracy));
 }
 
 var getStatus = function(req,res){

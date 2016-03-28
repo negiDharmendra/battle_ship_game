@@ -14,13 +14,13 @@ function get_updates() {
             displayShips('.oceanGridTable', updates.gotHit, updates.positions, 'lightgreen', updates.gotMiss);
             if (gameEnd === true) {
                 getAccuracy();
-                display_gameover('You won the game'), stop_updates();
                 $('.ship_info').html('');
+                display_gameover('You won the game'), stop_updates();
             }
             else if (gameEnd === false) {
                 getAccuracy();
-                display_gameover('You lost the game'), stop_updates();
                 $('.ship_info').html('');
+                display_gameover('You lost the game'), stop_updates();
             }
             else displayTurnMessage(updates.turn);
         } else if (updates.liveStatusOfGame === false) {
@@ -70,8 +70,7 @@ function play(id) {
 
 
 function display_gameover(message) {
-    var sampleHtml = '<div class="checkStatus">{{gameStatus}}<form method="GET" action="checkStatus">'+
-            '<button>Check Status</button></form></div>';
+    var sampleHtml = '<div class="checkStatus">{{gameStatus}}</div>';
     var template = Handlebars.compile(sampleHtml);
     var htmlStructure = template({
         gameStatus: message
@@ -112,12 +111,8 @@ function get_ship_info() {
     });
 };
 
-<<<<<<< HEAD
-$( window ).load(function() {
-=======
 $(window).load(function() {
     // $('.message').hide();
->>>>>>> 4a206a938dc43270f25390bda8079d4380378bea
     get_updates();
     $.get('myShootPositions', function(data) {
         data = JSON.parse(data);
