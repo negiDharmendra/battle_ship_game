@@ -88,12 +88,16 @@ Player.prototype = {
 
 
 emitter.on('HIT',function(opponentPlayer,position,game){
+	//[#4/db-integration]
+	// Save the board status before destroying position on the actual board
 	var hittedShip = game.destroy(opponentPlayer,position);
 	if(opponentPlayer.fleet[hittedShip].isSunk())
 		opponentPlayer.sunkShips.push(hittedShip);
 	if(opponentPlayer.sunkShips.length==5)
 			opponentPlayer.isAlive = false;
 	game.turn = opponentPlayer.playerId;
+	// save the status of board and the current hit position  
+	// Unique Key(Can be trigger),PlayerId,GameId,datestamp,board-satus,current-hit-position,...
 });
 emitter.on('MISS',function(opponentPlayer,game){
 	game.turn = opponentPlayer.playerId;
@@ -106,6 +110,9 @@ emitter.on('READY',function(player,game){
 	if (ld.uniq(game.readyPlayers).length==2){
 		game.turn = ld.first(game.readyPlayers);
 	};
+	//[#3/db-integration]
+	//TODO save the data of the player deployed ship postions 
+	// Unique Key(Can be trigger),PlayerId,GameId,datestamp,All the postions he has deployed on,isBot,...	
 });
 
 module.exports = Player;
