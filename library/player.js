@@ -2,6 +2,7 @@
 var ld = require('lodash');
 var Events=require("events").EventEmitter;
 var Ship = require('./ship.js');
+var dbWriter = require('../db/dbWriter.js');
 
 var emitter=new Events();
 
@@ -110,9 +111,9 @@ emitter.on('READY',function(player,game){
 	if (ld.uniq(game.readyPlayers).length==2){
 		game.turn = ld.first(game.readyPlayers);
 	};
-	//[#3/db-integration]
-	//TODO save the data of the player deployed ship postions 
-	// Unique Key(Can be trigger),PlayerId,GameId,datestamp,All the postions he has deployed on,isBot,...	
+	var isBot = player.name.match('BotPlayer')!=null ? true : false; //Dirty Hack
+	var entry = {player_id:player.playerId,game_id:game.gameId,placing_position:JSON.stringify(ld.values(player.fleet)),isBot:isBot};
+	dbWriter.savePlacments(entry);
 });
 
 module.exports = Player;
