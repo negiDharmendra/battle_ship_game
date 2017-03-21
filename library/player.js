@@ -1,10 +1,6 @@
 "use strict";
 var ld = require('lodash');
-var Events=require("events").EventEmitter;
 var Ship = require('./ship.js');
-var dbWriter = require('../db/dbWriter.js');
-
-var emitter=new Events();
 
 var Player = function(player_name){
 	var self=this;
@@ -23,7 +19,6 @@ var Player = function(player_name){
 	Object.defineProperty(this,'readyState',{value:false,enumerable:false,writable:true});
 	Object.defineProperty(this,'isAlive',{enumerable:false,writable:true});
 };
-
 
 
 Player.prototype = {
@@ -52,58 +47,63 @@ Player.prototype = {
 			throw new Error('Opponent turn');
 		if(!game.validatePosition(position.split(' ')))
 			throw new Error('Invalid position');
-		var index = opponentPlayer.usedPositions.indexOf(position);
-			if(index!= -1){
-				emitter.emit('HIT',opponentPlayer,position,game);
-				this.hit.push(position);
-				return 'hit';
-			}
-			else{
-				emitter.emit('MISS',opponentPlayer,game);
-				this.miss.push(position);
-				return 'miss';
-			}
+		var shotResult = this.evaluateShot(opponentPlayer,position,game);
+		game.turn = opponentPlayer.playerId;
+		return shotResult;
 	},
-	ready:function(game){
-		if(this.usedPositions.length==17)
-			emitter.emit('READY',this,game);
-		else
+	evaluateShot:function (opponentPlayer,position,game) {
+	var index = opponentPlayer.usedPositions.indexOf(position);
+	if(index!= -1){
+		//[#4/db-integration]
+		// Save the board status before destroying position on the actual board
+		var hittedShip = game.destroy(opponentPlayer,position);
+		if(opponentPlayer.fleet[hittedShip].isSunk())
+			opponentPlayer.sunkShips.push(hittedShip);
+		if(opponentPlayer.sunkShips.length==5)
+				opponentPlayer.isAlive = false;
+		// save the status of board and the current hit position  
+		// Unique Key(Can be trigger),PlayerId,GameId,datestamp,board-satus,current-hit-position,...
+		this.hit.push(position);
+		return 'hit';
+	}
+	this.miss.push(position);
+	return 'miss';
+	},
+	ready:function(game,savePlacments = ()=>{}){
+		if(this.usedPositions.length!=17)
 			throw new Error ('Can not announce READY');
+		this.readyState=true;
+		game.readyPlayers.push(this.playerId);
+		if (ld.uniq(game.readyPlayers).length==2){
+			game.turn = ld.first(game.readyPlayers);
+		};
+		var isBot = this.name.match('BotPlayer')!=null ? true : false; //Dirty Hack
+		var entry = {player_id:this.playerId,game_id:game.gameId,placing_position:JSON.stringify(ld.values(this.fleet)),isBot:isBot};
+		savePlacments(entry);
 	},
 	removeDamagePosition:function(position){
 		ld.remove(this.usedPositions,function(pos){
 			return pos==position;
 		});
+	},
+	convertToNumeric:function (position) {
+		var split = position.split('');
+		var asciiValueOfA = 65;
+		var char = ld.first(split).charCodeAt() - asciiValueOfA;
+		return char*10 + parseInt(ld.last(split)) - 1;
+	},
+	getBoardStatus:function() {
+		var board = new Array(100);
+		board = ld.fill(board,0);
+    	var hitIndexes = this.hit.map(this.convertToNumeric);
+    	var missIndexes = this.miss.map(this.convertToNumeric);
+    	board = board.map(function (val,index) {
+    		if (hitIndexes.indexOf(index)>-1) return 1;
+    		if (missIndexes.indexOf(index)>-1) return 2;
+    		return 0;
+    	});
+		return board;
 	}
 };
-
-
-emitter.on('HIT',function(opponentPlayer,position,game){
-	//[#4/db-integration]
-	// Save the board status before destroying position on the actual board
-	var hittedShip = game.destroy(opponentPlayer,position);
-	if(opponentPlayer.fleet[hittedShip].isSunk())
-		opponentPlayer.sunkShips.push(hittedShip);
-	if(opponentPlayer.sunkShips.length==5)
-			opponentPlayer.isAlive = false;
-	game.turn = opponentPlayer.playerId;
-	// save the status of board and the current hit position  
-	// Unique Key(Can be trigger),PlayerId,GameId,datestamp,board-satus,current-hit-position,...
-});
-emitter.on('MISS',function(opponentPlayer,game){
-	game.turn = opponentPlayer.playerId;
-});
-
-
-emitter.on('READY',function(player,game){
-	player.readyState=true;
-	game.readyPlayers.push(player.playerId);
-	if (ld.uniq(game.readyPlayers).length==2){
-		game.turn = ld.first(game.readyPlayers);
-	};
-	var isBot = player.name.match('BotPlayer')!=null ? true : false; //Dirty Hack
-	var entry = {player_id:player.playerId,game_id:game.gameId,placing_position:JSON.stringify(ld.values(player.fleet)),isBot:isBot};
-	dbWriter.savePlacments(entry);
-});
 
 module.exports = Player;

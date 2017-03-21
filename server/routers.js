@@ -6,6 +6,7 @@ var cookie_parser = require('cookie-parser');
 var BotPlayer = require('../library/botPlayer.js');
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
+var dbWriter = require('../db/dbWriter.js');
 
 var app = express();
     passport.use(new FacebookStrategy({
@@ -91,7 +92,7 @@ var readyAnnouncement = function(req, res) {
     var game = req.game;
     var player = req.user;
     try {
-        player.ready(game);
+        player.ready(game,dbWriter.savePlacments);
         res.redirect('/battleship.html');
     } catch (err) {
         log.log_message('appendFile', 'errors.log', 'readyAnnouncement ' + req.user.playerId + '➽' + err.message);

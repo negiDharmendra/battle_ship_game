@@ -193,4 +193,47 @@ describe('Player', function() {
             chai.expect(player.usedPositions).to.have.length(16);
         });
     })
+    describe('getBoardStatus', function() {
+        var player, opponentPlayer, game;
+        beforeEach(function() {
+            player = new Player('Manu');
+            deployShip(player);
+        });
+        it('should get the status of the board when it is clean', function() {
+            var boardStatus = player.getBoardStatus();
+            chai.expect(boardStatus).to.have.length(100);
+            boardStatus.forEach(function(key){
+                chai.assert.equal(key,0);
+            });
+        });
+        it('should get the status of the board when some of the hits and misses are on it', function() {
+            player.hit = ['A1','J2'];
+            player.miss = ['B1','D2'];
+            var boardStatus = player.getBoardStatus();
+            chai.assert.equal(boardStatus[0],1);
+            chai.assert.equal(boardStatus[91],1);
+
+            chai.assert.equal(boardStatus[10],2);
+            chai.assert.equal(boardStatus[31],2);
+        });
+        it('should not change the status of the board if there are no miss and hits', function() {
+            player.hit = ['A1'];
+            var boardStatus = player.getBoardStatus();
+
+            chai.assert.equal(boardStatus[0],1);
+            boardStatus.shift();
+            
+            boardStatus.forEach(function(key){
+                chai.assert.equal(key,0);
+            });
+        });
+        it('convert to numeric should convert the postion to numeric values', function() {
+            var numeric = player.convertToNumeric('A2')
+            chai.expect(numeric).to.be.equal(1);
+        });
+        it('convert to numeric should convert the postion to numeric values', function() {
+            var numeric = player.convertToNumeric('J1')
+            chai.expect(numeric).to.be.equal(90);
+        });
+    })
 });
