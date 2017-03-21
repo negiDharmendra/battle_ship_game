@@ -27,29 +27,19 @@ var Player = function(player_name){
 
 
 Player.prototype = {
-	getAllPositionOfShip : function(ship,position,alignment){
-		var fleet = {battleship:4,cruiser:3,submarine:3,destroyer:2,carrier:5};
-		var allPosition =[];
-		for (var i = 0; i < fleet[ship]; i++) {
-			if(alignment=='horizontal')
-				allPosition.push(position[0]+(parseInt(position.slice(1))+i).toString());
-			if(alignment=='vertical')
-				allPosition.push(String.fromCharCode(position[0].charCodeAt()+i)+position.slice(1));
-		};
-		return allPosition;
-	},
 	deployShip:function(ship,position,game,alignment){
-		var allPosition = this.getAllPositionOfShip(ship,position,alignment);
+		var selectedShip = this.fleet[ship];
+		var allPosition = selectedShip.getAllPositionOfShip(position,alignment);
 		var isPositionUsed = ld.intersection(this.usedPositions,allPosition).length;
 		if(!game.validatePosition(allPosition))
 			throw new Error('Position Not Valid.');
 		else if(isPositionUsed>0)
 			throw new Error('Position is already used');
-		else if(this.fleet[ship].positions.length!=0)
+		else if(selectedShip.positions.length!=0)
 		 	throw new Error('Can not afford more Ships');
 		else{
 			this.usedPositions=this.usedPositions.concat(allPosition);
-			this.fleet[ship].setPosition(allPosition);
+			selectedShip.setPosition(allPosition,alignment);
 			return true;
 		}
 	},

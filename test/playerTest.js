@@ -194,27 +194,3 @@ describe('Player', function() {
         });
     })
 });
-
-describe('allPosition', function() {
-    player = new Player('arun');
-    it('should give all position if alignment is horizontal', function() {
-        var allPosition = player.getAllPositionOfShip('battleship', 'A1', 'horizontal');
-        chai.expect(allPosition).to.have.length(4);
-        chai.assert.deepEqual(allPosition, ['A1', 'A2', 'A3', 'A4']);
-    });
-    it('should give all position if alignment is vertical', function() {
-        var allPosition = player.getAllPositionOfShip('cruiser', 'A1', 'vertical');
-        chai.expect(allPosition).to.have.length(3);
-        chai.assert.deepEqual(allPosition, ['A1', 'B1', 'C1']);
-    });
-    it('should give empty array if alignment is rather than horizontal or vertical', function() {
-        var allPosition = player.getAllPositionOfShip('battleship', 'A1', 'diagonal');
-        chai.expect(allPosition).to.have.length(0);
-        chai.assert.deepEqual(allPosition, []);
-    });
-    it('should give empty array if alignment is undefined', function() {
-        var allPosition = player.getAllPositionOfShip('battleship', 'A1');
-        chai.expect(allPosition).to.have.length(0);
-        chai.assert.deepEqual(allPosition, []);
-    })
-});
