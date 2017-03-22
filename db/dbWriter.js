@@ -20,9 +20,22 @@ exports.savePlacments = function(entry){
 		client.query(query, function(err, result) {
 	    	if(err) console.error('Error in running query', err,result);
 	  });
+	done();
 	});
 };
 
+exports.saveShotResult = function (entry) {
+	var date = new Date();
+	var insertions = [entry.player_id,entry.game_id,entry.boardStatus,entry.currentHitPosition,entry.shotResult,entry.isBot,date.toJSON()].map(x => '\''+x+'\'');
+	var query = 'insert into shooting_patterns (player_id,game_id,board,shooting_pos,shot_res,is_bot,datestamp) values('+insertions.join(',')+');';
+	pg.connect(conString,function(err,client,done) {
+	  if(err) console.error('Could not connect to database', err);
+		client.query(query, function(err, result) {
+	    	if(err) console.error('Error in running query', err,result);
+	  });
+	done();
+	});
+}
 
 
 

@@ -1,6 +1,8 @@
 "use strict";
 var ld = require('lodash');
 var Ship = require('./ship.js');
+var HIT = 'hit';
+var MISS = 'miss';
 
 var Player = function(player_name){
 	var self=this;
@@ -38,7 +40,8 @@ Player.prototype = {
 			return true;
 		}
 	},
-	shoot : function(opponentPlayer,position,game){
+	shoot : function(opponentPlayer,position,game,saveShotResult = ()=>{}){
+		var boardStatus = this.getBoardStatus();
 		if(!this.isAlive)
 			return 'miss';
 		if(!this.readyState)
@@ -48,26 +51,33 @@ Player.prototype = {
 		if(!game.validatePosition(position.split(' ')))
 			throw new Error('Invalid position');
 		var shotResult = this.evaluateShot(opponentPlayer,position,game);
+		var entry = {player_id:this.playerId,game_id:game.gameId,
+			boardStatus:JSON.stringify(boardStatus),
+			currentHitPosition:this.convertToNumeric(position),
+			shotResult:shotResult.statusCode,
+			isBot:this.isBot()
+		};
+		console.log(this.playerId,position);
+		saveShotResult(entry);
 		game.turn = opponentPlayer.playerId;
-		return shotResult;
+		return shotResult.status;
 	},
 	evaluateShot:function (opponentPlayer,position,game) {
-	var index = opponentPlayer.usedPositions.indexOf(position);
-	if(index!= -1){
-		//[#4/db-integration]
-		// Save the board status before destroying position on the actual board
-		var hittedShip = game.destroy(opponentPlayer,position);
-		if(opponentPlayer.fleet[hittedShip].isSunk())
-			opponentPlayer.sunkShips.push(hittedShip);
-		if(opponentPlayer.sunkShips.length==5)
+		var index = opponentPlayer.usedPositions.indexOf(position);
+		var shotResult = {status:MISS,statusCode:0};
+		if(index!= -1){
+			var hittedShip = game.destroy(opponentPlayer,position);
+			if(opponentPlayer.fleet[hittedShip].isSunk())
+				opponentPlayer.sunkShips.push(hittedShip);
+			if(opponentPlayer.sunkShips.length==5)
 				opponentPlayer.isAlive = false;
-		// save the status of board and the current hit position  
-		// Unique Key(Can be trigger),PlayerId,GameId,datestamp,board-satus,current-hit-position,...
-		this.hit.push(position);
-		return 'hit';
-	}
-	this.miss.push(position);
-	return 'miss';
+			this.hit.push(position);
+			shotResult = {status:HIT,statusCode:1};
+		}
+		else{
+			this.miss.push(position);
+		}
+		return shotResult;
 	},
 	ready:function(game,savePlacments = ()=>{}){
 		if(this.usedPositions.length!=17)
@@ -77,10 +87,16 @@ Player.prototype = {
 		if (ld.uniq(game.readyPlayers).length==2){
 			game.turn = ld.first(game.readyPlayers);
 		};
-		var isBot = this.name.match('BotPlayer')!=null ? true : false; //Dirty Hack
-		var entry = {player_id:this.playerId,game_id:game.gameId,placing_position:JSON.stringify(ld.values(this.fleet)),isBot:isBot};
+		var entry = {player_id:this.playerId,
+			game_id:game.gameId,
+			placing_position:JSON.stringify(ld.values(this.fleet)),
+			isBot:this.isBot()
+		};
 		savePlacments(entry);
 	},
+	isBot:function () {
+		return !!this.name.match('BotPlayer'); //Dirty Hack
+	}, 
 	removeDamagePosition:function(position){
 		ld.remove(this.usedPositions,function(pos){
 			return pos==position;
@@ -90,7 +106,7 @@ Player.prototype = {
 		var split = position.split('');
 		var asciiValueOfA = 65;
 		var char = ld.first(split).charCodeAt() - asciiValueOfA;
-		return char*10 + parseInt(ld.last(split)) - 1;
+		return char*10 +  parseInt(position.slice(1)) - 1;
 	},
 	getBoardStatus:function() {
 		var board = new Array(100);

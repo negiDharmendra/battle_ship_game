@@ -107,7 +107,7 @@ var validateShoot = function(req, res) {
     try {
         var opponentPlayer = game.getOpponentplayer(req.user.playerId);
         status.opponentPlayerId = opponentPlayer.playerId;
-        status.reply = player.shoot(opponentPlayer, req.body.position, game);
+        status.reply = player.shoot(opponentPlayer, req.body.position, game,dbWriter.saveShotResult);
     } catch (err) {
         status.error = err.message;
         log.log_message('appendFile', 'errors.log', 'validateShoot ' + req.user.playerId + '➽' + err.message);

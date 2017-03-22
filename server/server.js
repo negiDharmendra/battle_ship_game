@@ -8,7 +8,7 @@ var games = new Games(Game);
 
 var controller =routers.createController(games);
 http.createServer(controller).listen(process.env.PORT || PORT,function(){
-	console.log("listening at port===>"+ PORT);
+	console.log("Started on http://127.0.0.1:"+ PORT);
    	log.log_message('writeFile','players.log','server started at '+new Date().toLocaleTimeString());
    	log.log_message('writeFile','errors.log','server started at '+new Date().toLocaleTimeString());
 });
